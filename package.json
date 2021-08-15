@@ -4,9 +4,18 @@
   "description": "write javascript code to change javascript code",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Richard Huang",
-  "keywords": ["ast"],
-  "license": "ISC"
+  "keywords": [
+    "ast"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "acorn": "^8.4.1",
+    "espree": "^8.0.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
+  }
 }
