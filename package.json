@@ -1,0 +1,12 @@
+{
+  "name": "synvert-core-javascript",
+  "version": "0.0.1",
+  "description": "write javascript code to change javascript code",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Richard Huang",
+  "keywords": ["ast"],
+  "license": "ISC"
+}
