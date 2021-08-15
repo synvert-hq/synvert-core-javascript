@@ -5,13 +5,13 @@ describe("ast node", () => {
   describe("name", () => {
     describe("class", () => {
       test("gets name", () => {
-        const node = espree.parse("class FooBar {}", { ecmaVersion: 'latest' }).body[0];
+        const node = espree.parse("class FooBar {}", { ecmaVersion: 'latest', loc: true }).body[0];
         expect(node.name()).toBe("FooBar");
       });
     });
   });
 
-  describe("recursive_children", () => {
+  describe("recursiveChildren", () => {
     test("iterates all children recursively", () => {
       const code = `
         class Rectangle {
@@ -28,9 +28,9 @@ describe("ast node", () => {
         const obj = new Rectangle(10, 20);
         obj.area();
       `
-      const node = espree.parse(code, { ecmaVersion: 'latest' });
+      const node = espree.parse(code, { ecmaVersion: 'latest', loc: true });
       const children = [];
-      node.recursive_children((child) => {
+      node.recursiveChildren((child) => {
         children.push(child);
       });
       expect(children.length).toBe(45);
