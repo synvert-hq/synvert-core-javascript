@@ -4,7 +4,7 @@
   "description": "write javascript code to change javascript code",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --watchAll"
   },
   "author": "Richard Huang",
   "keywords": [
