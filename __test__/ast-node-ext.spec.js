@@ -5,8 +5,15 @@ describe("ast node", () => {
   describe("name", () => {
     describe("class", () => {
       test("gets name", () => {
-        const node = espree.parse("class FooBar {}", { ecmaVersion: 'latest', loc: true }).body[0];
+        const node = espree.parse("class FooBar {}", { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' }).body[0];
         expect(node.name()).toBe("FooBar");
+      });
+    });
+
+    describe("function", () => {
+      test("gets name", () => {
+        const node = espree.parse("function foobar() {}", { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' }).body[0];
+        expect(node.name()).toBe("foobar");
       });
     });
   });
@@ -28,7 +35,7 @@ describe("ast node", () => {
         const obj = new Rectangle(10, 20);
         obj.area();
       `
-      const node = espree.parse(code, { ecmaVersion: 'latest', loc: true });
+      const node = espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' });
       const children = [];
       node.recursiveChildren((child) => {
         children.push(child);
