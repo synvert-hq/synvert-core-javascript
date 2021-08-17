@@ -24,7 +24,7 @@ describe("ast node", () => {
   describe("childNodeRange", () => {
     describe("class", () => {
       const node = parse("class FooBar {}");
-      expect(node.childNodeRange('id')).toEqual([6, 12]);
+      expect(node.childNodeRange('id')).toEqual({ start: 6, end: 12 });
     });
   });
 
