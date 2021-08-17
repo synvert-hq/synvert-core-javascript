@@ -2,7 +2,7 @@ const fs = require('fs');
 const espree = require("espree");
 require("../lib/ast-node-ext");
 
-const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' }).body[0];
+const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'code.js' }).body[0];
 
 describe("ast node", () => {
   describe("name", () => {
@@ -24,7 +24,7 @@ describe("ast node", () => {
   describe("toSource", () => {
     test("gets source code", () => {
       code = "class FooBar {}"
-      fs.writeFileSync("test.js", code);
+      fs.writeFileSync("code.js", code);
       const node = parse(code);
       expect(node.toSource()).toBe(code);
     });
@@ -47,12 +47,33 @@ describe("ast node", () => {
         const obj = new Rectangle(10, 20);
         obj.area();
       `
-      const node = espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' });
+      const node = parse(code);
       const children = [];
       node.recursiveChildren((child) => {
         children.push(child);
       });
-      expect(children.length).toBe(45);
+      expect(children.length).toBe(32);
+    });
+  });
+
+  describe("rewrittenSource", () => {
+    test("does not rewrite with unknown property", () => {
+      code = `class Synvert {}`
+      node = parse(code);
+      expect(node.rewrittenSource('{{foobar}}')).toBe('{{foobar}}');
+    });
+
+    test("rewrites with known property", () => {
+      code = `class Synvert {}`
+      node = parse(code);
+      expect(node.rewrittenSource('{{id}}')).toBe('Synvert');
+    });
+
+    test("rewrites for arguments", () => {
+      code = `synvert('foo', 'bar')`
+      fs.writeFileSync("code.js", code);
+      node = parse(code);
+      expect(node.rewrittenSource('{{expression.arguments}}')).toBe("'foo', 'bar'");
     });
   });
 });
