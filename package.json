@@ -14,7 +14,8 @@
   "dependencies": {
     "acorn": "^8.4.1",
     "eslint-visitor-keys": "^3.0.0",
-    "espree": "github:xinminlabs/espree#add-option-source-file"
+    "espree": "github:xinminlabs/espree#add-option-source-file",
+    "typy": "^3.3.0"
   },
   "devDependencies": {
     "jest": "^27.0.6"

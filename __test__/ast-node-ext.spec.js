@@ -1,20 +1,32 @@
+const fs = require('fs');
 const espree = require("espree");
 require("../lib/ast-node-ext");
+
+const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' }).body[0];
 
 describe("ast node", () => {
   describe("name", () => {
     describe("class", () => {
       test("gets name", () => {
-        const node = espree.parse("class FooBar {}", { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' }).body[0];
+        const node = parse("class FooBar {}");
         expect(node.name()).toBe("FooBar");
       });
     });
 
     describe("function", () => {
       test("gets name", () => {
-        const node = espree.parse("function foobar() {}", { ecmaVersion: 'latest', loc: true, sourceFile: 'test.js' }).body[0];
+        const node = parse("function foobar() {}");
         expect(node.name()).toBe("foobar");
       });
+    });
+  });
+
+  describe("toSource", () => {
+    test("gets source code", () => {
+      code = "class FooBar {}"
+      fs.writeFileSync("test.js", code);
+      const node = parse(code);
+      expect(node.toSource()).toBe(code);
     });
   });
 
