@@ -54,6 +54,14 @@ describe("ast node", () => {
     });
   });
 
+  describe("match", () => {
+    test("matches class id", () => {
+      code = `class Synvert {}`
+      node = parse(code)
+      expect(node.match({ type: 'ClassDeclaration', id: { name: 'Synvert' } })).toBe(true);
+    });
+  });
+
   describe("toSource", () => {
     test("gets source code", () => {
       code = "class FooBar {}"

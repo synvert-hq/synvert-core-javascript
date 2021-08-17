@@ -15,6 +15,7 @@
     "acorn": "^8.4.1",
     "eslint-visitor-keys": "^3.0.0",
     "espree": "github:xinminlabs/espree#add-option-source-file",
+    "flat": "^5.0.2",
     "typy": "^3.3.0"
   },
   "devDependencies": {
