@@ -2,6 +2,8 @@ const fs = require('fs');
 const espree = require("espree");
 require("../lib/ast-node-ext");
 
+const mock = require('mock-fs');
+
 const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'code.js' }).body[0];
 
 describe("ast node", () => {
@@ -65,9 +67,10 @@ describe("ast node", () => {
   describe("toSource", () => {
     test("gets source code", () => {
       code = "class FooBar {}"
-      fs.writeFileSync("code.js", code);
+      mock({ 'code.js': code });
       const node = parse(code);
       expect(node.toSource()).toBe(code);
+      mock.restore();
     });
   });
 
@@ -86,9 +89,10 @@ describe("ast node", () => {
 
     test("rewrites for arguments", () => {
       code = `synvert('foo', 'bar')`
-      fs.writeFileSync("code.js", code);
+      mock({ 'code.js': code });
       node = parse(code);
       expect(node.rewrittenSource('{{expression.arguments}}')).toBe("'foo', 'bar'");
+      mock.restore();
     });
   });
 });
