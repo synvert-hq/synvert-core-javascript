@@ -21,12 +21,10 @@ describe("ast node", () => {
     });
   });
 
-  describe("toSource", () => {
-    test("gets source code", () => {
-      code = "class FooBar {}"
-      fs.writeFileSync("code.js", code);
-      const node = parse(code);
-      expect(node.toSource()).toBe(code);
+  describe("childNodeRange", () => {
+    describe("class", () => {
+      const node = parse("class FooBar {}");
+      expect(node.childNodeRange('id')).toEqual([6, 12]);
     });
   });
 
@@ -53,6 +51,15 @@ describe("ast node", () => {
         children.push(child);
       });
       expect(children.length).toBe(32);
+    });
+  });
+
+  describe("toSource", () => {
+    test("gets source code", () => {
+      code = "class FooBar {}"
+      fs.writeFileSync("code.js", code);
+      const node = parse(code);
+      expect(node.toSource()).toBe(code);
     });
   });
 
