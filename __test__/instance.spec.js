@@ -9,10 +9,11 @@ describe("Instance", () => {
   describe("process", () => {
     test("writes new code to file", () => {
       const instance = new Instance({}, '*.js', function() {
-        this.withNode({ type: 'ClassDeclaration', id: { name: 'FooBar' } }, function() {
-          this.replace('id', { with: 'Synvert' });
+        withNode({ type: 'ClassDeclaration', id: { name: 'FooBar' } }, function() {
+          replace('id', { with: 'Synvert' });
         });
       });
+      global.currentInstance = instance
       const input = `class FooBar {}`
       const output = `class Synvert {}`
       mock({ 'code.js': input })
