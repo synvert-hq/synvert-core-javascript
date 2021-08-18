@@ -2,14 +2,12 @@
   "name": "synvert-core-javascript",
   "version": "0.0.1",
   "description": "write javascript code to change javascript code",
-  "main": "index.js",
+  "main": "lib/synvert.js",
   "scripts": {
     "test": "jest --watchAll"
   },
   "author": "Richard Huang",
-  "keywords": [
-    "ast"
-  ],
+  "keywords": ["ast", "rewrite"],
   "license": "ISC",
   "dependencies": {
     "acorn": "^8.4.1",
