@@ -7,22 +7,6 @@ const mock = require('mock-fs');
 const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'code.js' }).body[0];
 
 describe("ast node", () => {
-  describe("name", () => {
-    describe("class", () => {
-      test("gets name", () => {
-        const node = parse("class FooBar {}");
-        expect(node.name()).toBe("FooBar");
-      });
-    });
-
-    describe("function", () => {
-      test("gets name", () => {
-        const node = parse("function foobar() {}");
-        expect(node.name()).toBe("foobar");
-      });
-    });
-  });
-
   describe("childNodeRange", () => {
     describe("class", () => {
       const node = parse("class FooBar {}");
