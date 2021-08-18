@@ -1,5 +1,5 @@
 {
-  "name": "synvert-core-javascript",
+  "name": "synvert-core",
   "version": "0.1.0",
   "description": "write javascript code to change javascript code",
   "main": "lib/synvert.js",
@@ -10,6 +10,10 @@
   "author": "Richard Huang",
   "keywords": ["ast", "rewrite"],
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xinminlabs/synvert-core-javascript/issues"
+  },
+  "homepage": "https://github.com/xinminlabs/synvert-core-javascript#readme",
   "dependencies": {
     "acorn": "^8.4.1",
     "eslint-visitor-keys": "^3.0.0",
