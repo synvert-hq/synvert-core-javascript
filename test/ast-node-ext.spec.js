@@ -14,6 +14,13 @@ describe("ast node", () => {
     });
   });
 
+  describe("indent", () => {
+    test("gets column", () => {
+      const node = parse("class FooBar {}").id;
+      expect(node.indent()).toEqual(6);
+    });
+  });
+
   describe("recursiveChildren", () => {
     test("iterates all children recursively", () => {
       const code = `
