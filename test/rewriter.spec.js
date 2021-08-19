@@ -14,6 +14,7 @@ describe('static register', () => {
   describe("process", () => {
     test("writes new code to file", () => {
       const rewriter = new Rewriter('group', 'rewriter', function() {
+        description('this is a rewriter description.')
         withFiles('*.js', function() {
           withNode({ type: 'ClassDeclaration', id: { name: 'FooBar' } }, function() {
             replace('id', { with: 'Synvert' });
@@ -24,6 +25,7 @@ describe('static register', () => {
       const output = `class Synvert {}`
       mock({ 'code.js': input })
       rewriter.process()
+      expect(rewriter.description()).toEqual(`this is a rewriter description.`)
       expect(fs.readFileSync('code.js', 'utf8')).toEqual(output)
       mock.restore()
     });
