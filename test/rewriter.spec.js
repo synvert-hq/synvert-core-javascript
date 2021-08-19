@@ -7,14 +7,14 @@ const Rewriter = require('../lib/rewriter');
 
 describe('static register', () => {
   it('registers and fetches', () => {
-    rewriter = new Rewriter('group', 'rewriter', () => {});
-    expect(Rewriter.fetch('group', 'rewriter')).toBe(rewriter);
+    rewriter = new Rewriter('snippet group', 'snippet name', () => {});
+    expect(Rewriter.fetch('snippet group', 'snippet name')).toBe(rewriter);
   });
 
   describe("process", () => {
     test("writes new code to file", () => {
-      const rewriter = new Rewriter('group', 'rewriter', function() {
-        description('this is a rewriter description.')
+      const rewriter = new Rewriter('snippet group', 'snippet name', function() {
+        description('this is a snippet description.')
         withFiles('*.js', function() {
           withNode({ type: 'ClassDeclaration', id: { name: 'FooBar' } }, function() {
             replace('id', { with: 'Synvert' });
@@ -25,7 +25,7 @@ describe('static register', () => {
       const output = `class Synvert {}`
       mock({ 'code.js': input })
       rewriter.process()
-      expect(rewriter.description()).toEqual(`this is a rewriter description.`)
+      expect(rewriter.description()).toEqual(`this is a snippet description.`)
       expect(fs.readFileSync('code.js', 'utf8')).toEqual(output)
       mock.restore()
     });
