@@ -2,6 +2,7 @@ const fs = require('fs');
 const mock = require('mock-fs');
 
 const Instance = require("../lib/instance");
+const Rewriter = require('../lib/rewriter');
 
 describe("Instance", () => {
   describe("process", () => {
@@ -14,7 +15,7 @@ describe("Instance", () => {
           replace('callee.property', { with: 'trimEnd' })
         })
       });
-      global.currentInstance = instance
+      Instance.current = instance
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
