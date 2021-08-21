@@ -1,5 +1,8 @@
 # CHANGELOG
 
+* Add `ReplaceWithAction`
+* Rename `Node#indent` to `Node#column`
+
 ## 0.2.0 (2021-08-19)
 
 * Add `description` dsl
