@@ -7,13 +7,22 @@ describe("Instance", () => {
   describe("process", () => {
     test("writes new code to file", () => {
       const instance = new Instance({}, '*.js', function() {
-        withNode({ type: 'ClassDeclaration', id: { name: 'FooBar' } }, function() {
-          replace('id', { with: 'Synvert' });
-        });
+        withNode({ type: 'CallExpression', callee: { type: 'MemberExpression', property: 'trimLeft' } }, function() {
+          replace('callee.property', { with: 'trimStart' })
+        })
+        withNode({ type: 'CallExpression', callee: { type: 'MemberExpression', property: 'trimRight' } }, function() {
+          replace('callee.property', { with: 'trimEnd' })
+        })
       });
       global.currentInstance = instance
-      const input = `class FooBar {}`
-      const output = `class Synvert {}`
+      const input = `
+        const foo1 = bar.trimLeft();
+        const foo2 = bar.trimRight();
+      `
+      const output = `
+        const foo1 = bar.trimStart();
+        const foo2 = bar.trimEnd();
+      `
       mock({ 'code.js': input })
       instance.process()
       expect(fs.readFileSync('code.js', 'utf8')).toEqual(output)
