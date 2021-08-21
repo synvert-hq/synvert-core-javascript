@@ -51,6 +51,12 @@ describe("ast node", () => {
     test("matches class id", () => {
       code = `class Synvert {}`
       node = parse(code)
+      expect(node.match({ type: 'ClassDeclaration', id: 'Synvert' })).toBe(true);
+    });
+
+    test("matches class id with name", () => {
+      code = `class Synvert {}`
+      node = parse(code)
       expect(node.match({ type: 'ClassDeclaration', id: { name: 'Synvert' } })).toBe(true);
     });
   });
