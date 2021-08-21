@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.3.1 (2021-08-21)
+
+* Get nested `childNodeRange`
+* Match value `id.name === id`
+
+## 0.3.0 (2021-08-21)
+
 * Add `ReplaceWithAction`
 * Rename `Node#indent` to `Node#column`
 
