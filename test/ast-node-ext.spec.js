@@ -12,6 +12,11 @@ describe("ast node", () => {
       const node = parse("class FooBar {}");
       expect(node.childNodeRange('id')).toEqual({ start: 6, end: 12 });
     });
+
+    describe("expression", () => {
+      const node = parse("foo.trimLeft()");
+      expect(node.childNodeRange('expression.callee.property')).toEqual({ start: 4, end: 12 });
+    });
   });
 
   describe("indent", () => {
