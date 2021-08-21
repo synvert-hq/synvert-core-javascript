@@ -1,5 +1,4 @@
 const espree = require("espree");
-require("../lib/ast-node-ext");
 
 const { WithinScope } = require("../lib/scope");
 const Instance = require("../lib/instance");

@@ -1,6 +1,4 @@
 const fs = require('fs');
-require("../lib/ast-node-ext");
-
 const mock = require('mock-fs');
 
 const Instance = require("../lib/instance");

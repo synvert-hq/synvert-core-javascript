@@ -1,8 +1,8 @@
 const fs = require('fs');
 const espree = require("espree");
-require("../lib/ast-node-ext");
-
 const mock = require('mock-fs');
+
+require("../lib/ast-node-ext");
 
 const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'code.js' }).body[0];
 
