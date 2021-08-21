@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.2 (2021-08-21)
+
+* Fix `Instance#process` for multiple withNode
+
 ## 0.3.1 (2021-08-21)
 
 * Get nested `childNodeRange`
