@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.3 (2021-08-22)
+
+* Change Rewriter.rewriters to global.synvertRewriters
+
 ## 0.3.2 (2021-08-21)
 
 * Fix `Instance#process` for multiple withNode
