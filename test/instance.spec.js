@@ -7,11 +7,11 @@ const Rewriter = require('../lib/rewriter');
 describe("Instance", () => {
   describe("process", () => {
     test("writes new code to file", () => {
-      const instance = new Instance({}, '*.js', function() {
-        withNode({ type: 'CallExpression', callee: { type: 'MemberExpression', property: 'trimLeft' } }, function() {
+      const instance = new Instance({}, '*.js', () => {
+        withNode({ type: 'CallExpression', callee: { type: 'MemberExpression', property: 'trimLeft' } }, () => {
           replace('callee.property', { with: 'trimStart' })
         })
-        withNode({ type: 'CallExpression', callee: { type: 'MemberExpression', property: 'trimRight' } }, function() {
+        withNode({ type: 'CallExpression', callee: { type: 'MemberExpression', property: 'trimRight' } }, () => {
           replace('callee.property', { with: 'trimEnd' })
         })
       });

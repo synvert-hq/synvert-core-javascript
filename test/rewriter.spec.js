@@ -11,10 +11,10 @@ describe('static register', () => {
 
   describe("process", () => {
     test("writes new code to file", () => {
-      const rewriter = new Rewriter('snippet group', 'snippet name', function() {
+      const rewriter = new Rewriter('snippet group', 'snippet name', () => {
         description('this is a snippet description.')
         withFiles('*.js', function() {
-          withNode({ type: 'ClassDeclaration', id: { name: 'FooBar' } }, function() {
+          withNode({ type: 'ClassDeclaration', id: { name: 'FooBar' } }, () => {
             replace('id', { with: 'Synvert' });
           });
         });
