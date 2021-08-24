@@ -8,13 +8,15 @@ const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, s
 
 describe("ast node", () => {
   describe("childNodeRange", () => {
-    describe("class", () => {
+    test("class", () => {
       const node = parse("class FooBar {}");
       expect(node.childNodeRange('id')).toEqual({ start: 6, end: 12 });
     });
 
-    describe("expression", () => {
+    test("expression", () => {
       const node = parse("foo.trimLeft()");
+      expect(node.childNodeRange('expression.callee.object')).toEqual({ start: 0, end: 3 });
+      expect(node.childNodeRange('expression.callee.dot')).toEqual({ start: 3, end: 4 });
       expect(node.childNodeRange('expression.callee.property')).toEqual({ start: 4, end: 12 });
     });
   });
