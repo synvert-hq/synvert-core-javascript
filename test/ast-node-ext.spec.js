@@ -18,6 +18,12 @@ describe("ast node", () => {
       expect(node.childNodeRange('expression.callee.object')).toEqual({ start: 0, end: 3 });
       expect(node.childNodeRange('expression.callee.dot')).toEqual({ start: 3, end: 4 });
       expect(node.childNodeRange('expression.callee.property')).toEqual({ start: 4, end: 12 });
+      expect(node.childNodeRange('expression.arguments')).toEqual({ start: 12, end: 14 });
+    });
+
+    test("expression with arguments", () => {
+      const node = parse("test(foo, bar)");
+      expect(node.childNodeRange('expression.arguments')).toEqual({ start: 4, end: 14 });
     });
   });
 
