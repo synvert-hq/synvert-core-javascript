@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.5.0 (2021-08-21)
+
+* Add `insert` dsl
+* Add `delete` dsl
+* `ReplaceAction` supports multiple selectors
+* `childNodeRange` supports `MemberExpression` `arguments` and `dot`
+
 ## 0.4.0 (2021-08-24)
 
 * Add `replaceWith` dsl
