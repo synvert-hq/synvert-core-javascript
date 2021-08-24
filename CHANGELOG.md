@@ -1,21 +1,11 @@
 # CHANGELOG
 
-## 0.3.4 (2021-08-22)
+## 0.4.0 (2021-08-24)
 
-* Revert "Change Rewriter.rewriters to global.synvertRewriters"
-
-## 0.3.3 (2021-08-22)
-
-* Change `Rewriter.rewriters` to `global.synvertRewriters`
+* Add `replaceWith` dsl
 * Add `Rewriter.current`
 * Add `Instance.current`
-
-## 0.3.2 (2021-08-21)
-
 * Fix `Instance#process` for multiple `withNode`
-
-## 0.3.1 (2021-08-21)
-
 * Get nested `childNodeRange`
 * Match value `id.name === id`
 
