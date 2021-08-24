@@ -1,7 +1,7 @@
 const espree = require("espree");
 
 const Instance = require("../lib/instance");
-const { Action, ReplaceAction, ReplaceWithAction } = require("../lib/action");
+const { Action, InsertAction, ReplaceAction, ReplaceWithAction } = require("../lib/action");
 
 const parse = (code) => espree.parse(code, { ecmaVersion: 'latest', loc: true, sourceFile: 'code.js' }).body[0];
 
@@ -13,6 +13,25 @@ describe("action", () => {
 
   it("gets rewrittenSource", function() {
     expect(action.rewrittenSource()).toBe("FooBar");
+  });
+});
+
+describe("InsertAction", () => {
+  const node = parse("this.foo");
+  const instance = new Instance({}, '', function() {})
+  instance.currentNode = node
+  const action = new InsertAction(instance, '::', { at: 'beginning' });
+
+  it("gets beginPos", function() {
+    expect(action.beginPos()).toBe(0);
+  });
+
+  it("gets endPos", function() {
+    expect(action.endPos()).toBe(0);
+  });
+
+  it("gets rewrittenCode", function() {
+    expect(action.rewrittenCode()).toBe("::");
   });
 });
 
