@@ -1,11 +1,9 @@
 # CHANGELOG
 
-## 0.5.2 (2021-08-25)
+## 0.6.0 (2021-08-25)
 
-* Match `this` shorts for match `{ type: 'ThisExpression' }`"
-
-## 0.5.1 (2021-08-21)
-
+* Add `ifExistNode` dsl
+* Match `this` shorts for match `{ type: 'ThisExpression' }`
 * Rename `delete` dsl to `deleteNode`
 
 ## 0.5.0 (2021-08-21)
