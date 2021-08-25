@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.2 (2021-08-25)
+
+* Match `this` shorts for match `{ type: 'ThisExpression' }`"
+
 ## 0.5.1 (2021-08-21)
 
 * Rename `delete` dsl to `deleteNode`
