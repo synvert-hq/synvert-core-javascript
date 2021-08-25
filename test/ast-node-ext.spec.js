@@ -72,6 +72,12 @@ describe("ast node", () => {
       node = parse(code)
       expect(node.match({ type: 'ClassDeclaration', id: { name: 'Synvert' } })).toBe(true);
     });
+
+    test("matches this", () => {
+      code = `this.foobar.bind(this)`
+      node = parse(code).expression
+      expect(node.match({ callee: { object: { object: 'this' } }, arguments: { 0: 'this' } })).toBe(true);
+    });
   });
 
   describe("toSource", () => {
