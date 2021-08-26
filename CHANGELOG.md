@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.0 (2021-08-26)
+
+* Add `unlessExistNode` dsl
+
 ## 0.6.0 (2021-08-25)
 
 * Add `ifExistNode` dsl
