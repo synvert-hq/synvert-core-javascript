@@ -2,7 +2,6 @@ const fs = require('fs');
 const mock = require('mock-fs');
 
 const Instance = require("../lib/instance");
-const Rewriter = require('../lib/rewriter');
 
 describe("Instance", () => {
   describe("process", () => {

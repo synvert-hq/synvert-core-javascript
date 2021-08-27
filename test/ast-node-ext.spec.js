@@ -1,4 +1,3 @@
-const fs = require('fs');
 const espree = require("espree");
 const mock = require('mock-fs');
 
@@ -77,6 +76,12 @@ describe("ast node", () => {
       code = `this.foobar.bind(this)`
       node = parse(code).expression
       expect(node.match({ callee: { object: { object: 'this' } }, arguments: { 0: 'this' } })).toBe(true);
+    });
+
+    test("matches regexp", () => {
+      code = `"foobar"`
+      node = parse(code).expression
+      expect(node.match({ type: 'Literal', value: /foo/ })).toBe(true)
     });
   });
 
