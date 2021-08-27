@@ -83,6 +83,12 @@ describe("ast node", () => {
       node = parse(code).expression
       expect(node.match({ type: 'Literal', value: /foo/ })).toBe(true)
     });
+
+    test("matches not", () => {
+      code = `class Synvert {}`
+      node = parse(code)
+      expect(node.match({ type: 'ClassDeclaration', id: { not: 'FooBar' } })).toBe(true);
+    })
   });
 
   describe("toSource", () => {
