@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.1 (2021-08-27)
+
+* Match regexp
+
 ## 0.7.0 (2021-08-26)
 
 * Add `unlessExistNode` dsl
