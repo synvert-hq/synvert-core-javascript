@@ -1,15 +1,9 @@
 # CHANGELOG
 
-## 0.7.3 (2021-08-27)
+## 0.8.0 (2021-08-28)
 
-* Fix return obj
-
-## 0.7.2 (2021-08-27)
-
+* Add `get`/`set` instance `currentFileSource`
 * Match `not`
-
-## 0.7.1 (2021-08-27)
-
 * Match regexp
 
 ## 0.7.0 (2021-08-26)
