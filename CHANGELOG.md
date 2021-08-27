@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.2 (2021-08-27)
+
+* Match `not`
+
 ## 0.7.1 (2021-08-27)
 
 * Match regexp
