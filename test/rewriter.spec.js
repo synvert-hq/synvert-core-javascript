@@ -5,8 +5,18 @@ const Rewriter = require('../lib/rewriter');
 
 describe('static register', () => {
   it('registers and fetches', () => {
-    rewriter = new Rewriter('snippet group', 'snippet name', () => {});
-    expect(Rewriter.fetch('snippet group', 'snippet name')).toBe(rewriter);
+    const rewriter = new Rewriter('group', 'name', () => {});
+    expect(Rewriter.fetch('group', 'name')).toBe(rewriter);
+
+    expect(Rewriter.fetch('new group', 'name')).toBeUndefined();
+    expect(Rewriter.fetch('group', 'new name')).toBeUndefined();
+  });
+
+  it('calls', () => {
+    let run = false
+    const rewriter = new Rewriter('group', 'name', () => { run = true });
+    Rewriter.call('group', 'name')
+    expect(run).toBe(true)
   });
 
   describe("process", () => {
