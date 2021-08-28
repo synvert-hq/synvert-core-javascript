@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.9.0 (2021-08-28)
+
+* Add node `actualValue` to match rules by function
+* Add `gotoNode` dsl
+* Add `Array.prototype.first` and `Array.prototype.last`
+
 ## 0.8.0 (2021-08-28)
 
 * Add `get`/`set` instance `currentFileSource`
