@@ -88,7 +88,13 @@ describe("ast node", () => {
       code = `class Synvert {}`
       node = parse(code)
       expect(node.match({ type: 'ClassDeclaration', id: { not: 'FooBar' } })).toBe(true);
-    })
+    });
+
+    test("matches array last", () => {
+      code = `var obj = { foo: 'bar' }`
+      node = parse(code)
+      expect(node.match({ declarations: { first: { id: 'obj' } } })).toBe(true);
+    });
   });
 
   describe("toSource", () => {
