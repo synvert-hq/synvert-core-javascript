@@ -33,8 +33,8 @@ describe('static register', () => {
       const output = `class Synvert {}`
       mock({ 'code.js': input })
       rewriter.process()
-      expect(rewriter.description()).toEqual(`this is a snippet description.`)
-      expect(fs.readFileSync('code.js', 'utf8')).toEqual(output)
+      expect(rewriter.description()).toBe(`this is a snippet description.`)
+      expect(fs.readFileSync('code.js', 'utf8')).toBe(output)
       mock.restore()
     });
   });

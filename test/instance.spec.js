@@ -25,7 +25,7 @@ describe("Instance", () => {
       `
       mock({ 'code.js': input })
       instance.process()
-      expect(fs.readFileSync('code.js', 'utf8')).toEqual(output)
+      expect(fs.readFileSync('code.js', 'utf8')).toBe(output)
       mock.restore()
     });
   });

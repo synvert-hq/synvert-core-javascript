@@ -29,7 +29,7 @@ describe("ast node", () => {
   describe("indent", () => {
     test("gets column", () => {
       const node = parse("class FooBar {}").id;
-      expect(node.column()).toEqual(6);
+      expect(node.column()).toBe(6);
     });
   });
 
