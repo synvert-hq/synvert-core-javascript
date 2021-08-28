@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 0.9.1 (2021-08-28)
+## 0.10.0 (2021-08-28)
 
-* Require `GotoScope`
+* Call a rewriter
 
 ## 0.9.0 (2021-08-28)
 
