@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.11.0 (2021-08-29)
+
+* Ignore node_modues
+* Set sourceType to module
+* Add `NotSupportedError`
+* Add `RewriterNotFoundError`
+
 ## 0.10.0 (2021-08-28)
 
 * Call a rewriter
