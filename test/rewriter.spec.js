@@ -1,5 +1,6 @@
 const fs = require('fs');
 const mock = require('mock-fs');
+const { RewriterNotFoundError } = require('../lib/error');
 
 const Rewriter = require('../lib/rewriter');
 
@@ -8,8 +9,8 @@ describe('static register', () => {
     const rewriter = new Rewriter('group', 'name', () => {});
     expect(Rewriter.fetch('group', 'name')).toBe(rewriter);
 
-    expect(Rewriter.fetch('new group', 'name')).toBeUndefined();
-    expect(Rewriter.fetch('group', 'new name')).toBeUndefined();
+    expect(() => { Rewriter.fetch('new group', 'name') }).toThrowError(new RewriterNotFoundError("Rewriter new group name not found"));
+    expect(() => { Rewriter.fetch('group', 'new name') }).toThrowError(new RewriterNotFoundError("Rewriter group new name not found"));
   });
 
   it('calls', () => {
