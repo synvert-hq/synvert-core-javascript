@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.12.0 (2021-08-30)
+
+* Add global `Configuration`
+
 ## 0.11.0 (2021-08-29)
 
 * Ignore node_modues
