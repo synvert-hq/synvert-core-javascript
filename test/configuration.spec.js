@@ -8,7 +8,7 @@ describe("Configuration", () => {
   });
 
   it("skipFiles", () => {
-    expect(Configuration.skipFiles).toEqual([]);
+    expect(Configuration.skipFiles).toEqual(["node_modules/**"]);
     Configuration.skipFiles = ["foo", "bar"];
     expect(Configuration.skipFiles).toEqual(["foo", "bar"]);
   });
