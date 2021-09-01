@@ -1,7 +1,15 @@
 const espree = require("espree");
 
 const Instance = require("../lib/instance");
-const { Action, AppendAction, PrependAction, InsertAction, DeleteAction, ReplaceAction, ReplaceWithAction } = require("../lib/action");
+const {
+  Action,
+  AppendAction,
+  PrependAction,
+  InsertAction,
+  DeleteAction,
+  ReplaceAction,
+  ReplaceWithAction,
+} = require("../lib/action");
 
 const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
 
@@ -90,7 +98,7 @@ describe("PrependAction", () => {
       expect(action.rewrittenCode()).toBe(`  foo() {}\n  bar() {}\n`);
     });
   });
-})
+});
 
 describe("InsertAction", () => {
   const node = parse("this.foo");
