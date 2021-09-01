@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.13.0 (2021-09-01)
+
+* Add `append` dsl
+* Add `prepend` dsl
+
 ## 0.12.0 (2021-08-30)
 
 * Add global `Configuration`
