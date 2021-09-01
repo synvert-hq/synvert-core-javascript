@@ -1,7 +1,7 @@
 const espree = require("espree");
 
 const Instance = require("../lib/instance");
-const { Action, AppendAction, InsertAction, DeleteAction, ReplaceAction, ReplaceWithAction } = require("../lib/action");
+const { Action, AppendAction, PrependAction, InsertAction, DeleteAction, ReplaceAction, ReplaceWithAction } = require("../lib/action");
 
 const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
 
@@ -39,6 +39,44 @@ describe("AppendAction", () => {
 
   describe("multiple lines", () => {
     const action = new AppendAction(instance, "foo() {}\nbar() {}");
+
+    it("gets beginPos", function () {
+      expect(action.beginPos()).toBe(15);
+    });
+
+    it("gets endPos", function () {
+      expect(action.endPos()).toBe(15);
+    });
+
+    it("gets rewrittenCode", function () {
+      expect(action.rewrittenCode()).toBe(`  foo() {}\n  bar() {}\n`);
+    });
+  });
+});
+
+describe("PrependAction", () => {
+  const node = parse(`class FooBar {\n}`);
+  const instance = new Instance({}, "", function () {});
+  instance.currentNode = node;
+
+  describe("single line", () => {
+    const action = new PrependAction(instance, "foobar() {}");
+
+    it("gets beginPos", function () {
+      expect(action.beginPos()).toBe(15);
+    });
+
+    it("gets endPos", function () {
+      expect(action.endPos()).toBe(15);
+    });
+
+    it("gets rewrittenCode", function () {
+      expect(action.rewrittenCode()).toBe(`  foobar() {}\n`);
+    });
+  });
+
+  describe("multiple lines", () => {
+    const action = new PrependAction(instance, "foo() {}\nbar() {}");
 
     it("gets beginPos", function () {
       expect(action.beginPos()).toBe(15);
