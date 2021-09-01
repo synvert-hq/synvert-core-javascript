@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.13.1 (2021-09-01)
+
+* Fix `append`/`prepend` without indent for `Program` node
+
 ## 0.13.0 (2021-09-01)
 
 * Add `append` dsl
