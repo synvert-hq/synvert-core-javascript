@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.15.0 (2021-09-08)
+
+* Add `remove` dsl
+
 ## 0.14.0 (2021-09-07)
 
 * Support .jsx
