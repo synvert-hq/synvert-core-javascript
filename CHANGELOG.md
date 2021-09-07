@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 0.13.1 (2021-09-01)
+## 0.14.0 (2021-09-07)
 
+* Support .jsx
 * Fix `append`/`prepend` without indent for `Program` node
 
 ## 0.13.0 (2021-09-01)
