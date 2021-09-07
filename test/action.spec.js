@@ -1,4 +1,5 @@
 const espree = require("espree");
+const mock = require("mock-fs");
 
 const Instance = require("../lib/instance");
 const {
@@ -7,6 +8,7 @@ const {
   PrependAction,
   InsertAction,
   DeleteAction,
+  RemoveAction,
   ReplaceAction,
   ReplaceWithAction,
 } = require("../lib/action");
@@ -139,6 +141,68 @@ describe("DeleteAction", () => {
 
   it("gets rewrittenCode", function () {
     expect(action.rewrittenCode()).toBe("");
+  });
+});
+
+describe("RemoveAction", () => {
+  describe("single line", () => {
+    code = "this.foo.bind(this);";
+    const node = parse(code);
+    const instance = new Instance({}, "", function () {});
+    instance.currentNode = node.expression;
+    const action = new RemoveAction(instance);
+
+    beforeEach(() => {
+      mock({ "code.js": code });
+    });
+
+    afterEach(() => {
+      mock.restore();
+    });
+
+    it("gets beginPos", function () {
+      expect(action.beginPos()).toBe(0);
+    });
+
+    it("gets endPos", function () {
+      expect(action.endPos()).toBe(code.length);
+    });
+
+    it("gets rewrittenCode", function () {
+      expect(action.rewrittenCode()).toBe("");
+    });
+  });
+
+  describe("multiple lines", () => {
+    const code = `
+      function foo(props) {
+        this.bar = this.bar.bind(this);
+      }
+    `
+    const node = parse(code);
+    const instance = new Instance({}, "", function () {});
+    instance.currentNode = node.body.body[0];
+    const action = new RemoveAction(instance);
+
+    beforeEach(() => {
+      mock({ "code.js": code });
+    });
+
+    afterEach(() => {
+      mock.restore();
+    });
+
+    it("gets beginPos", function () {
+      expect(action.beginPos()).toBe(code.indexOf("{") + "{\n".length);
+    });
+
+    it("gets endPos", function () {
+      expect(action.endPos()).toBe(code.indexOf(";") + ";\n".length);
+    });
+
+    it("gets rewrittenCode", function () {
+      expect(action.rewrittenCode()).toBe("");
+    });
   });
 });
 
