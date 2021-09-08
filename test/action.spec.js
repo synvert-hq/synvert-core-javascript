@@ -178,7 +178,7 @@ describe("RemoveAction", () => {
       function foo(props) {
         this.bar = this.bar.bind(this);
       }
-    `
+    `;
     const node = parse(code);
     const instance = new Instance({}, "", function () {});
     instance.currentNode = node.body.body[0];
