@@ -45,4 +45,20 @@ describe("static register", () => {
       mock.restore();
     });
   });
+
+  describe("addSnippet", () => {
+    test("add another snippet", () => {
+      let rewriter1Called = false
+      const rewriter1 = new Rewriter("group1", "name1", () => { rewriter1Called = true });
+      const rewriter2 = new Rewriter("group2", "name2", () => {
+        addSnippet("group1", "name1");
+      });
+      rewriter2.process();
+      expect(rewriter1Called).toBe(true);
+      const subSnippets = rewriter2.subSnippets;
+      expect(subSnippets.length).toBe(1);
+      expect(subSnippets[0].group).toBe("group1");
+      expect(subSnippets[0].name).toBe("name1");
+    });
+  });
 });
