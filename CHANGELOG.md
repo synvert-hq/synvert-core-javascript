@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.17.0 (2021-09-10)
+
+* Add `ifOnlyExistNode` dsl
+* Fix PrependAction `beginPos`
+
 ## 0.16.0 (2021-09-09)
 
 * Add `addSnippet` dsl
