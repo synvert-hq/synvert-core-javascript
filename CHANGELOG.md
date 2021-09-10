@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.17.1 (2021-09-10)
+
+* Check `arrayBody()`
+
 ## 0.17.0 (2021-09-10)
 
 * Add `ifOnlyExistNode` dsl
