@@ -29,7 +29,6 @@ describe("static register", () => {
   describe("process", () => {
     test("writes new code to file", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        description("this is a snippet description.");
         withFiles("*.js", function () {
           withNode({ type: "ClassDeclaration", id: { name: "FooBar" } }, () => {
             replace("id", { with: "Synvert" });
@@ -40,24 +39,37 @@ describe("static register", () => {
       const output = `class Synvert {}`;
       mock({ "code.js": input });
       rewriter.process();
-      expect(rewriter.description()).toBe(`this is a snippet description.`);
       expect(fs.readFileSync("code.js", "utf8")).toBe(output);
       mock.restore();
     });
   });
 
-  describe("addSnippet", () => {
-    test("add another snippet", () => {
-      let rewriter1Called = false;
-      const rewriter1 = new Rewriter("group1", "name1", () => {
-        rewriter1Called = true;
+  describe("group and name", () => {
+    test("get group and name", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {});
+      expect(rewriter.group).toBe("snippet group");
+      expect(rewriter.name).toBe("snippet name");
+    });
+  });
+
+  describe("description", () => {
+    test("set and get description", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        description("this is a snippet description.");
       });
-      const rewriter2 = new Rewriter("group2", "name2", () => {
+      rewriter.process();
+      expect(rewriter.description()).toBe(`this is a snippet description.`);
+    });
+  });
+
+  describe("subSnippets", () => {
+    test("add and get sub snippet", () => {
+      new Rewriter("group1", "name1", () => {});
+      const rewriter = new Rewriter("group2", "name2", () => {
         addSnippet("group1", "name1");
       });
-      rewriter2.process();
-      expect(rewriter1Called).toBe(true);
-      const subSnippets = rewriter2.subSnippets;
+      rewriter.process();
+      const subSnippets = rewriter.subSnippets;
       expect(subSnippets.length).toBe(1);
       expect(subSnippets[0].group).toBe("group1");
       expect(subSnippets[0].name).toBe("name1");
