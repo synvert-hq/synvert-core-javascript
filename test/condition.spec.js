@@ -1,9 +1,9 @@
 const espree = require("espree");
 
-const { IfExistCondition, UnlessExistCondition } = require("../lib/condition");
+const { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition } = require("../lib/condition");
 const Instance = require("../lib/instance");
 
-describe("IfExistsCondition", () => {
+describe("IfExistCondition", () => {
   const source = `
     'use strict'
 
@@ -43,7 +43,7 @@ describe("IfExistsCondition", () => {
   });
 });
 
-describe("UnlessExistsCondition", () => {
+describe("UnlessExistCondition", () => {
   const source = `
     'use strict'
 
@@ -79,6 +79,58 @@ describe("UnlessExistsCondition", () => {
         }
       ).process();
       expect(run).toBe(false);
+    });
+  });
+});
+
+describe("IfOnlyExistCondition", () => {
+  describe("process", () => {
+    const source = `
+      'use strict'
+
+      this.foobar
+    `;
+    const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" });
+    const instance = new Instance({}, "", function () {});
+
+    beforeAll(() => {
+      instance.currentNode = node;
+    });
+
+    test("does not call function if no matching node", () => {
+      let run = false;
+      new IfOnlyExistCondition(
+        instance,
+        { type: "ExpressionStatement", expression: { type: "Literal", value: "strict" } },
+        function () {
+          run = true;
+        }
+      ).process();
+      expect(run).toBe(false);
+    });
+  });
+
+  describe("process", () => {
+    const source = `
+      'use strict'
+    `;
+    const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" });
+    const instance = new Instance({}, "", function () {});
+
+    beforeAll(() => {
+      instance.currentNode = node;
+    });
+
+    test("calls function if there is a matching node", () => {
+      let run = false;
+      new IfOnlyExistCondition(
+        instance,
+        { type: "ExpressionStatement", expression: { type: "Literal", value: "use strict" } },
+        function () {
+          run = true;
+        }
+      ).process();
+      expect(run).toBe(true);
     });
   });
 });
