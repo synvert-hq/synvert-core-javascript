@@ -12,4 +12,16 @@ describe("Configuration", () => {
     Configuration.skipFiles = ["foo", "bar"];
     expect(Configuration.skipFiles).toEqual(["foo", "bar"]);
   });
+
+  it("showRunProcess", () => {
+    expect(Configuration.showRunProcess).toEqual(false);
+    Configuration.showRunProcess = true;
+    expect(Configuration.showRunProcess).toEqual(true);
+  });
+
+  it("enableEcmaFeaturesJsx", () => {
+    expect(Configuration.enableEcmaFeaturesJsx).toEqual(false);
+    Configuration.enableEcmaFeaturesJsx = true;
+    expect(Configuration.enableEcmaFeaturesJsx).toEqual(true);
+  })
 });
