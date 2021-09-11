@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.19.0 (2021-09-11)
+
+* Add `Configuration.enableEcmaFeaturesJsx`
+* Support `MethodDefinition` async `childNodeRange`
+
 ## 0.18.0 (2021-09-11)
 
 * Add `Configuration.showRunProcess`
