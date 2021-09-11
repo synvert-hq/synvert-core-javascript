@@ -24,6 +24,16 @@ describe("ast node", () => {
       const node = parse("test(foo, bar)");
       expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 14 });
     });
+
+    test("method definition", () => {
+      const node = parse(`
+        class Foobar {
+          async foobar() {
+          }
+        }
+      `).body.body[0];
+      expect(node.childNodeRange("async")).toEqual({ start: 34, end: 40 });
+    });
   });
 
   describe("indent", () => {
