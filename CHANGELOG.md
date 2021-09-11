@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 0.17.1 (2021-09-10)
+## 0.18.0 (2021-09-11)
 
+* Add `Configuration.showRunProcess`
 * Check `arrayBody()`
 
 ## 0.17.0 (2021-09-10)
