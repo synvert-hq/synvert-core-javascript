@@ -117,6 +117,21 @@ describe("ast node", () => {
     });
   });
 
+  describe("fixIndentToSource", () => {
+    test("gets source code", () => {
+      code = `
+        class FooBar {
+          constructor(props) {
+          }
+        }
+      `;
+      mock({ "code.js": code });
+      const node = parse(code).body.body[0];
+      expect(node.fixIndentToSource()).toBe("constructor(props) {\n}");
+      mock.restore();
+    });
+  });
+
   describe("rewrittenSource", () => {
     test("does not rewrite with unknown property", () => {
       code = `class Synvert {}`;
