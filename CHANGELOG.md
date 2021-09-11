@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.19.2 (2021-09-11)
+
+* Update espree
+
 ## 0.19.1 (2021-09-11)
 
 * Add `Node#fixIndentToSource`
