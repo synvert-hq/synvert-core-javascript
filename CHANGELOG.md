@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.19.1 (2021-09-11)
+
+* Add `Node#fixIndentToSource`
+
 ## 0.19.0 (2021-09-11)
 
 * Add `Configuration.enableEcmaFeaturesJsx`
