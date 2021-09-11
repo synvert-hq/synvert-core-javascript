@@ -37,9 +37,15 @@ describe("ast node", () => {
   });
 
   describe("indent", () => {
-    test("gets column", () => {
-      const node = parse("class FooBar {}").id;
-      expect(node.column()).toBe(6);
+    test("gets indent", () => {
+      code = `
+        class FooBar {
+        }
+      `
+      mock({ "code.js": code });
+      const node = parse(code).id;
+      expect(node.indent()).toBe(8);
+      mock.restore();
     });
   });
 

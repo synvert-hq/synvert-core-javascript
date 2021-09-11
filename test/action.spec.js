@@ -27,9 +27,18 @@ describe("action", () => {
 });
 
 describe("AppendAction", () => {
-  const node = parse(`class FooBar {\n}`);
+  const code = `class FooBar {\n}`;
+  const node = parse(code);
   const instance = new Instance({}, "", function () {});
   instance.currentNode = node;
+
+  beforeEach(() => {
+    mock({ "code.js": code });
+  });
+
+  afterEach(() => {
+    mock.restore();
+  });
 
   describe("single line", () => {
     const action = new AppendAction(instance, "foobar() {}");
@@ -65,9 +74,18 @@ describe("AppendAction", () => {
 });
 
 describe("PrependAction", () => {
-  const node = parse(`class FooBar {\n}`);
+  const code = `class FooBar {\n}`;
+  const node = parse(code);
   const instance = new Instance({}, "", function () {});
   instance.currentNode = node;
+
+  beforeEach(() => {
+    mock({ "code.js": code });
+  });
+
+  afterEach(() => {
+    mock.restore();
+  });
 
   describe("single line", () => {
     const action = new PrependAction(instance, "foobar() {}");
