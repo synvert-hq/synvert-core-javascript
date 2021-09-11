@@ -41,7 +41,7 @@ describe("ast node", () => {
       code = `
         class FooBar {
         }
-      `
+      `;
       mock({ "code.js": code });
       const node = parse(code).id;
       expect(node.indent()).toBe(8);
