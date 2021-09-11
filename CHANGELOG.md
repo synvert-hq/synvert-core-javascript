@@ -1,16 +1,12 @@
 # CHANGELOG
 
-## 0.19.3 (2021-09-11)
+## 0.20.0 (2021-09-12)
 
-* Fix action indent
-
-## 0.19.2 (2021-09-11)
-
-* Update espree
-
-## 0.19.1 (2021-09-11)
-
+* Add `Node#childNodeSource`
 * Add `Node#fixIndentToSource`
+* Match `super`
+* Fix action indent
+* Update espree
 
 ## 0.19.0 (2021-09-11)
 
