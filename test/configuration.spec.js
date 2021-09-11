@@ -23,5 +23,5 @@ describe("Configuration", () => {
     expect(Configuration.enableEcmaFeaturesJsx).toEqual(false);
     Configuration.enableEcmaFeaturesJsx = true;
     expect(Configuration.enableEcmaFeaturesJsx).toEqual(true);
-  })
+  });
 });
