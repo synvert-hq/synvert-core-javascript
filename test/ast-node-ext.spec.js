@@ -128,9 +128,9 @@ describe("ast node", () => {
       code = "class FooBar {}";
       mock({ "code.js": code });
       const node = parse(code);
-      expect(node.childNodeSource('id')).toBe('FooBar');
+      expect(node.childNodeSource("id")).toBe("FooBar");
       mock.restore();
-    })
+    });
   });
 
   describe("fixIndentToSource", () => {
