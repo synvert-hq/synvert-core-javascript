@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.20.1 (2021-09-12)
+
+* Handle array child node in `childNodeRange`
+* Handle function params in `childNodeRange`
+
 ## 0.20.0 (2021-09-12)
 
 * Add `Node#childNodeSource`
