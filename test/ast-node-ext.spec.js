@@ -23,16 +23,18 @@ describe("ast node", () => {
     test("expression with arguments", () => {
       const node = parse("test(foo, bar)");
       expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 14 });
+      expect(node.childNodeRange("expression.arguments.0")).toEqual({ start: 5, end: 8 });
     });
 
     test("method definition", () => {
       const node = parse(`
         class Foobar {
-          async foobar() {
+          async foobar(foo, bar) {
           }
         }
-      `).body.body[0];
-      expect(node.childNodeRange("async")).toEqual({ start: 34, end: 40 });
+      `);
+      expect(node.childNodeRange("body.body.0.async")).toEqual({ start: 34, end: 40 });
+      expect(node.childNodeRange("body.body.0.value.params")).toEqual({ start: 46, end: 56 });
     });
   });
 
