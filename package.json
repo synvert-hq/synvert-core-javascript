@@ -1,6 +1,6 @@
 {
   "name": "synvert-core",
-  "version": "0.20.1",
+  "version": "0.20.2",
   "description": "write javascript code to change javascript code",
   "main": "lib/synvert.js",
   "scripts": {

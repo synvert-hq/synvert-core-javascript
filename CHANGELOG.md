@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.20.2 (2021-09-17)
+
+* Avoid double spaces after `delete` and `remove` actions
+
 ## 0.20.1 (2021-09-12)
 
 * Handle array child node in `childNodeRange`
