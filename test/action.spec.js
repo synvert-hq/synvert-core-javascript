@@ -149,6 +149,14 @@ describe("DeleteAction", () => {
     "expression.arguments",
   ]);
 
+  beforeEach(() => {
+    mock({ "code.js": code });
+  });
+
+  afterEach(() => {
+    mock.restore();
+  });
+
   it("gets beginPos", function () {
     expect(action.beginPos()).toBe(8);
   });
