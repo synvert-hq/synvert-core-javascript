@@ -8,7 +8,10 @@
     "test_watch": "jest --watchAll"
   },
   "author": "Richard Huang",
-  "keywords": ["ast", "rewrite"],
+  "keywords": [
+    "ast",
+    "rewrite"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/xinminlabs/synvert-core-javascript/issues"
@@ -16,10 +19,12 @@
   "homepage": "https://github.com/xinminlabs/synvert-core-javascript#readme",
   "dependencies": {
     "acorn": "^8.4.1",
+    "compare-versions": "^3.6.0",
     "eslint-visitor-keys": "^3.0.0",
     "espree": "github:xinminlabs/espree#add-option-source-file",
     "flat": "^5.0.2",
     "glob": "^7.1.7",
+    "snyk-nodejs-lockfile-parser": "^1.37.0",
     "typy": "^3.3.0"
   },
   "devDependencies": {
