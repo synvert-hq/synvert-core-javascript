@@ -75,4 +75,30 @@ describe("static register", () => {
       expect(subSnippets[0].name).toBe("name1");
     });
   });
+
+  describe("nodeVersion", () => {
+    test("set and get nodeVersion", () => {
+      const rewriter = new Rewriter("group", "name", () => {
+        ifNode("10.14.0")
+
+        withFiles("*.js", function () {})
+      });
+      expect(rewriter.nodeVersion).toBe(undefined)
+      rewriter.process();
+      expect(rewriter.nodeVersion).not.toBe(undefined)
+    });
+  });
+
+  describe("npmVersion", () => {
+    test("set and get npmVersion", () => {
+      const rewriter = new Rewriter("group", "name", () => {
+        ifNpm("compare-versions", ">= 1.0.0")
+
+        withFiles("*.js", function () {})
+      });
+      expect(rewriter.npmVersion).toBe(undefined)
+      rewriter.process();
+      expect(rewriter.npmVersion).not.toBe(undefined)
+    });
+  });
 });
