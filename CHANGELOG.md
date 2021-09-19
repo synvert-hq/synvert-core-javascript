@@ -1,11 +1,10 @@
 # CHANGELOG
 
-## 0.20.2 (2021-09-17)
+## 0.21.0 (2021-09-19)
 
-* Avoid double spaces after `delete` and `remove` actions
-
-## 0.20.1 (2021-09-12)
-
+* Add `ifNode` dsl
+* Add `ifNpm` dsl
+* Squeeze spaces and lines
 * Handle array child node in `childNodeRange`
 * Handle function params in `childNodeRange`
 
