@@ -24,7 +24,6 @@
     "espree": "github:xinminlabs/espree#add-option-source-file",
     "flat": "^5.0.2",
     "glob": "^7.1.7",
-    "snyk-nodejs-lockfile-parser": "^1.37.0",
     "typy": "^3.3.0"
   },
   "devDependencies": {
