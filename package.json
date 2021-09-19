@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/xinminlabs/synvert-core-javascript#readme",
   "dependencies": {
+    "@yarnpkg/lockfile": "^1.1.0",
     "acorn": "^8.4.1",
     "compare-versions": "^3.6.0",
     "eslint-visitor-keys": "^3.0.0",
