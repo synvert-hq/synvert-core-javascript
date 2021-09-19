@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.21.1 (2021-09-19)
+
+* Compatible with npm lockfile version 1 and 2
+
 ## 0.21.0 (2021-09-19)
 
 * Add `ifNode` dsl
