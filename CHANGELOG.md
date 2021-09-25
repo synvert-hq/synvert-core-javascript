@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.21.3 (2021-09-25)
+
+* Return the range of source code in `rewrttenSource`
+
 ## 0.21.2 (2021-09-24)
 
 * Fix `remove` endPos
