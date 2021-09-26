@@ -29,7 +29,7 @@ describe("static register", () => {
   describe("process", () => {
     test("writes new code to file", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        withFiles("*.js", function () {
+        withinFiles("*.js", function () {
           withNode({ type: "ClassDeclaration", id: { name: "FooBar" } }, () => {
             replace("id", { with: "Synvert" });
           });
@@ -81,7 +81,7 @@ describe("static register", () => {
       const rewriter = new Rewriter("group", "name", () => {
         ifNode("10.14.0");
 
-        withFiles("*.js", function () {});
+        withinFiles("*.js", function () {});
       });
       expect(rewriter.nodeVersion).toBe(undefined);
       rewriter.process();
@@ -94,7 +94,7 @@ describe("static register", () => {
       const rewriter = new Rewriter("group", "name", () => {
         ifNpm("compare-versions", ">= 1.0.0");
 
-        withFiles("*.js", function () {});
+        withinFiles("*.js", function () {});
       });
       expect(rewriter.npmVersion).toBe(undefined);
       rewriter.process();
