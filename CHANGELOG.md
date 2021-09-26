@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.22.1 (2021-09-26)
+
+* Update espree github url
+
 ## 0.22.0 (2021-09-25)
 
 * Export `Synvert.version`
