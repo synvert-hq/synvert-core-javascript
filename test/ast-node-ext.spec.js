@@ -108,6 +108,18 @@ describe("ast node", () => {
       expect(node.match({ type: "ClassDeclaration", id: { not: "FooBar" } })).toBe(true);
     });
 
+    test("matches in", () => {
+      code = `class Synvert {}`;
+      node = parse(code);
+      expect(node.match({ type: "ClassDeclaration", id: { in: ["FooBar", "Synvert"] } })).toBe(true);
+    });
+
+    test("matches notIn", () => {
+      code = `class Synvert {}`;
+      node = parse(code);
+      expect(node.match({ type: "ClassDeclaration", id: { notIn: ["Foo", "Bar"] } })).toBe(true);
+    });
+
     test("matches array last", () => {
       code = `var obj = { foo: 'bar' }`;
       node = parse(code);
