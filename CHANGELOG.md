@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.24.0 (2021-09-29)
+
+* Match `in` and `notIn` array value
+
 ## 0.23.0 (2021-09-26)
 
 * Drop `withFiles`, add `withinFile` dsl
