@@ -89,7 +89,7 @@ describe("PrependAction", () => {
 
     beforeEach(() => {
       action = new PrependAction(instance, "foobar() {}").process();
-    })
+    });
 
     it("gets beginPos", function () {
       expect(action.beginPos).toBe(15);
@@ -163,7 +163,11 @@ describe("DeleteAction", () => {
   });
 
   beforeEach(() => {
-    action = new DeleteAction(instance, ["expression.callee.dot", "expression.callee.property", "expression.arguments"]).process();
+    action = new DeleteAction(instance, [
+      "expression.callee.dot",
+      "expression.callee.property",
+      "expression.arguments",
+    ]).process();
   });
 
   it("gets beginPos", function () {
