@@ -15,17 +15,6 @@ const {
 
 const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
 
-// describe("action", () => {
-//   const node = parse("class FooBar {}");
-//   const instance = new Instance({}, "", function () {});
-//   instance.currentNode = node;
-//   const action = new Action(instance, "{{id}}");
-
-//   it("gets rewrittenSource", function () {
-//     expect(action.rewrittenSource()).toBe("FooBar");
-//   });
-// });
-
 describe("AppendAction", () => {
   const code = `class FooBar {\n}`;
   const node = parse(code);
