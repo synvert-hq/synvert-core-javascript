@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.25.0 (2021-10-01)
+
+* Remove unused comma after delete/remove action
+
 ## 0.24.0 (2021-09-29)
 
 * Match `in` and `notIn` array value
