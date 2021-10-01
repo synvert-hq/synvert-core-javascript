@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.26.0 (2021-10-02)
+
+* Add `ifAll` dsl
+
 ## 0.25.0 (2021-10-01)
 
 * Remove unused comma after delete/remove action
