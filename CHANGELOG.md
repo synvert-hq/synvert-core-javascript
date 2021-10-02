@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.27.0 (2021-10-02)
+
+* Support `ImportDeclaration` specifiers `childNodeRange`
+
 ## 0.26.0 (2021-10-02)
 
 * Add `ifAll` dsl
