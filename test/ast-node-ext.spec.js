@@ -3,7 +3,7 @@ const mock = require("mock-fs");
 
 require("../lib/ast-node-ext");
 
-const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
+const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceType: "module", sourceFile: "code.js" }).body[0];
 
 describe("ast node", () => {
   describe("childNodeRange", () => {
@@ -35,6 +35,14 @@ describe("ast node", () => {
       `);
       expect(node.childNodeRange("body.body.0.async")).toEqual({ start: 34, end: 40 });
       expect(node.childNodeRange("body.body.0.value.params")).toEqual({ start: 46, end: 56 });
+    });
+
+    test("importDeclaration", () => {
+      const code = `import x, { a, b } from 'y';`;
+      const node = parse(code);
+      mock({ "code.js": code });
+      expect(node.childNodeRange("specifiers")).toEqual({ start: 10, end: 18 });
+      mock.restore();
     });
   });
 
