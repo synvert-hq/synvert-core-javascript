@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.27.1 (2021-10-02)
+
+* `options.match` can be function for `ifAll` dsl
+
 ## 0.27.0 (2021-10-02)
 
 * Support `ImportDeclaration` specifiers `childNodeRange`
