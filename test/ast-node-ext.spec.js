@@ -37,12 +37,18 @@ describe("ast node", () => {
       expect(node.childNodeRange("body.body.0.value.params")).toEqual({ start: 46, end: 56 });
     });
 
-    test("importDeclaration", () => {
+    test("import declaration", () => {
       const code = `import x, { a, b } from 'y';`;
       const node = parse(code);
       mock({ "code.js": code });
       expect(node.childNodeRange("specifiers")).toEqual({ start: 10, end: 18 });
       mock.restore();
+    });
+
+    test("property", () => {
+      const code = `const foobar = { foo: 'bar' }`;
+      const node = parse(code)
+      expect(node.childNodeRange("declarations.0.init.properties.0.semicolon")).toEqual({ start: 20, end: 21 });
     });
   });
 
