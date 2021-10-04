@@ -3,7 +3,8 @@ const mock = require("mock-fs");
 
 require("../lib/ast-node-ext");
 
-const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceType: "module", sourceFile: "code.js" }).body[0];
+const parse = (code) =>
+  espree.parse(code, { ecmaVersion: "latest", loc: true, sourceType: "module", sourceFile: "code.js" }).body[0];
 
 describe("ast node", () => {
   describe("childNodeRange", () => {
@@ -47,7 +48,7 @@ describe("ast node", () => {
 
     test("property", () => {
       const code = `const foobar = { foo: 'bar' }`;
-      const node = parse(code)
+      const node = parse(code);
       expect(node.childNodeRange("declarations.0.init.properties.0.semicolon")).toEqual({ start: 20, end: 21 });
     });
   });
