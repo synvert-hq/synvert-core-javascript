@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.28.3 (2021-10-04)
+
+* Do not remove comma if begin str is `:`
+
 ## 0.28.2 (2021-10-04)
 
 * Handle trailing comma when checking take whole line
