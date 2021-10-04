@@ -1,15 +1,8 @@
 # CHANGELOG
 
-## 0.28.3 (2021-10-04)
+## 0.29.0 (2021-10-04)
 
-* Do not remove comma if begin str is `:`
-
-## 0.28.2 (2021-10-04)
-
-* Handle trailing comma when checking take whole line
-
-## 0.28.1 (2021-10-04)
-
+* Improve remove comma function
 * Export `ALL_FILES` constant
 
 ## 0.28.0 (2021-10-03)
