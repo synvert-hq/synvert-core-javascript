@@ -139,7 +139,7 @@ describe("IfAllCondition", () => {
   const source = `
     import { a, b } from 'x';
   `;
-  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceType: 'module', sourceFile: "code.js" });
+  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceType: "module", sourceFile: "code.js" });
   const instance = new Instance({}, "", function () {});
 
   describe("process", () => {
@@ -152,9 +152,13 @@ describe("IfAllCondition", () => {
       new IfAllCondition(
         instance,
         { type: "ImportDefaultSpecifier" },
-        { match: { local: { name: { in: ['a', 'b'] } } } },
-        function () { run = true },
-        function () { run = true }
+        { match: { local: { name: { in: ["a", "b"] } } } },
+        function () {
+          run = true;
+        },
+        function () {
+          run = true;
+        }
       ).process();
       expect(run).toBe(false);
     });
@@ -164,9 +168,13 @@ describe("IfAllCondition", () => {
       new IfAllCondition(
         instance,
         { type: "ImportSpecifier" },
-        { match: { local: { name: { in: ['a', 'b'] } } } },
-        function () { run = true },
-        function () { run = false }
+        { match: { local: { name: { in: ["a", "b"] } } } },
+        function () {
+          run = true;
+        },
+        function () {
+          run = false;
+        }
       ).process();
       expect(run).toBe(true);
     });
@@ -176,9 +184,13 @@ describe("IfAllCondition", () => {
       new IfAllCondition(
         instance,
         { type: "ImportSpecifier" },
-        { match: { local: { name: { in: ['c', 'd'] } } } },
-        function () { run = false },
-        function () { run = true }
+        { match: { local: { name: { in: ["c", "d"] } } } },
+        function () {
+          run = false;
+        },
+        function () {
+          run = true;
+        }
       ).process();
       expect(run).toBe(true);
     });
