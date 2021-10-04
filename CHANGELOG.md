@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 0.28.0
+## 0.28.1 (2021-10-04)
+
+* Export `ALL_FILES` constant
+
+## 0.28.0 (2021-10-03)
 
 * Support `Property` `semicolon` in `childNodeRange`
 * `options.match` can be function for `ifAll` dsl
