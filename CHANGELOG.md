@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.28.2 (2021-10-04)
+
+* Handle trailing comma when checking take whole line
+
 ## 0.28.1 (2021-10-04)
 
 * Export `ALL_FILES` constant
