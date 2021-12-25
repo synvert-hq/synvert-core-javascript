@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.29.1 (2021-12-25)
+
+* Use our own fork eslint-visitor-keys
+
 ## 0.29.0 (2021-10-04)
 
 * Improve remove comma function
