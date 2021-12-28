@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.29.2 (2021-25-28)
+
+* Dedent multiline code
+
 ## 0.29.1 (2021-12-25)
 
 * Use our own fork eslint-visitor-keys
