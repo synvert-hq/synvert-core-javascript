@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 0.29.2 (2021-25-28)
+## 0.29.3 (2021-12-28)
+
+* Do not add indent if line code is empty
+
+## 0.29.2 (2021-12-28)
 
 * Dedent multiline code
 
