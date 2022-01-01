@@ -1,16 +1,10 @@
 # CHANGELOG
 
-## 0.29.3 (2021-12-28)
+## 0.30.0 (2022-01-01)
 
-* Do not add indent if line code is empty
-
-## 0.29.2 (2021-12-28)
-
+* Add `Array#toSource`
 * Dedent multiline code
-
-## 0.29.1 (2021-12-25)
-
-* Use our own fork eslint-visitor-keys
+* Use our own fork `eslint-visitor-keys`
 
 ## 0.29.0 (2021-10-04)
 
