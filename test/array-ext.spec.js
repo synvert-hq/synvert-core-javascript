@@ -28,7 +28,7 @@ describe("array", () => {
     mock({ "code.js": code });
     const node = parse(code);
     const array = node.body.body;
-    expect(array.toSource()).toBe(`        async foobar(foo, bar) {\n        }`);
+    expect(array.toSource()).toBe(`async foobar(foo, bar) {\n        }`);
     mock.restore();
   });
 });
