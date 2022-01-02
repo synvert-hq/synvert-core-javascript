@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.30.1(2022-01-02)
+
+* Do not add indent to `Array#toSource`
+
 ## 0.30.0 (2022-01-01)
 
 * Add `Array#toSource`
