@@ -31,4 +31,18 @@ describe("array", () => {
     expect(array.toSource()).toBe(`async foobar(foo, bar) {\n        }`);
     mock.restore();
   });
+
+  test("fixIndentToSource", () => {
+    const code = `
+      class Foobar {
+        foo() {}
+        bar() {}
+      }
+    `
+    mock({ "code.js": code });
+    const node = parse(code);
+    const array = node.body.body;
+    expect(array.fixIndentToSource()).toBe(`foo() {}\nbar() {}`);
+    mock.restore();
+  });
 });
