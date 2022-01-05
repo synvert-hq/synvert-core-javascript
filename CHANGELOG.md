@@ -1,8 +1,11 @@
 # CHANGELOG
 
-## 0.30.1(2022-01-02)
+## 0.31.0 (2022-01-05)
 
-* Do not add indent to `Array#toSource`
+* Add `Array#fixIndentToSource`
+* Catch `SyntaxError`
+* Add `autoIndent` option to `ReplaceWithAction`
+* Add `global.indent` and `global.dedent`
 
 ## 0.30.0 (2022-01-01)
 
