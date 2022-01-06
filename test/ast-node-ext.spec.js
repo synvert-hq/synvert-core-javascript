@@ -135,10 +135,40 @@ describe("ast node", () => {
       expect(node.match({ type: "ClassDeclaration", id: { notIn: ["Foo", "Bar"] } })).toBe(true);
     });
 
-    test("matches array last", () => {
+    test("matches array first", () => {
       code = `var obj = { foo: 'bar' }`;
       node = parse(code);
       expect(node.match({ declarations: { first: { id: "obj" } } })).toBe(true);
+    });
+
+    test("matches array last", () => {
+      code = `var obj = { foo: 'bar' }`;
+      node = parse(code);
+      expect(node.match({ declarations: { last: { id: "obj" } } })).toBe(true);
+    });
+
+    test("matches gt", () => {
+      code = `import React, { Component, Fragment } from 'react'`
+      node = parse(code);
+      expect(node.match({ specifiers: { length: { gt: 2 } } })).toBe(true);
+    });
+
+    test("matches gte", () => {
+      code = `import React, { Component, Fragment } from 'react'`
+      node = parse(code);
+      expect(node.match({ specifiers: { length: { gte: 3 } } })).toBe(true);
+    });
+
+    test("matches lt", () => {
+      code = `import React, { Component, Fragment } from 'react'`
+      node = parse(code);
+      expect(node.match({ specifiers: { length: { lt: 4 } } })).toBe(true);
+    });
+
+    test("matches lte", () => {
+      code = `import React, { Component, Fragment } from 'react'`
+      node = parse(code);
+      expect(node.match({ specifiers: { length: { lte: 3 } } })).toBe(true);
     });
   });
 
