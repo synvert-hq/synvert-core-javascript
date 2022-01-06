@@ -25,7 +25,7 @@ it("dedent", () => {
         test()
       }
     }
-  `
+  `;
   const newCode = `
 class Foo {
   bar() {
