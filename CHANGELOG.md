@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.32.0 (2022-01-06)
+
+* Match `gt`, `gte`, `lt` and `lte` value.
+
 ## 0.31.0 (2022-01-05)
 
 * Add `Array#fixIndentToSource`
