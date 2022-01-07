@@ -5,7 +5,7 @@
   "main": "lib/synvert.js",
   "scripts": {
     "test": "jest",
-    "test_watch": "jest --watchAll"
+    "test_watch": "jest --watch"
   },
   "author": "Richard Huang",
   "keywords": [
