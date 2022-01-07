@@ -21,10 +21,16 @@ describe("ast node", () => {
       expect(node.childNodeRange("expression.arguments")).toEqual({ start: 12, end: 14 });
     });
 
-    test("expression with arguments", () => {
+    test("expression with arguments index", () => {
       const node = parse("test(foo, bar)");
       expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 14 });
       expect(node.childNodeRange("expression.arguments.0")).toEqual({ start: 5, end: 8 });
+    });
+
+    test("expression with arguments function", () => {
+      const node = parse("test(foo, bar)");
+      expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 14 });
+      expect(node.childNodeRange("expression.arguments.first")).toEqual({ start: 5, end: 8 });
     });
 
     test("method definition", () => {
