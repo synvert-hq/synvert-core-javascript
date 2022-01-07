@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.33.0 (2022-01-07)
+
+* Remove braces
+* Support function name in `Node#childNodeRange`
+
 ## 0.32.0 (2022-01-06)
 
 * Match `gt`, `gte`, `lt` and `lte` value.
