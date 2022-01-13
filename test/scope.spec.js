@@ -34,7 +34,12 @@ describe("WithinScope", () => {
 });
 
 describe("GotoScope", () => {
-  const source = `class FooBar {}`;
+  const source = `
+    class FooBar {
+      foo() {}
+      bar() {}
+    }
+  `;
   const node = parse(source);
   const instance = new Instance({}, "", function () {});
 
@@ -54,6 +59,14 @@ describe("GotoScope", () => {
     test("calls function if there is a matching node", () => {
       let run = false;
       new GotoScope(instance, "id", function () {
+        run = true;
+      }).process();
+      expect(run).toBe(true);
+    });
+
+    test("calls function if there is a matching node", () => {
+      let run = false;
+      new GotoScope(instance, "body.body.last", function () {
         run = true;
       }).process();
       expect(run).toBe(true);
