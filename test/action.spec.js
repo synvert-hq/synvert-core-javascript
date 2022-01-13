@@ -131,20 +131,40 @@ describe("InsertAction", () => {
   instance.currentNode = node;
   let action;
 
-  beforeEach(() => {
-    action = new InsertAction(instance, "::", { at: "beginning" }).process();
+  describe("at beginning", () => {
+    beforeEach(() => {
+      action = new InsertAction(instance, "::", { at: "beginning" }).process();
+    });
+
+    it("gets beginPos", function () {
+      expect(action.beginPos).toBe(0);
+    });
+
+    it("gets endPos", function () {
+      expect(action.endPos).toBe(0);
+    });
+
+    it("gets rewrittenCode", function () {
+      expect(action.rewrittenCode).toBe("::");
+    });
   });
 
-  it("gets beginPos", function () {
-    expect(action.beginPos).toBe(0);
-  });
+  describe("at end of object", () => {
+    beforeEach(() => {
+      action = new InsertAction(instance, ".bar", { to: "expression.object", at: "end" }).process();
+    });
 
-  it("gets endPos", function () {
-    expect(action.endPos).toBe(0);
-  });
+    it("gets beginPos", function () {
+      expect(action.beginPos).toBe("this".length);
+    });
 
-  it("gets rewrittenCode", function () {
-    expect(action.rewrittenCode).toBe("::");
+    it("gets endPos", function () {
+      expect(action.beginPos).toBe("this".length);
+    });
+
+    it("gets rewrittenCode", function () {
+      expect(action.rewrittenCode).toBe(".bar");
+    });
   });
 });
 
