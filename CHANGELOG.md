@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.34.0 (2022-01-14)
+
+* Add `to` option to `InsertAction`
+* Add `Instance#currentFilePath`
+
 ## 0.33.0 (2022-01-07)
 
 * Remove braces
