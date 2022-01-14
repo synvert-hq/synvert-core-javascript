@@ -100,95 +100,103 @@ describe("ast node", () => {
 
   describe("match", () => {
     test("matches class id", () => {
-      code = `class Synvert {}`;
-      node = parse(code);
+      const code = `class Synvert {}`;
+      const node = parse(code);
       expect(node.match({ type: "ClassDeclaration", id: "Synvert" })).toBe(true);
     });
 
     test("matches class id with name", () => {
-      code = `class Synvert {}`;
-      node = parse(code);
+      const code = `class Synvert {}`;
+      const node = parse(code);
       expect(node.match({ type: "ClassDeclaration", id: { name: "Synvert" } })).toBe(true);
     });
 
     test("matches this", () => {
-      code = `this.foobar.bind(this)`;
-      node = parse(code).expression;
+      const code = `this.foobar.bind(this)`;
+      const node = parse(code).expression;
       expect(node.match({ callee: { object: { object: "this" } }, arguments: { 0: "this" } })).toBe(true);
     });
 
-    test("matches regexp", () => {
-      code = `"foobar"`;
-      node = parse(code).expression;
+    test("matches regexp with string", () => {
+      const code = `"foobar"`;
+      const node = parse(code).expression;
       expect(node.match({ type: "Literal", value: /foo/ })).toBe(true);
     });
 
-    test("matches regexp with toSource", () => {
-      code = `foo.bar`;
+    test.only("matches regexp with number", () => {
+      const code = `10`;
       mock({ "code.js": code });
-      node = parse(code).expression;
+      const node = parse(code).expression;
+      expect(node.match({ type: "Literal", value: /1/ })).toBe(true);
+      mock.restore();
+    });
+
+    test("matches regexp with toSource", () => {
+      const code = `foo.bar`;
+      mock({ "code.js": code });
+      const node = parse(code).expression;
       expect(node.match({ type: "MemberExpression", object: /foo/ })).toBe(true);
       mock.restore();
     });
 
     test("matches not", () => {
-      code = `class Synvert {}`;
-      node = parse(code);
+      const code = `class Synvert {}`;
+      const node = parse(code);
       expect(node.match({ type: "ClassDeclaration", id: { not: "FooBar" } })).toBe(true);
     });
 
     test("matches in", () => {
-      code = `class Synvert {}`;
-      node = parse(code);
+      const code = `class Synvert {}`;
+      const node = parse(code);
       expect(node.match({ type: "ClassDeclaration", id: { in: ["FooBar", "Synvert"] } })).toBe(true);
     });
 
     test("matches notIn", () => {
-      code = `class Synvert {}`;
-      node = parse(code);
+      const code = `class Synvert {}`;
+      const node = parse(code);
       expect(node.match({ type: "ClassDeclaration", id: { notIn: ["Foo", "Bar"] } })).toBe(true);
     });
 
     test("matches array first", () => {
-      code = `var obj = { foo: 'bar' }`;
-      node = parse(code);
+      const code = `var obj = { foo: 'bar' }`;
+      const node = parse(code);
       expect(node.match({ declarations: { first: { id: "obj" } } })).toBe(true);
     });
 
     test("matches array last", () => {
-      code = `var obj = { foo: 'bar' }`;
-      node = parse(code);
+      const code = `var obj = { foo: 'bar' }`;
+      const node = parse(code);
       expect(node.match({ declarations: { last: { id: "obj" } } })).toBe(true);
     });
 
     test("matches gt", () => {
-      code = `import React, { Component, Fragment } from 'react'`
-      node = parse(code);
+      const code = `import React, { Component, Fragment } from 'react'`
+      const node = parse(code);
       expect(node.match({ specifiers: { length: { gt: 2 } } })).toBe(true);
     });
 
     test("matches gte", () => {
-      code = `import React, { Component, Fragment } from 'react'`
-      node = parse(code);
+      const code = `import React, { Component, Fragment } from 'react'`
+      const node = parse(code);
       expect(node.match({ specifiers: { length: { gte: 3 } } })).toBe(true);
     });
 
     test("matches lt", () => {
-      code = `import React, { Component, Fragment } from 'react'`
-      node = parse(code);
+      const code = `import React, { Component, Fragment } from 'react'`
+      const node = parse(code);
       expect(node.match({ specifiers: { length: { lt: 4 } } })).toBe(true);
     });
 
     test("matches lte", () => {
-      code = `import React, { Component, Fragment } from 'react'`
-      node = parse(code);
+      const code = `import React, { Component, Fragment } from 'react'`
+      const node = parse(code);
       expect(node.match({ specifiers: { length: { lte: 3 } } })).toBe(true);
     });
   });
 
   describe("toSource", () => {
     test("gets source code", () => {
-      code = "class FooBar {}";
+      const code = "class FooBar {}";
       mock({ "code.js": code });
       const node = parse(code);
       expect(node.toSource()).toBe(code);
@@ -198,7 +206,7 @@ describe("ast node", () => {
 
   describe("childNodeSource", () => {
     test("gets child node source code", () => {
-      code = "class FooBar {}";
+      const code = "class FooBar {}";
       mock({ "code.js": code });
       const node = parse(code);
       expect(node.childNodeSource("id")).toBe("FooBar");
@@ -208,7 +216,7 @@ describe("ast node", () => {
 
   describe("fixIndentToSource", () => {
     test("gets source code", () => {
-      code = `
+      const code = `
         class FooBar {
           constructor(props) {
           }
@@ -223,21 +231,21 @@ describe("ast node", () => {
 
   describe("rewrittenSource", () => {
     test("does not rewrite with unknown property", () => {
-      code = `class Synvert {}`;
-      node = parse(code);
+      const code = `class Synvert {}`;
+      const node = parse(code);
       expect(node.rewrittenSource("{{foobar}}")).toBe("{{foobar}}");
     });
 
     test("rewrites with known property", () => {
-      code = `class Synvert {}`;
-      node = parse(code);
+      const code = `class Synvert {}`;
+      const node = parse(code);
       expect(node.rewrittenSource("{{id}}")).toBe("Synvert");
     });
 
     test("rewrites for arguments", () => {
-      code = `synvert('foo', 'bar')`;
+      const code = `synvert('foo', 'bar')`;
       mock({ "code.js": code });
-      node = parse(code);
+      const node = parse(code);
       expect(node.rewrittenSource("{{expression.arguments}}")).toBe("'foo', 'bar'");
       mock.restore();
     });
