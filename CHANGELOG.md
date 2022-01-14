@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.34.1 (2022-01-14)
+
+* Match regexp on node source
+
 ## 0.34.0 (2022-01-14)
 
 * Add `to` option to `InsertAction`
