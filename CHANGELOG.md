@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.34.2 (2022-01-14)
+
+* Match regexp on number
+
 ## 0.34.1 (2022-01-14)
 
 * Match regexp on node source
