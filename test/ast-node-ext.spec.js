@@ -123,6 +123,14 @@ describe("ast node", () => {
       expect(node.match({ type: "Literal", value: /foo/ })).toBe(true);
     });
 
+    test("matches regexp with toSource", () => {
+      code = `foo.bar`;
+      mock({ "code.js": code });
+      node = parse(code).expression;
+      expect(node.match({ type: "MemberExpression", object: /foo/ })).toBe(true);
+      mock.restore();
+    });
+
     test("matches not", () => {
       code = `class Synvert {}`;
       node = parse(code);
