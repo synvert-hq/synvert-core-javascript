@@ -170,25 +170,25 @@ describe("ast node", () => {
     });
 
     test("matches gt", () => {
-      const code = `import React, { Component, Fragment } from 'react'`
+      const code = `import React, { Component, Fragment } from 'react'`;
       const node = parse(code);
       expect(node.match({ specifiers: { length: { gt: 2 } } })).toBe(true);
     });
 
     test("matches gte", () => {
-      const code = `import React, { Component, Fragment } from 'react'`
+      const code = `import React, { Component, Fragment } from 'react'`;
       const node = parse(code);
       expect(node.match({ specifiers: { length: { gte: 3 } } })).toBe(true);
     });
 
     test("matches lt", () => {
-      const code = `import React, { Component, Fragment } from 'react'`
+      const code = `import React, { Component, Fragment } from 'react'`;
       const node = parse(code);
       expect(node.match({ specifiers: { length: { lt: 4 } } })).toBe(true);
     });
 
     test("matches lte", () => {
-      const code = `import React, { Component, Fragment } from 'react'`
+      const code = `import React, { Component, Fragment } from 'react'`;
       const node = parse(code);
       expect(node.match({ specifiers: { length: { lte: 3 } } })).toBe(true);
     });
