@@ -38,7 +38,7 @@ describe("array", () => {
         foo() {}
         bar() {}
       }
-    `
+    `;
     mock({ "code.js": code });
     const node = parse(code);
     const array = node.body.body;

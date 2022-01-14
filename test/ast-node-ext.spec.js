@@ -162,25 +162,25 @@ describe("ast node", () => {
     });
 
     test("matches gt", () => {
-      code = `import React, { Component, Fragment } from 'react'`
+      code = `import React, { Component, Fragment } from 'react'`;
       node = parse(code);
       expect(node.match({ specifiers: { length: { gt: 2 } } })).toBe(true);
     });
 
     test("matches gte", () => {
-      code = `import React, { Component, Fragment } from 'react'`
+      code = `import React, { Component, Fragment } from 'react'`;
       node = parse(code);
       expect(node.match({ specifiers: { length: { gte: 3 } } })).toBe(true);
     });
 
     test("matches lt", () => {
-      code = `import React, { Component, Fragment } from 'react'`
+      code = `import React, { Component, Fragment } from 'react'`;
       node = parse(code);
       expect(node.match({ specifiers: { length: { lt: 4 } } })).toBe(true);
     });
 
     test("matches lte", () => {
-      code = `import React, { Component, Fragment } from 'react'`
+      code = `import React, { Component, Fragment } from 'react'`;
       node = parse(code);
       expect(node.match({ specifiers: { length: { lte: 3 } } })).toBe(true);
     });
