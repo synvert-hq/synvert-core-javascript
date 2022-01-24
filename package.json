@@ -22,7 +22,7 @@
     "acorn": "^8.4.1",
     "compare-versions": "^3.6.0",
     "dedent": "^0.7.0",
-    "eslint-visitor-keys": "xinminlabs/eslint-visitor-keys#add-jsx-fragment",
+    "eslint-visitor-keys": "^3.2.0",
     "espree": "git://github.com/xinminlabs/espree#add-option-source-file",
     "flat": "^5.0.2",
     "glob": "^7.1.7",
