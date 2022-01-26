@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.34.3 (2022-01-26)
+
+* Update `eslint-visitor-keys` to 3.2.0
+* Update `espree`
+
 ## 0.34.2 (2022-01-14)
 
 * Match regexp on number
