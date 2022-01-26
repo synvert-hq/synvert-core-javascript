@@ -1,4 +1,4 @@
-const espree = require("espree");
+const espree = require("xinminlabs-espree");
 
 const { WithinScope, GotoScope } = require("../lib/scope");
 const Instance = require("../lib/instance");

@@ -23,7 +23,7 @@
     "compare-versions": "^3.6.0",
     "dedent": "^0.7.0",
     "eslint-visitor-keys": "^3.2.0",
-    "espree": "git://github.com/xinminlabs/espree#add-option-source-file",
+    "xinminlabs-espree": "^9.3.0",
     "flat": "^5.0.2",
     "glob": "^7.1.7",
     "typy": "^3.3.0"

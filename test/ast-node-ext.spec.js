@@ -1,4 +1,4 @@
-const espree = require("espree");
+const espree = require("xinminlabs-espree");
 const mock = require("mock-fs");
 
 require("../lib/ast-node-ext");

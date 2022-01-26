@@ -1,4 +1,4 @@
-const espree = require("espree");
+const espree = require("xinminlabs-espree");
 
 const { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition } = require("../lib/condition");
 const Instance = require("../lib/instance");
