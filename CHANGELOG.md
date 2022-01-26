@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.35.1 (2022-01-26)
+
+* Set and get rewriter `options`.
+
 ## 0.35.0 (2022-01-26)
 
 * Use `xinminlabs-espree` instead of `espree`
