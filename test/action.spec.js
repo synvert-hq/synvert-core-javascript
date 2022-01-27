@@ -3,7 +3,6 @@ const mock = require("mock-fs");
 
 const Instance = require("../lib/instance");
 const {
-  Action,
   AppendAction,
   PrependAction,
   InsertAction,
@@ -11,6 +10,7 @@ const {
   RemoveAction,
   ReplaceAction,
   ReplaceWithAction,
+  CommentOutAction,
 } = require("../lib/action");
 
 const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
@@ -316,5 +316,42 @@ describe("ReplaceWithAction", () => {
 
   it("gets rewrittenCode", function () {
     expect(action.rewrittenCode).toBe("Boolean(foobar)");
+  });
+});
+
+describe("CommentOutAction", () => {
+  const code = `
+    function foo(props) {
+      this.bar = this.bar.bind(this);
+    }
+  `.trim();
+  const node = parse(code);
+  const instance = new Instance({}, "", function () {});
+  instance.currentNode = node;
+  let action;
+
+  beforeEach(() => {
+    mock({ "code.js": code });
+    action = new CommentOutAction({ currentNode: node }).process();
+  });
+
+  afterEach(() => {
+    mock.restore();
+  });
+
+  it("gets beginPos", function () {
+    expect(action.beginPos).toBe(0);
+  });
+
+  it("gets endPos", function () {
+    expect(action.endPos).toBe(65);
+  });
+
+  it("gets rewrittenCode", function () {
+    expect(action.rewrittenCode).toBe('    ' + `
+    // function foo(props) {
+    //   this.bar = this.bar.bind(this);
+    // }
+    `.trim());
   });
 });
