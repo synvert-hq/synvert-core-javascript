@@ -348,10 +348,13 @@ describe("CommentOutAction", () => {
   });
 
   it("gets rewrittenCode", function () {
-    expect(action.rewrittenCode).toBe('    ' + `
+    expect(action.rewrittenCode).toBe(
+      "    " +
+        `
     // function foo(props) {
     //   this.bar = this.bar.bind(this);
     // }
-    `.trim());
+    `.trim()
+    );
   });
 });
