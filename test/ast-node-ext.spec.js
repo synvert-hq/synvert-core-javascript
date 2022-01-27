@@ -123,7 +123,7 @@ describe("ast node", () => {
       expect(node.match({ type: "Literal", value: /foo/ })).toBe(true);
     });
 
-    test.only("matches regexp with number", () => {
+    test("matches regexp with number", () => {
       const code = `10`;
       mock({ "code.js": code });
       const node = parse(code).expression;
