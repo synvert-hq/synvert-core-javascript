@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## 0.35.1 (2022-01-26)
+## 0.36.0 (2022-01-27)
 
-* Set and get rewriter `options`.
+* Process single file
+* Set and get rewriter `options`
 
 ## 0.35.0 (2022-01-26)
 
