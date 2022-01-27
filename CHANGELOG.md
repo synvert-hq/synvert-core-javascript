@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.36.1 (2022-01-27)
+
+* Add `minimatch` to check path
+
 ## 0.36.0 (2022-01-27)
 
 * Process single file
