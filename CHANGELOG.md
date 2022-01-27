@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.36.2 (2022-01-27)
+
+* Set currentFilePath as absolute path
+
 ## 0.36.1 (2022-01-27)
 
 * Add `minimatch` to check path
