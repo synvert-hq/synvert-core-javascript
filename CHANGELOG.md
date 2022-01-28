@@ -1,11 +1,11 @@
 # CHANGELOG
 
-## 0.36.2 (2022-01-27)
+## 0.37.0 (2022-01-28)
 
+* Strict rewritten code regex
+* Fix fixIndentToSource when end indent does not match start indent
+* Add `commentOut` action
 * Set currentFilePath as absolute path
-
-## 0.36.1 (2022-01-27)
-
 * Add `minimatch` to check path
 
 ## 0.36.0 (2022-01-27)
