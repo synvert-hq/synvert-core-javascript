@@ -5,11 +5,9 @@ const Instance = require("../lib/instance");
 
 describe("IfExistCondition", () => {
   const source = `
-    'use strict'
-
-    this.foobar
+    $.ajax({ url, method })
   `;
-  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" });
+  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
   const instance = new Instance({}, "", function () {});
 
   describe("process", () => {
@@ -21,7 +19,7 @@ describe("IfExistCondition", () => {
       let run = false;
       new IfExistCondition(
         instance,
-        { type: "ExpressionStatement", expression: { type: "Literal", value: "strict" } },
+        { type: "MemberExpression", object: "jQuery", property: "ajax" },
         function () {
           run = true;
         }
@@ -33,7 +31,20 @@ describe("IfExistCondition", () => {
       let run = false;
       new IfExistCondition(
         instance,
-        { type: "ExpressionStatement", expression: { type: "Literal", value: "use strict" } },
+        { type: "MemberExpression", object: "$", property: "ajax" },
+        function () {
+          run = true;
+        }
+      ).process();
+      expect(run).toBe(true);
+    });
+
+    test("calls function if there is a matching node in child node", () => {
+      let run = false;
+      new IfExistCondition(
+        instance,
+        { type: "MemberExpression", object: "$", property: "ajax" },
+        { in: 'expression' },
         function () {
           run = true;
         }
@@ -45,11 +56,9 @@ describe("IfExistCondition", () => {
 
 describe("UnlessExistCondition", () => {
   const source = `
-    'use strict'
-
-    this.foobar
+    $.ajax({ url, method })
   `;
-  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" });
+  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
   const instance = new Instance({}, "", function () {});
 
   describe("process", () => {
@@ -57,11 +66,11 @@ describe("UnlessExistCondition", () => {
       instance.currentNode = node;
     });
 
-    test("does not call function if no matching node", () => {
+    test("calls function if no matching node", () => {
       let run = false;
       new UnlessExistCondition(
         instance,
-        { type: "ExpressionStatement", expression: { type: "Literal", value: "strict" } },
+        { type: "MemberExpression", object: "jQuery", property: "ajax" },
         function () {
           run = true;
         }
@@ -69,16 +78,29 @@ describe("UnlessExistCondition", () => {
       expect(run).toBe(true);
     });
 
-    test("calls function if there is a matching node", () => {
+    test("does not call function if there is a matching node", () => {
       let run = false;
       new UnlessExistCondition(
         instance,
-        { type: "ExpressionStatement", expression: { type: "Literal", value: "use strict" } },
+        { type: "MemberExpression", object: "$", property: "ajax" },
         function () {
           run = true;
         }
       ).process();
       expect(run).toBe(false);
+    });
+
+    test("calls function if no matching node in child node", () => {
+      let run = false;
+      new UnlessExistCondition(
+        instance,
+        { type: "MemberExpression", object: "$", property: "ajax" },
+        { in: 'expression.callee' },
+        function () {
+          run = true;
+        }
+      ).process();
+      expect(run).toBe(true);
     });
   });
 });
