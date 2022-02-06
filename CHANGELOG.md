@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.38.0 (2022-02-06)
+
+* Remove `dedent` util
+* Set `in` option for condition
+
 ## 0.37.0 (2022-01-28)
 
 * Strict rewritten code regex
