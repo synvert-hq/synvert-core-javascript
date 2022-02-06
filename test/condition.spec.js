@@ -17,25 +17,17 @@ describe("IfExistCondition", () => {
 
     test("does not call function if no matching node", () => {
       let run = false;
-      new IfExistCondition(
-        instance,
-        { type: "MemberExpression", object: "jQuery", property: "ajax" },
-        function () {
-          run = true;
-        }
-      ).process();
+      new IfExistCondition(instance, { type: "MemberExpression", object: "jQuery", property: "ajax" }, function () {
+        run = true;
+      }).process();
       expect(run).toBe(false);
     });
 
     test("calls function if there is a matching node", () => {
       let run = false;
-      new IfExistCondition(
-        instance,
-        { type: "MemberExpression", object: "$", property: "ajax" },
-        function () {
-          run = true;
-        }
-      ).process();
+      new IfExistCondition(instance, { type: "MemberExpression", object: "$", property: "ajax" }, function () {
+        run = true;
+      }).process();
       expect(run).toBe(true);
     });
 
@@ -44,7 +36,7 @@ describe("IfExistCondition", () => {
       new IfExistCondition(
         instance,
         { type: "MemberExpression", object: "$", property: "ajax" },
-        { in: 'expression' },
+        { in: "expression" },
         function () {
           run = true;
         }
@@ -68,25 +60,17 @@ describe("UnlessExistCondition", () => {
 
     test("calls function if no matching node", () => {
       let run = false;
-      new UnlessExistCondition(
-        instance,
-        { type: "MemberExpression", object: "jQuery", property: "ajax" },
-        function () {
-          run = true;
-        }
-      ).process();
+      new UnlessExistCondition(instance, { type: "MemberExpression", object: "jQuery", property: "ajax" }, function () {
+        run = true;
+      }).process();
       expect(run).toBe(true);
     });
 
     test("does not call function if there is a matching node", () => {
       let run = false;
-      new UnlessExistCondition(
-        instance,
-        { type: "MemberExpression", object: "$", property: "ajax" },
-        function () {
-          run = true;
-        }
-      ).process();
+      new UnlessExistCondition(instance, { type: "MemberExpression", object: "$", property: "ajax" }, function () {
+        run = true;
+      }).process();
       expect(run).toBe(false);
     });
 
@@ -95,7 +79,7 @@ describe("UnlessExistCondition", () => {
       new UnlessExistCondition(
         instance,
         { type: "MemberExpression", object: "$", property: "ajax" },
-        { in: 'expression.callee' },
+        { in: "expression.callee" },
         function () {
           run = true;
         }
