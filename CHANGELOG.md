@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.39.0 (2022-02-27)
+
+* Process with sandbox
+* Set `Rewriter.current` properly after calling sub snippet
+
 ## 0.38.0 (2022-02-06)
 
 * Remove `dedent` util
