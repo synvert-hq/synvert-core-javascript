@@ -65,14 +65,18 @@ describe("static register", () => {
   describe("subSnippets", () => {
     test("add and get sub snippet", () => {
       new Rewriter("group1", "name1", () => {});
-      const rewriter = new Rewriter("group2", "name2", () => {
+      new Rewriter("group2", "name2", () => {});
+      const rewriter = new Rewriter("group3", "name3", () => {
         addSnippet("group1", "name1");
+        addSnippet("group2", "name2");
       });
       rewriter.process();
       const subSnippets = rewriter.subSnippets;
-      expect(subSnippets.length).toBe(1);
+      expect(subSnippets.length).toBe(2);
       expect(subSnippets[0].group).toBe("group1");
       expect(subSnippets[0].name).toBe("name1");
+      expect(subSnippets[1].group).toBe("group2");
+      expect(subSnippets[1].name).toBe("name2");
     });
   });
 
