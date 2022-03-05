@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.39.1 (2022-03-05)
+
+* Remove space when removing a property in jsx element.
+
 ## 0.39.0 (2022-02-27)
 
 * Process with sandbox
