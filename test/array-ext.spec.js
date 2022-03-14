@@ -18,31 +18,33 @@ describe("array", () => {
     expect(array.last()).toBe(2);
   });
 
-  test("toSource", () => {
-    const code = `
-      class Foobar {
-        async foobar(foo, bar) {
+  describe("toSource", () => {
+    test("gets source code", () => {
+      const code = `
+        class Foobar {
+          async foobar(foo, bar) {
+          }
         }
-      }
-    `;
-    mock({ "code.js": code });
-    const node = parse(code);
-    const array = node.body.body;
-    expect(array.toSource()).toBe(`async foobar(foo, bar) {\n        }`);
-    mock.restore();
-  });
+      `;
+      mock({ "code.js": code });
+      const node = parse(code);
+      const array = node.body.body;
+      expect(array.toSource()).toBe(`async foobar(foo, bar) {\n        }`);
+      mock.restore();
+    });
 
-  test("fixIndentToSource", () => {
-    const code = `
-      class Foobar {
-        foo() {}
-        bar() {}
-      }
-    `;
-    mock({ "code.js": code });
-    const node = parse(code);
-    const array = node.body.body;
-    expect(array.fixIndentToSource()).toBe(`foo() {}\nbar() {}`);
-    mock.restore();
+    test("gets source code with fixIndent", () => {
+      const code = `
+        class Foobar {
+          foo() {}
+          bar() {}
+        }
+      `;
+      mock({ "code.js": code });
+      const node = parse(code);
+      const array = node.body.body;
+      expect(array.toSource({ fixIndent: true })).toBe(`foo() {}\nbar() {}`);
+      mock.restore();
+    });
   });
 });
