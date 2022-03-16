@@ -1,8 +1,11 @@
 # CHANGELOG
 
-## 0.39.1 (2022-03-05)
+## 0.40.0 (2022-03-05)
 
 * Remove space when removing a property in jsx element.
+* Support `ClassDeclaration` `class` in `childNodeRange`.
+* Support `arguments.0` for empty argument call in `childNodeRange`.
+* Deprecate `fixIndentToSource`, use`toSource({ fixIndent: true })` instead.
 
 ## 0.39.0 (2022-02-27)
 
