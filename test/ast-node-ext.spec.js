@@ -28,6 +28,12 @@ describe("ast node", () => {
       expect(node.childNodeRange("expression.arguments.0")).toEqual({ start: 5, end: 8 });
     });
 
+    test("expression with empty arguments", () => {
+      const node = parse("test()");
+      expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 6 });
+      expect(node.childNodeRange("expression.arguments.0")).toEqual({ start: 5, end: 5 });
+    });
+
     test("expression with arguments function", () => {
       const node = parse("test(foo, bar)");
       expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 14 });
