@@ -26,7 +26,7 @@
     "glob": "^7.1.7",
     "minimatch": "^3.0.4",
     "typy": "^3.3.0",
-    "xinminlabs-espree": "^9.3.0"
+    "xinminlabs-espree": "^9.3.1"
   },
   "devDependencies": {
     "jest": "^27.0.6",
