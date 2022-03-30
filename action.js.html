@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>action.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Action.html">Action</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Action.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="AppendAction.html">AppendAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="AppendAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Array.html">Array</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Array.html#first">first</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Array.html#last">last</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Array.html#toSource">toSource</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="CommentOutAction.html">CommentOutAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="CommentOutAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Condition.html">Condition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Condition.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Configuration.html">Configuration</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="DeleteAction.html">DeleteAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DeleteAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="GotoScope.html">GotoScope</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GotoScope.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="IfAllCondition.html">IfAllCondition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="IfAllCondition.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="IfExistCondition.html">IfExistCondition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="IfExistCondition.html#match">match</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="IfExistCondition.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="IfOnlyExistCondition.html">IfOnlyExistCondition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="IfOnlyExistCondition.html#match">match</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="IfOnlyExistCondition.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="InsertAction.html">InsertAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="InsertAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Instance.html">Instance</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#append">append</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#commentOut">commentOut</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#delete">delete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#gotoNode">gotoNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#ifAllNodes">ifAllNodes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#ifExistNode">ifExistNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#ifOnlyExistNode">ifOnlyExistNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#insert">insert</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#prepend">prepend</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#process">process</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#processWithNode">processWithNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#processWithOtherNode">processWithOtherNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#remove">remove</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#replace">replace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#replaceWith">replaceWith</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#unlessExistNode">unlessExistNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#withinNode">withinNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#withNode">withNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Instance.html#withNode">withNode</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="NodeVersion.html">NodeVersion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="NodeVersion.html#match">match</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="NotSupportedError.html">NotSupportedError</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="NpmVersion.html">NpmVersion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="NpmVersion.html#match">match</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PrependAction.html">PrependAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PrependAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="RemoveAction.html">RemoveAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="RemoveAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ReplaceAction.html">ReplaceAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ReplaceWithAction.html">ReplaceWithAction</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_calculatePositions">_calculatePositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_removeBraces">_removeBraces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_removeComma">_removeComma</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_removeSpace">_removeSpace</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_rewrittenSource">_rewrittenSource</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_source">_source</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_squeezeLines">_squeezeLines</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#_squeezeSpaces">_squeezeSpaces</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ReplaceWithAction.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Rewriter.html">Rewriter</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#.call">call</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#.fetch">fetch</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#.register">register</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#addSnippet">addSnippet</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#description">description</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#ifNode">ifNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#ifNpm">ifNpm</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#process">process</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#processWithSandbox">processWithSandbox</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#withinFile">withinFile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#withinFile">withinFile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Rewriter.html#withinFiles">withinFiles</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="RewriterNotFoundError.html">RewriterNotFoundError</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Scope.html">Scope</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="UnlessExistCondition.html">UnlessExistCondition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="UnlessExistCondition.html#match">match</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="UnlessExistCondition.html#process">process</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="WithinScope.html">WithinScope</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="WithinScope.html#process">process</a></span></li><li class="nav-heading">Externals</li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-Array.html">Array</a></span></li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-Node.html">Node</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#indent">indent</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">action.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const fs = require("fs");
+
+/**
+ * Action does some real actions, e.g. insert / replace / delete code.
+ */
+class Action {
+  /**
+   * Create an Action.
+   * @param {Instance} instance
+   * @param {string} code - new code to insert, replace or delete
+   */
+  constructor(instance, code) {
+    this.instance = instance;
+    this.code = code;
+    this.node = this.instance.currentNode;
+  }
+
+  /**
+   * Calculate start and begin positions.
+   * @abstract
+   * @protected
+   */
+  _calculatePositions() {
+    throw new Error("must be implemented by subclass!");
+  }
+
+  /**
+   * Calculate begin and end positions, and return this.
+   * @returns {Action} this
+   */
+  process() {
+    this._calculatePositions();
+    return this;
+  }
+
+  /**
+   * Get begin position.
+   */
+  get beginPos() {
+    return this._beginPos;
+  }
+
+  /**
+   * Get end position.
+   */
+  get endPos() {
+    return this._endPos;
+  }
+
+  /**
+   * The rewritten source code.
+   * @returns {string} rewritten code.
+   */
+  get rewrittenCode() {
+    throw new Error("must be implemented by subclass!");
+  }
+
+  /**
+   * The rewritten source code.
+   * @protected
+   * @returns {string} rewritten source code.
+   */
+  _rewrittenSource() {
+    return this.node.rewrittenSource(this.code);
+  }
+
+  /**
+   * Get the source code of this node.
+   * @protected
+   * @returns source code of this node.
+   */
+  _source() {
+    if (this._sourceCode) return this._sourceCode;
+    this._sourceCode = fs.readFileSync(this.node.loc.source, "utf-8");
+    return this._sourceCode;
+  }
+
+  /**
+   * Squeeze spaces from source code.
+   * @protected
+   */
+  _squeezeSpaces() {
+    const beforeCharIsSpace = this._source()[this._beginPos - 1] === " ";
+    const afterCharIsSpace = this._source()[this._endPos] == " ";
+    if (beforeCharIsSpace &amp;&amp; afterCharIsSpace) {
+      this._beginPos = this._beginPos - 1;
+    }
+  }
+
+  /**
+   * Squeeze empty lines from source code.
+   * @protected
+   */
+  _squeezeLines() {
+    const lines = this._source().split("\n");
+    const beginLine = this.node.loc.start.line;
+    const endLine = this.node.loc.end.line;
+    const beforeLineIsBlank = endLine === 1 || lines[beginLine - 2] === "";
+    const afterLineIsBlank = lines[endLine] === "";
+    if (lines.length > 1 &amp;&amp; beforeLineIsBlank &amp;&amp; afterLineIsBlank) {
+      this._endPos = this._endPos + "\n".length;
+    }
+  }
+
+  /**
+   * Remove unused braces.
+   * e.g. `foobar({ foo: bar })`, if we remove `foo: bar`, braces should also be removed.
+   * @protected
+   */
+  _removeBraces() {
+    if (this._prevTokenIs("{") &amp;&amp; this._nextTokenIs("}")) {
+      this._beginPos = this._beginPos - 1;
+      this._endPos = this._endPos + 1;
+    } else if (this._prevTokenIs("{ ") &amp;&amp; this._nextTokenIs(" }")) {
+      this._beginPos = this._beginPos - 2;
+      this._endPos = this._endPos + 2;
+    } else if (this._prevTokenIs("{") &amp;&amp; this._nextTokenIs(" }")) {
+      this._beginPos = this._beginPos - 1;
+      this._endPos = this._endPos + 2;
+    } else if (this._prevTokenIs("{ ") &amp;&amp; this._nextTokenIs("}")) {
+      this._beginPos = this._beginPos - 2;
+      this._endPos = this._endPos + 1;
+    }
+  }
+
+  /**
+   * Rmove unused comma.
+   * e.g. `foobar(foo, bar)`, if we remove `foo`, the comma should also be removed,
+   * the code should be changed to `foobar(bar)`.
+   * @protected
+   */
+  _removeComma() {
+    if (this._prevTokenIs(",")) {
+      this._beginPos = this._beginPos - 1;
+    } else if (this._prevTokenIs(", ")) {
+      this._beginPos = this._beginPos - 2;
+    } else if (this._nextTokenIs(", ") &amp;&amp; !this._startWith(":")) {
+      this._endPos = this._endPos + 2;
+    } else if (this._nextTokenIs(",") &amp;&amp; !this._startWith(":")) {
+      this._endPos = this._endPos + 1;
+    }
+  }
+
+  /**
+   * Remove unused space.
+   * e.g. `&lt;div foo='bar'>foobar&lt;/div>`, if we remove `foo='bar`, the space should also be removed,
+   * the code shoulde be changed to `&lt;div>foobar&lt;/div>`.
+   * @protected
+   */
+  _removeSpace() {
+    // this happens when removing a property in jsx element.
+    const beforeCharIsSpace = this._source()[this._beginPos - 1] === " ";
+    const afterCharIsGreatThan = this._source()[this._endPos] == ">";
+    if (beforeCharIsSpace &amp;&amp; afterCharIsGreatThan) {
+      this._beginPos = this._beginPos - 1;
+    }
+  }
+
+  /**
+   * Check if next token is substr.
+   * @private
+   * @param {string} substr
+   * @returns {boolean} true if next token is equal to substr
+   */
+  _nextTokenIs(substr) {
+    return this._source().slice(this._endPos, this._endPos + substr.length) === substr;
+  }
+
+  /**
+   * Check if previous token is substr.
+   * @private
+   * @param {string} substr
+   * @returns {boolean} true if previous token is equal to substr
+   */
+  _prevTokenIs(substr) {
+    return this._source().slice(this._beginPos - substr.length, this._beginPos) === substr;
+  }
+
+  /**
+   * Check if the node source starts with semicolon.
+   * @private
+   * @param {string} substr
+   * @returns {boolean} true if the node source starts with semicolon
+   */
+  _startWith(substr) {
+    return this._source().slice(this._beginPos, this._beginPos + substr.length) === substr;
+  }
+}
+
+/**
+ * AppendAction to append code to the bottom of node body.
+ * @extends Action
+ */
+class AppendAction extends Action {
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    this._beginPos = this.node.end - this.node.indent() - "}".length;
+    this._endPos = this._beginPos;
+  }
+
+  /**
+   * The rewritten source code.
+   * @returns {string} rewritten code.
+   */
+  get rewrittenCode() {
+    const source = this._rewrittenSource();
+    const indent = this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
+    if (source.split("\n").length > 1) {
+      return (
+        source
+          .split("\n")
+          .map((line) => indent + line)
+          .join("\n") + "\n"
+      );
+    } else {
+      return indent + source + "\n";
+    }
+  }
+}
+
+/**
+ * PrependAction to prepend code to the top of node body.
+ * @extends Action
+ */
+class PrependAction extends Action {
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    this._beginPos = this.node.body.start + "{\n".length;
+    this._endPos = this._beginPos;
+  }
+
+  /**
+   * The rewritten source code.
+   * @returns {string} rewritten code.
+   */
+  get rewrittenCode() {
+    const source = this._rewrittenSource();
+    const indent = this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
+    if (source.split("\n").length > 1) {
+      return (
+        source
+          .split("\n")
+          .map((line) => indent + line)
+          .join("\n") + "\n"
+      );
+    } else {
+      return indent + source + "\n";
+    }
+  }
+}
+
+/**
+ * InsertAction to add code to the node.
+ * @extends Action
+ */
+class InsertAction extends Action {
+  /**
+   * Create an InsertAction
+   * @param {Instance} instance
+   * @param {string} code - new code to be inserted
+   * @param {Object} options - position to insert code
+   */
+  constructor(instance, code, options) {
+    super(instance, code);
+    this.at = options.at;
+    this.selector = options.to;
+  }
+
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    const range = this.selector ? this.node.childNodeRange(this.selector) : this.node;
+    this._beginPos = this.at === "beginning" ? range.start : range.end;
+    this._endPos = this._beginPos;
+  }
+
+  /**
+   * The rewritten source code.
+   * @returns {string} rewritten code.
+   */
+  get rewrittenCode() {
+    return this._rewrittenSource();
+  }
+}
+
+/**
+ * DeleteAction to delete child node.
+ * @extends Action
+ */
+class DeleteAction extends Action {
+  /**
+   * Create a DeleteAction
+   * @param {Instance} instance
+   * @param {string|string[]} selectors - name of child nodes
+   */
+  constructor(instance, selectors) {
+    super(instance, null);
+    this.selectors = Array.isArray(selectors) ? selectors : Array(selectors);
+  }
+
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    this._beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
+    this._endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
+    this._squeezeSpaces();
+    this._removeBraces();
+    this._removeComma();
+    this._removeSpace();
+  }
+
+  /**
+   * The rewritten code, always empty string.
+   */
+  get rewrittenCode() {
+    return "";
+  }
+}
+
+/**
+ * RemoveAction to remove current node.
+ * @extends Action
+ */
+class RemoveAction extends Action {
+  /**
+   * Create a RemoveAction
+   * @param {Instance} instance
+   */
+  constructor(instance) {
+    super(instance, null);
+  }
+
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    if (this._takeWholeLine()) {
+      const lines = this._source().split("\n");
+      const beginLine = this.node.loc.start.line;
+      const endLine = this.node.loc.end.line;
+      this._beginPos = lines.slice(0, beginLine - 1).join("\n").length + (beginLine === 1 ? 0 : "\n".length);
+      this._endPos = lines.slice(0, endLine).join("\n").length;
+      if (lines.length > endLine) {
+        this._endPos = this.endPos + "\n".length;
+      }
+      this._squeezeLines();
+    } else {
+      this._beginPos = this.node.start;
+      this._endPos = this.node.end;
+      this._squeezeSpaces();
+      this._removeBraces();
+      this._removeComma();
+      this._removeSpace();
+    }
+  }
+
+  /**
+   * The rewritten code, always empty string.
+   */
+  get rewrittenCode() {
+    return "";
+  }
+
+  /**
+   * Check if the source code of this node takes the whole line.
+   * @private
+   * @returns {boolean}
+   */
+  _takeWholeLine() {
+    const sourceFromFile = this._source()
+      .split("\n")
+      .slice(this.node.loc.start.line - 1, this.node.loc.end.line)
+      .join("\n")
+      .trim();
+    return (
+      this.node.toSource() === sourceFromFile ||
+      this.node.toSource() + ";" === sourceFromFile ||
+      this.node.toSource() + "," === sourceFromFile
+    );
+  }
+}
+
+/**
+ * ReplaceAction to replace child node with code.
+ * @extends Action
+ */
+class ReplaceAction extends Action {
+  /**
+   * Create a ReplaceAction
+   * @param {Instance} instance
+   * @param {string|string[]} selectors - name of child nodes
+   * @param {Object} options - { with } new code to be replaced
+   */
+  constructor(instance, selectors, options) {
+    super(instance, options.with);
+    this.selectors = Array.isArray(selectors) ? selectors : Array(selectors);
+  }
+
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    this._beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
+    this._endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
+  }
+
+  /**
+   * The rewritten source code.
+   * @returns {string} rewritten code.
+   */
+  get rewrittenCode() {
+    return this._rewrittenSource();
+  }
+}
+
+/**
+ * ReplaceWithAction to replace code.
+ * @extends Action
+ */
+class ReplaceWithAction extends Action {
+  /**
+   * Create a ReplaceWithAction
+   * @param {Instance} instance
+   * @param {string} code - new code to be replaced
+   * @param {Object} options - default is { autoIndent: true } if auto fix indent
+   */
+  constructor(instance, code, options = { autoIndent: true }) {
+    super(instance, code);
+    this.autoIndent = options.autoIndent;
+  }
+
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    if (this.autoIndent) {
+      this._beginPos = this.node.start;
+    } else {
+      this._beginPos = this.node.start - this.node.loc.start.column;
+    }
+    this._endPos = this.node.end;
+  }
+
+  /**
+   * The rewritten source code.
+   * @returns {string} rewritten code.
+   */
+  get rewrittenCode() {
+    if (this.autoIndent &amp;&amp; this._rewrittenSource().includes("\n")) {
+      const newCode = [];
+      this._rewrittenSource()
+        .split("\n")
+        .forEach((line, index) => {
+          if (index === 0 || line === "") {
+            newCode.push(line);
+          } else {
+            newCode.push(" ".repeat(this.node.indent()) + line);
+          }
+        });
+      return newCode.join("\n");
+    } else {
+      return this._rewrittenSource();
+    }
+  }
+}
+
+/**
+ * CommentOutAction comments out a block of code.
+ * @extends Action
+ */
+class CommentOutAction extends Action {
+  /**
+   * Create a CommentOutAction
+   * @param {Instance} instance
+   */
+  constructor(instance) {
+    super(instance, null);
+  }
+
+  /**
+   * Calculate the begin and end positions.
+   * @protected
+   */
+  _calculatePositions() {
+    this._beginPos = this.node.start;
+    this._endPos = this.node.end;
+  }
+
+  /**
+   * The rewritten source code.
+   * @returns {string} rewritten code.
+   */
+  get rewrittenCode() {
+    const lines = (" ".repeat(this.node.loc.end.column - 1) + this.node.toSource()).split("\n");
+    const column = Math.min(...lines.map((line) => line.search(/\S/)));
+    return lines.map((line) => (column > -1 ? line.slice(0, column) + "// " + line.slice(column) : line)).join("\n");
+  }
+}
+
+module.exports = {
+  Action,
+  AppendAction,
+  PrependAction,
+  InsertAction,
+  DeleteAction,
+  RemoveAction,
+  ReplaceAction,
+  ReplaceWithAction,
+  CommentOutAction,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Mar 30 2022 12:58:34 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
