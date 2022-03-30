@@ -15,5 +15,18 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node  }}
-      - run: npm install
-      - run: npm test
+      - run: npm ci
+
+      - name: Build
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./lib
+          output_dir: ./out
+          template: minami
+          front_page: README.md
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./out
