@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuration - Documentation</title>
+    <title>Node - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Configuration</h1>
+    <h1 class="page-title">Node</h1>
     
 
     
@@ -42,10 +42,8 @@
 <header>
     
         <h2>
-        Configuration
+        Node
         </h2>
-        
-            <div class="class-description">Synvert global configuration.</div>
         
     
 </header>
@@ -57,14 +55,16 @@
 <div class="section-method">
 
     
-    <h2>Constructor</h2>
-    
 
-    <h4 class="name" id="Configuration"><span class="type-signature"></span>new Configuration<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Node"><span class="type-signature"></span>new Node<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
+
+<div class="description">
+    Node
+</div>
 
 
 
@@ -99,7 +99,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line4">line 4</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -147,18 +147,24 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             
-<div class="section-members">
-<h4 class="name" id=".enableEcmaFeaturesJsx"><span class="type-signature">(static) </span>enableEcmaFeaturesJsx<span class="type-signature"></span></h4>
+<div class="section-method">
 
+    
+
+    <h4 class="name" id="_fileContent"><span class="type-signature"></span>_fileContent<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Set enableEcmaFeaturesJsx
+    Get the source code of current file.
 </div>
 
 
@@ -194,7 +200,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line72">line 72</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -211,23 +217,62 @@
 
 
 
-    <h5>Example</h5>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>string</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    source code of current file.
+</div>
+
     
-    <pre class="prettyprint"><code>Configuration.enableEcmaFeaturesJsx = true</code></pre>
+</div>
+
 
 
 </div>
-
         
             
-<div class="section-members">
-<h4 class="name" id=".enableEcmaFeaturesJsx"><span class="type-signature">(static) </span>enableEcmaFeaturesJsx<span class="type-signature"></span></h4>
+<div class="section-method">
 
+    
+
+    <h4 class="name" id="_matchValue"><span class="type-signature"></span>_matchValue<span class="signature">(actual, expected)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Get enableEcmaFeaturesJsx
+    Match the actual and expected value.
 </div>
 
 
@@ -263,7 +308,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line81">line 81</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line302">line 302</a>
     </li></ul></dd>
     
 
@@ -280,18 +325,140 @@
 
 
 
-</div>
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
 
         
-            
-<div class="section-members">
-<h4 class="name" id=".path"><span class="type-signature">(static) </span>path<span class="type-signature"></span></h4>
 
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>actual</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>*</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>expected</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>*</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>boolean</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    true if actual value matches expected value
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="actualValue"><span class="type-signature"></span>actualValue<span class="signature">(multiKeys)</span><span class="type-signature"> &rarr; {*}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Set path.
+    Get actual value from the node.
 </div>
 
 
@@ -327,7 +494,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line32">line 32</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line269">line 269</a>
     </li></ul></dd>
     
 
@@ -344,23 +511,123 @@
 
 
 
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>Configuration.path = "/Users/flyerhzm/Downloads"</code></pre>
 
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>multiKeys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code><a href="Array.html">Array</a>.&lt;string></code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                multiiple keys to find value.
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>*</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    actual value.
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>// source code of node is foo.slice(1, 2)
+// foo
+node.actualValue(['expression', 'callee', 'object'])</code></pre>
 
 </div>
 
+</div>
         
             
-<div class="section-members">
-<h4 class="name" id=".path"><span class="type-signature">(static) </span>path<span class="type-signature"></span></h4>
+<div class="section-method">
 
+    
+
+    <h4 class="name" id="arrayBody"><span class="type-signature"></span>arrayBody<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Array.html">Array</a>.&lt;<a href="Node.html">Node</a>>}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Get path.
+    Array body nodes.
 </div>
 
 
@@ -396,7 +663,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line41">line 41</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line124">line 124</a>
     </li></ul></dd>
     
 
@@ -413,18 +680,62 @@
 
 
 
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
 
         
-            
-<div class="section-members">
-<h4 class="name" id=".showRunProcess"><span class="type-signature">(static) </span>showRunProcess<span class="type-signature"></span></h4>
 
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code><a href="Array.html">Array</a>.&lt;<a href="Node.html">Node</a>></code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    array of body nodes
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="childNodeRange"><span class="type-signature"></span>childNodeRange<span class="signature">(childName)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Set showRunProcess.
+    Get the source range of child node.
 </div>
 
 
@@ -460,7 +771,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line52">line 52</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -477,23 +788,146 @@
 
 
 
-    <h5>Example</h5>
+
+
+    <h5>Parameters:</h5>
     
-    <pre class="prettyprint"><code>Configuration.showRunProcess = true</code></pre>
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>childName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                name of child node.
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-throws">
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        if we can't get the range.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><code><a href="NotSupportedError.html">NotSupportedError</a></code></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+</div>
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>Object</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    child node range, e.g. { start: 0, end: 10 }
+</div>
+
+    
+</div>
+
 
 
 </div>
-
         
             
-<div class="section-members">
-<h4 class="name" id=".showRunProcess"><span class="type-signature">(static) </span>showRunProcess<span class="type-signature"></span></h4>
+<div class="section-method">
 
+    
+
+    <h4 class="name" id="childNodeSource"><span class="type-signature"></span>childNodeSource<span class="signature">(childName)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Get showRunProcess.
+    Get the source code of child node.
 </div>
 
 
@@ -529,7 +963,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line61">line 61</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line182">line 182</a>
     </li></ul></dd>
     
 
@@ -546,18 +980,123 @@
 
 
 
-</div>
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
 
         
-            
-<div class="section-members">
-<h4 class="name" id=".skipFiles"><span class="type-signature">(static) </span>skipFiles<span class="type-signature"></span></h4>
 
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>childName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                name of child node.
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>string</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    source code.
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>// source code of node is class FooBar {}
+// FooBar
+node.childNodeSource('id')</code></pre>
+
+</div>
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="indent"><span class="type-signature"></span>indent<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Set skip files.
+    Get the indent of current node.
 </div>
 
 
@@ -593,7 +1132,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line12">line 12</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line227">line 227</a>
     </li></ul></dd>
     
 
@@ -610,23 +1149,63 @@
 
 
 
-    <h5>Example</h5>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>number</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    indent.
+</div>
+
     
-    <pre class="prettyprint"><code>Configuration.skipFiles = ["node_modules/**"]</code></pre>
+</div>
+
 
 
 </div>
-
         
             
-<div class="section-members">
-<h4 class="name" id=".skipFiles"><span class="type-signature">(static) </span>skipFiles<span class="type-signature"></span></h4>
+<div class="section-method">
 
+    
+
+    <h4 class="name" id="match"><span class="type-signature"></span>match<span class="signature">(rules)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
 
 
 
 <div class="description">
-    Get skip files.
+    Match current node with rules.
+It provides some additional keywords to match rules, [not, in, notIn, gt, gte, lt, lte].
 </div>
 
 
@@ -662,7 +1241,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="configuration.js.html">configuration.js</a>, <a href="configuration.js.html#line21">line 21</a>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line145">line 145</a>
     </li></ul></dd>
     
 
@@ -679,11 +1258,586 @@
 
 
 
-</div>
 
-        
+
+    <h5>Parameters:</h5>
     
 
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>rules</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>Object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>boolean</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    true if matches.
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>{ type: "ImportDeclaration", source: { value: "react" }, specifiers: { length: { not: 1 } } }
+{ type: "ImportDeclaration", source: { value: "react" }, specifiers: { length: { gt: 1 } } }
+{ type: "MemberExpression", object: { in: ["$", "jQuery"] }, property: "ajax" }</code></pre>
+
+</div>
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="recursiveChildren"><span class="type-signature"></span>recursiveChildren<span class="signature">(func)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Recursively iterate all child nodes of current node.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line101">line 101</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                to be called on the child node.
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="rewrittenSource"><span class="type-signature"></span>rewrittenSource<span class="signature">(code)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Get rewritten source code.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line239">line 239</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>code</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                expression code
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>string</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    rewritten code.
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>// foo.slice(1, 2)
+node.rewrittenSource("{{expression.callee.object}}.slice({{expression.arguments}})") #=></code></pre>
+
+</div>
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="toSource"><span class="type-signature"></span>toSource<span class="signature">(options)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Get the source code of current node.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ast-node-ext.js.html">ast-node-ext.js</a>, <a href="ast-node-ext.js.html#line200">line 200</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>Object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                default is { fixIndent: false }, if to fix indent
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>string</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    source code.
+</div>
+
+    
+</div>
+
+
+
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>// source code of node is
+// class Button {
+//   constructor(props) {
+//     super(props)
+//   }
+// }
+node.toSource()</code></pre>
+
+</div>
+
+</div>
+        
     
 
     
