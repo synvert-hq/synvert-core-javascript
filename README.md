@@ -5,7 +5,7 @@
 ![Main workflow](https://github.com/xinminlabs/synvert-core-javascript/actions/workflows/main.yml/badge.svg)
 [![AwesomeCode Status for xinminlabs/synvert-core-javascript](https://awesomecode.io/projects/24366d99-29b2-407f-a7b8-9773e59f8cd0/status)](https://awesomecode.io/repos/xinminlabs/synvert-core-javascript)
 
-Synvert core provides a set of dsls to rewrite javascript code. e.g.
+Synvert core provides a set of DSLs to rewrite javascript code. e.g.
 
 ```javascript
 const Synvert = require("synvert-core");
@@ -46,18 +46,22 @@ new Synvert.Rewriter("jquery", "deprecate-event-shorthand", () => {
 });
 ```
 
+Want to see more examples, check out [synvert-snippets-javascript](https://github.com/xinminlabs/synvert-snippets-javascript).
+
+Want to use the CLI, check out [synvert-javascript](https://github.com/xinminlabs/synvert-javascript).
+
 DSL are as follows
 
 * [description](./Rewriter.html#description) - set description of the rewriter
-* [ifNode](./Rewriter.html#ifNode) - checks if node version is greater than or equal to the specified node version
-* [ifNpm](./Rewriter.html#ifNpm) - checks the version of the specifid npm package
+* [ifNode](./Rewriter.html#ifNode) - check if node version is greater than or equal to the specified node version
+* [ifNpm](./Rewriter.html#ifNpm) - check the version of the specifid npm package
 * [withinFiles](./Rewriter.html#withinFiles) - find specified files
 * [withinFile](./Rewriter.html#withinFile) - alias to withinFiles
 * [addSnippet](./Rewriter.html#addSnippet) - call another rewriter
 
 Scopes:
 
-* [withNodes](./Instance.html#withNodes) - find recursive matching ast nodes
+* [withNodes](./Instance.html#withNodes) - recursively find matching ast nodes
 * [withNode](./Instance.html#withNode) - alias to withNode
 * [gotoNode](./Instance.html#gotoNode) - go to a child node
 
