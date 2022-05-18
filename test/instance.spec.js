@@ -7,7 +7,7 @@ describe("Instance", () => {
   describe("process", () => {
     test("writes new code to file", () => {
       const instance = new Instance({}, "*.js", () => {
-        withNode({ type: "CallExpression", callee: { type: "MemberExpression", property: "trimLeft" } }, () => {
+        findNode(".CallExpression[callee=.MemberExpression[property=trimLeft]]", () => {
           replace("callee.property", { with: "trimStart" });
         });
         withNode({ type: "CallExpression", callee: { type: "MemberExpression", property: "trimRight" } }, () => {
