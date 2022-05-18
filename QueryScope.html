@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>rewriter.js - Documentation</title>
+    <title>QueryScope - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,238 +29,341 @@
 
 <div id="main">
     
-    <h1 class="page-title">rewriter.js</h1>
+    <h1 class="page-title">QueryScope</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>const { RewriterNotFoundError } = require("./error");
-const Instance = require("./instance");
-const NodeVersion = require("./node-version");
-const NpmVersion = require("./npm-version");
+        <h2>
+        QueryScope
+        </h2>
+        
+            <div class="class-description">QueryScope finds out nodes by using node query language, then changes its scope to matching node.</div>
+        
+    
+</header>
 
-/**
- * Rewriter is the top level namespace in a synvert snippet.
- *
- * One rewriter checks if the dependency version matche, and it can contain one or many Instances,
- * which define the behavior what files need to find and what codes need to rewrite.
- * @borrows Rewriter#withinFiles as Rewriter#withinFile
- */
-class Rewriter {
-  /**
-   * Store all rewriters grouped by group name, e.g.  `{ jquery: { 'deprecate-event-shorthand': &lt;Rewriter> } }`
-   * @static
-   */
-  static rewriters = {};
+<article>
+    <div class="container-overview">
+    
+        
+<div class="section-method">
 
-  /**
-   * Current rewriters
-   * @static
-   */
-  static current;
+    
+    <h2>Constructor</h2>
+    
 
-  /**
-   * Register a rewriter with its group and name.
-   * @static
-   * @param {string} group - the rewriter group.
-   * @param {string} name - the unique rewriter name.
-   * @param {Rewirter} rewriter - the rewriter to register.
-   */
-  static register(group, name, rewriter) {
-    this.rewriters[group] = this.rewriters[group] || {};
-    this.rewriters[group][name] = rewriter;
-  }
+    <h4 class="name" id="QueryScope"><span class="type-signature"></span>new QueryScope<span class="signature">(instance, queryString, func)</span><span class="type-signature"></span></h4>
 
-  /**
-   * Fetch a rewriter by group and name.
-   * @static
-   * @param {string} group rewrtier group.
-   * @param {string} name rewrtier name.
-   * @returns {Rewriter} the matching rewriter.
-   * @throws {RewriterNotFoundError} if rewriter not found.
-   */
-  static fetch(group, name) {
-    if (this.rewriters[group] &amp;&amp; this.rewriters[group][name]) {
-      return this.rewriters[group][name];
-    } else {
-      throw new RewriterNotFoundError(`Rewriter ${group} ${name} not found`);
-    }
-  }
+    
 
-  /**
-   * Get a registered rewriter by group and name, then process that rewriter.
-   * @static
-   * @param {string} group - the rewriter group.
-   * @param {string} name - the rewriter name.
-   * @param {boolean} sandbox - if run in sandbox mode, default is false.
-   * @param {Object} options - the rewriter options.
-   * @returns {Rewriter} the registered rewriter.
-   */
-  static call(group, name, sandbox, options = {}) {
-    const rewriter = this.fetch(group, name);
-    if (!rewriter) return;
 
-    rewriter.options = options;
-    if (sandbox) {
-      rewriter.processWithSandbox();
-    } else {
-      rewriter.process();
-    }
-    return rewriter;
-  }
 
-  /**
-   * Create a Rewriter
-   * @param {string} group - group name
-   * @param {string} name - snippet name
-   * @param {Function} func - a function defines the behaviors of the rewriter
-   */
-  constructor(group, name, func) {
-    this.group = group;
-    this.name = name;
-    this.subSnippets = [];
-    this.func = func;
-    this.constructor.register(group, name, this);
-  }
+<div class="description">
+    Create a QueryScope
+</div>
 
-  /**
-   * Rewriter options.
-   * @returns {Object} options.
-   */
-  get options() {
-    return this._options || {};
-  }
 
-  /**
-   * Set options.
-   * @param {Object} options.
-   */
-  set options(options) {
-    this._options = options;
-  }
 
-  /**
-   * Process the rewriter.
-   */
-  process() {
-    const originalRewriter = Rewriter.current;
-    try {
-      Rewriter.current = this;
-      this.func.call(this);
-    } finally {
-      Rewriter.current = originalRewriter;
-    }
-  }
 
-  /**
-   * Process rewriter with sandbox mode.
-   * It will call the function but doesn't change any file.
-   */
-  processWithSandbox() {
-    this.sandbox = true;
-    this.process();
-  }
 
-  /*******
-   * DSL *
-   *******/
+<dl class="details">
 
-  /**
-   * Parse `description` dsl, it sets description of the rewriter.
-   * Or get description.
-   * @example
-   * new Synvert.Rewriter("react", "transform-class-components-to-functions", () => {
-   *   description("transform react class components to functions")
-   * })
-   * @param {string} description - rewriter description.
-   * @returns {string} description
-   */
-  description(description = null) {
-    if (description) {
-      Rewriter.current._description = description;
-    } else {
-      return this._description;
-    }
-  }
+    
 
-  /**
-   * Parse `ifNode` dsl, it checks if node version is greater than or equal to the specified node version.
-   * @example
-   * ifNode("10.14.0");
-   * @param {string} version - specified node version.
-   */
-  ifNode(version) {
-    Rewriter.current.nodeVersion = new NodeVersion(version);
-  }
+    
 
-  /**
-   * Parse `ifNpm` dsl, it compares version of the specified npm.
-   * @example
-   * ifNpm("react", ">= 18.0");
-   * @param {string} name - npm name.
-   * @param {string} version - equal, less than or greater than specified version, e.g. '>= 2.0.0',
-   */
-  ifNpm(name, version) {
-    Rewriter.current.npmVersion = new NpmVersion(name, version);
-  }
+    
 
-  /**
-   * Parse `addSnippet` dsl, it calls anther rewriter.
-   * @example
-   * new Synvert.Rewriter("jquery", "migrate", () => {
-   *   addSnippet("jquery", "deprecate-event-shorthand");
-   *   addSnippet("jquery", "deprecate-ready-event");
-   * });
-   * @param {string} group - group of another rewriter.
-   * @param {string} name - name of another rewriter.
-   * @param {Object} options - options of another rewriter.
-   */
-  addSnippet(group, name, options = {}) {
-    const currentRewriter = Rewriter.current;
-    currentRewriter.subSnippets.push(Rewriter.call(group, name, currentRewriter.sandbox, options));
-  }
+    
 
-  /**
-   * Parse `withinFiles` dsl, it finds specified files.
-   * It creates an Instance to rewrite code.
-   * @example
-   * new Synvert.Rewriter("javascript", "no-unused-imports", () => {
-   *   withinFiles('**\/*.js', function () {
-   *   })
-   * })
-   * @param {string} filePattern - pattern to find files, e.g. lib/*.js
-   * @param {Functioin} func - a function rewrites code in the matching files.
-   */
-  withinFiles(filePattern, func) {
-    if (Rewriter.current.sandbox) return;
+    
 
-    if (
-      (!Rewriter.current.nodeVersion || Rewriter.current.nodeVersion.match()) &amp;&amp;
-      (!Rewriter.current.npmVersion || Rewriter.current.npmVersion.match())
-    ) {
-      const instance = new Instance(Rewriter.current, filePattern, func);
-      Instance.current = instance;
-      instance.process();
-    }
-  }
-}
+    
 
-module.exports = Rewriter;
+    
 
-global.description = Rewriter.prototype.description;
-global.ifNode = Rewriter.prototype.ifNode;
-global.ifNpm = Rewriter.prototype.ifNpm;
-global.addSnippet = Rewriter.prototype.addSnippet;
-global.withinFiles = Rewriter.prototype.withinFiles;
-global.withinFile = Rewriter.prototype.withinFiles;
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scope.js.html">scope.js</a>, <a href="scope.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>instance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code><a href="Instance.html">Instance</a></code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>queryString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>String</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                a function to be called on all matching nodes.
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="Scope.html">Scope</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="process"><span class="type-signature"></span>process<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Find out the matching nodes.
+It checks the current node and iterates all child nodes,
+then run the function code on each matching node.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="scope.js.html">scope.js</a>, <a href="scope.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
