@@ -1,9 +1,6 @@
-const espree = require("xinminlabs-espree");
-
 const { QueryScope, WithinScope, GotoScope } = require("../lib/scope");
 const Instance = require("../lib/instance");
-
-const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
+const { parse } = require("./helper");
 
 describe("QueryScope", () => {
   const source = `class FooBar {}`;

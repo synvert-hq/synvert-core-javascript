@@ -1,13 +1,12 @@
-const espree = require("xinminlabs-espree");
-
 const { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition } = require("../lib/condition");
 const Instance = require("../lib/instance");
+const { parse } = require("./helper");
 
 describe("IfExistCondition", () => {
   const source = `
     $.ajax({ url, method })
   `;
-  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
+  const node = parse(source);
   const instance = new Instance({}, "", function () {});
 
   describe("process", () => {
@@ -50,7 +49,7 @@ describe("UnlessExistCondition", () => {
   const source = `
     $.ajax({ url, method })
   `;
-  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
+  const node = parse(source);
   const instance = new Instance({}, "", function () {});
 
   describe("process", () => {
@@ -96,7 +95,7 @@ describe("IfOnlyExistCondition", () => {
 
       this.foobar
     `;
-    const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" });
+    const node = parse(source, { firstStatement: false });
     const instance = new Instance({}, "", function () {});
 
     beforeAll(() => {
@@ -120,7 +119,7 @@ describe("IfOnlyExistCondition", () => {
     const source = `
       'use strict'
     `;
-    const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" });
+    const node = parse(source, { firstStatement: false });
     const instance = new Instance({}, "", function () {});
 
     beforeAll(() => {
@@ -145,7 +144,7 @@ describe("IfAllCondition", () => {
   const source = `
     import { a, b } from 'x';
   `;
-  const node = espree.parse(source, { ecmaVersion: "latest", loc: true, sourceType: "module", sourceFile: "code.js" });
+  const node = parse(source);
   const instance = new Instance({}, "", function () {});
 
   describe("process", () => {

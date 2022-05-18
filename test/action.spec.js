@@ -1,4 +1,3 @@
-const espree = require("xinminlabs-espree");
 const mock = require("mock-fs");
 
 const Instance = require("../lib/instance");
@@ -12,8 +11,7 @@ const {
   ReplaceWithAction,
   CommentOutAction,
 } = require("../lib/action");
-
-const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, sourceFile: "code.js" }).body[0];
+const { parse } = require("./helper");
 
 describe("AppendAction", () => {
   const code = `class FooBar {\n}`;

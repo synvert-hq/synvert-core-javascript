@@ -1,10 +1,6 @@
-const espree = require("xinminlabs-espree");
 const mock = require("mock-fs");
 
-require("../lib/ast-node-ext");
-
-const parse = (code) =>
-  espree.parse(code, { ecmaVersion: "latest", loc: true, sourceType: "module", sourceFile: "code.js" }).body[0];
+const { parse } = require("./helper");
 
 describe("ast node", () => {
   describe("childNodeRange", () => {
