@@ -8,7 +8,7 @@ const parse = (code) => espree.parse(code, { ecmaVersion: "latest", loc: true, s
 describe("QueryScope", () => {
   const source = `class FooBar {}`;
   const node = parse(source);
-  const instance = new Instance({}, "", function() {});
+  const instance = new Instance({}, "", function () {});
 
   describe("process", () => {
     beforeAll(() => {
