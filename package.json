@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/xinminlabs/synvert-core-javascript#readme",
   "dependencies": {
+    "@xinminlabs/espree": "^9.3.2",
     "@xinminlabs/node-query": "^1.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "acorn": "^8.4.1",
@@ -26,8 +27,7 @@
     "flat": "^5.0.2",
     "glob": "^7.1.7",
     "minimatch": "^3.0.4",
-    "typy": "^3.3.0",
-    "xinminlabs-espree": "^9.3.1"
+    "typy": "^3.3.0"
   },
   "devDependencies": {
     "jest": "^27.0.6",
