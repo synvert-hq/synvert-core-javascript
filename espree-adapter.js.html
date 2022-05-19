@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>utils.js - Documentation</title>
+    <title>espree-adapter.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">utils.js</h1>
+    <h1 class="page-title">espree-adapter.js</h1>
     
 
     
@@ -39,28 +39,52 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Add `count` spaces to `str`.
- * @example
- * //   foo
- * //   bar
- * indent("foo\nbar", 2)
- * @param {string} str
- * @param {number} count
- * @returns indented str
- */
-const indent = (str, count) =>
-  str
-    .split("\n")
-    .map((line) => {
-      if (/^\s*$/.test(line)) {
-        return line;
-      }
-      return " ".repeat(count) + line;
-    })
-    .join("\n");
+            <pre class="prettyprint source linenums"><code>const fs = require("fs");
+const visitorKeys = require("eslint-visitor-keys");
 
-module.exports = { indent };
+/**
+ * Implement node-query-typescript adapter
+ * @see https://github.com/xinminlabs/node-query-typescript/blob/main/src/adapter.ts
+ */
+class EspreeAdapter {
+  // get node type
+  getNodeType(node) {
+    return node.type;
+  }
+
+  // get node source
+  getSource(node) {
+    const source = fs.readFileSync(node.loc.source, "utf-8");
+    return source.slice(node.start, node.end);
+  }
+
+  // get node children
+  getChildren(node) {
+    const children = [];
+    visitorKeys.KEYS[node.type].forEach((key) => {
+      if (Array.isArray(node[key])) {
+        node[key].forEach((child) => {
+          if (child) {
+            children.push(child);
+          }
+        });
+      } else {
+        const child = node[key];
+        if (child) {
+          children.push(child);
+        }
+      }
+    });
+    return children;
+  }
+
+  // Espree doesn't support siblings.
+  getSiblings(_node) {
+    return [];
+  }
+}
+
+module.exports = EspreeAdapter;
 </code></pre>
         </article>
     </section>
