@@ -7,7 +7,7 @@ describe("IfExistCondition", () => {
     $.ajax({ url, method })
   `;
   const node = parse(source);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
 
   describe("process", () => {
     beforeAll(() => {
@@ -50,7 +50,7 @@ describe("UnlessExistCondition", () => {
     $.ajax({ url, method })
   `;
   const node = parse(source);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
 
   describe("process", () => {
     beforeAll(() => {
@@ -96,7 +96,7 @@ describe("IfOnlyExistCondition", () => {
       this.foobar
     `;
     const node = parse(source, { firstStatement: false });
-    const instance = new Instance({}, "", function () {});
+    const instance = new Instance("", function () {});
 
     beforeAll(() => {
       instance.currentNode = node;
@@ -120,7 +120,7 @@ describe("IfOnlyExistCondition", () => {
       'use strict'
     `;
     const node = parse(source, { firstStatement: false });
-    const instance = new Instance({}, "", function () {});
+    const instance = new Instance("", function () {});
 
     beforeAll(() => {
       instance.currentNode = node;
@@ -145,7 +145,7 @@ describe("IfAllCondition", () => {
     import { a, b } from 'x';
   `;
   const node = parse(source);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
 
   describe("process", () => {
     beforeAll(() => {

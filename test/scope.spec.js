@@ -5,7 +5,7 @@ const { parse } = require("./helper");
 describe("QueryScope", () => {
   const source = `class FooBar {}`;
   const node = parse(source);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
 
   describe("process", () => {
     beforeAll(() => {
@@ -33,7 +33,7 @@ describe("QueryScope", () => {
 describe("WithinScope", () => {
   const source = `class FooBar {}`;
   const node = parse(source);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
 
   describe("process", () => {
     beforeAll(() => {
@@ -66,7 +66,7 @@ describe("GotoScope", () => {
     }
   `;
   const node = parse(source);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
 
   describe("process", () => {
     beforeAll(() => {

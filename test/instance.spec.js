@@ -6,7 +6,7 @@ const Instance = require("../lib/instance");
 describe("Instance", () => {
   describe("process", () => {
     test("writes new code to file", () => {
-      const instance = new Instance({}, "*.js", () => {
+      const instance = new Instance("*.js", () => {
         findNode(".CallExpression[callee=.MemberExpression[property=trimLeft]]", () => {
           replace("callee.property", { with: "trimStart" });
         });

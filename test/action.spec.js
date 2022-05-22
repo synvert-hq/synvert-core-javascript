@@ -16,7 +16,7 @@ const { parse } = require("./helper");
 describe("AppendAction", () => {
   const code = `class FooBar {\n}`;
   const node = parse(code);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
   instance.currentNode = node;
 
   beforeEach(() => {
@@ -71,7 +71,7 @@ describe("AppendAction", () => {
 describe("PrependAction", () => {
   const code = `class FooBar {\n}`;
   const node = parse(code);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
   instance.currentNode = node;
 
   beforeEach(() => {
@@ -125,7 +125,7 @@ describe("PrependAction", () => {
 
 describe("InsertAction", () => {
   const node = parse("this.foo");
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
   instance.currentNode = node;
   let action;
 
@@ -168,7 +168,7 @@ describe("InsertAction", () => {
 
 describe("DeleteAction", () => {
   const node = parse("this.foo.bind(this)");
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
   instance.currentNode = node;
   let action;
 
@@ -205,7 +205,7 @@ describe("RemoveAction", () => {
   describe("single line", () => {
     code = "this.foo.bind(this);";
     const node = parse(code);
-    const instance = new Instance({}, "", function () {});
+    const instance = new Instance("", function () {});
     instance.currentNode = node.expression;
     let action;
 
@@ -241,7 +241,7 @@ describe("RemoveAction", () => {
       }
     `;
     const node = parse(code);
-    const instance = new Instance({}, "", function () {});
+    const instance = new Instance("", function () {});
     instance.currentNode = node.body.body[0];
     let action;
 
@@ -273,7 +273,7 @@ describe("RemoveAction", () => {
 
 describe("ReplaceAction", () => {
   const node = parse("class FooBar {}");
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
   instance.currentNode = node;
   let action;
 
@@ -296,7 +296,7 @@ describe("ReplaceAction", () => {
 
 describe("ReplaceWithAction", () => {
   const node = parse("!!foobar");
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
   instance.currentNode = node;
   let action;
 
@@ -324,7 +324,7 @@ describe("CommentOutAction", () => {
     }
   `.trim();
   const node = parse(code);
-  const instance = new Instance({}, "", function () {});
+  const instance = new Instance("", function () {});
   instance.currentNode = node;
   let action;
 
