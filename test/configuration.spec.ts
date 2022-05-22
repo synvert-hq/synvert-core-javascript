@@ -1,4 +1,4 @@
-const Configuration = require("../lib/configuration");
+import Configuration from "../src/configuration";
 
 describe("Configuration", () => {
   it("path", () => {
