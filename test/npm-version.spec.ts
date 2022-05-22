@@ -1,4 +1,4 @@
-const NpmVersion = require("../lib/npm-version");
+import NpmVersion from "../src/npm-version";
 
 describe("npm version", () => {
   test("compares versions >=", () => {
