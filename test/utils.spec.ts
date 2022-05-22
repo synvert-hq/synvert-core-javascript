@@ -1,4 +1,4 @@
-const { indent } = require("../lib/utils");
+import { indent } from "../src/utils";
 
 it("indent", () => {
   const oldCode = `
