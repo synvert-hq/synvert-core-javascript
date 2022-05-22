@@ -1,6 +1,6 @@
-const mock = require("mock-fs");
+import mock from "mock-fs";
 
-const NodeVersion = require("../lib/node-version");
+import NodeVersion from "../src/node-version";
 
 describe("node version", () => {
   describe(".node-version", () => {
