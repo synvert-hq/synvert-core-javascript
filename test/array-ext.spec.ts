@@ -1,6 +1,6 @@
-const mock = require("mock-fs");
+import mock from "mock-fs";
 
-const { parse } = require("./helper");
+import { parse } from "./helper";
 
 describe("array", () => {
   test("first", () => {

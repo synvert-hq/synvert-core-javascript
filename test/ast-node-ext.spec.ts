@@ -1,6 +1,6 @@
-const mock = require("mock-fs");
+import mock from "mock-fs";
 
-const { parse } = require("./helper");
+import { parse } from "./helper";
 
 describe("ast node", () => {
   describe("childNodeRange", () => {
@@ -31,9 +31,12 @@ describe("ast node", () => {
     });
 
     test("expression with arguments function", () => {
-      const node = parse("test(foo, bar)");
+      const code = "test(foo, bar)";
+      const node = parse(code);
+      mock({ "code.js": code });
       expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 14 });
       expect(node.childNodeRange("expression.arguments.first")).toEqual({ start: 5, end: 8 });
+      mock.restore();
     });
 
     test("method definition", () => {
@@ -64,7 +67,7 @@ describe("ast node", () => {
 
   describe("indent", () => {
     test("gets indent", () => {
-      code = `
+      const code = `
         class FooBar {
         }
       `;
@@ -94,7 +97,7 @@ describe("ast node", () => {
       `;
       const node = parse(code);
       const children = [];
-      node.recursiveChildren((child) => {
+      node.recursiveChildren((child: any) => {
         children.push(child);
       });
       expect(children.length).toBe(32);

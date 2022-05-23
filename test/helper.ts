@@ -1,14 +1,12 @@
 const espree = require("@xinminlabs/espree");
 
-require("../lib/ast-node-ext");
-require("../lib/array-ext");
+require("../src/ast-node-ext");
+require("../src/array-ext");
 
-const parse = (code, { firstStatement } = { firstStatement: true }) => {
+export const parse = (code: string, { firstStatement }: { firstStatement: boolean } = { firstStatement: true }): any => {
   const node = espree.parse(code, { ecmaVersion: "latest", loc: true, sourceType: "module", sourceFile: "code.js" });
   if (firstStatement) {
     return node.body[0];
   }
   return node;
 };
-
-module.exports = { parse };
