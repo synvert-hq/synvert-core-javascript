@@ -12,11 +12,11 @@ import NpmVersion from "./npm-version";
  */
 class Rewriter {
   public subSnippets: Rewriter[] = [];
-  private _options: object = {};
-  private sandbox: boolean = false;
-  private _description?: string;
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
+  public options: object = {};
+  private sandbox: boolean = false;
+  private desc?: string;
 
   /**
    * Store all rewriters grouped by group name, e.g.  `{ jquery: { 'deprecate-event-shorthand': <Rewriter> } }`
@@ -91,22 +91,6 @@ class Rewriter {
   }
 
   /**
-   * Rewriter options.
-   * @returns {Object} options.
-   */
-  get options(): object {
-    return this._options;
-  }
-
-  /**
-   * Set options.
-   * @param {Object} options.
-   */
-  set options(options: object) {
-    this._options = options;
-  }
-
-  /**
    * Process the rewriter.
    */
   process(): void {
@@ -144,9 +128,9 @@ class Rewriter {
    */
   description(description: string | null = null): void | string {
     if (description) {
-      Rewriter.current._description = description;
+      Rewriter.current.desc = description;
     } else {
-      return this._description;
+      return this.desc;
     }
   }
 

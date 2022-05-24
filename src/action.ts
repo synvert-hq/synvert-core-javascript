@@ -6,9 +6,8 @@ import Instance from "./instance";
  */
 abstract class Action {
   protected node: Node;
-  protected _beginPos: number;
-  protected _endPos: number;
-  protected _sourceCode?: string;
+  public beginPos: number;
+  public endPos: number;
 
   /**
    * Create an Action.
@@ -16,8 +15,8 @@ abstract class Action {
    * @param {string} code - new code to insert, replace or delete
    */
   constructor(protected instance: Instance, protected code: string) {
-    this._beginPos = -1;
-    this._endPos = -1;
+    this.beginPos = -1;
+    this.endPos = -1;
     this.node = this.instance.currentNode;
   }
 
@@ -26,29 +25,15 @@ abstract class Action {
    * @abstract
    * @protected
    */
-  abstract _calculatePositions(): void;
+  protected abstract calculatePositions(): void;
 
   /**
    * Calculate begin and end positions, and return this.
    * @returns {Action} this
    */
   process(): this {
-    this._calculatePositions();
+    this.calculatePositions();
     return this;
-  }
-
-  /**
-   * Get begin position.
-   */
-  get beginPos(): number {
-    return this._beginPos;
-  }
-
-  /**
-   * Get end position.
-   */
-  get endPos(): number {
-    return this._endPos;
   }
 
   /**
@@ -62,7 +47,7 @@ abstract class Action {
    * @protected
    * @returns {string} rewritten source code.
    */
-  _rewrittenSource(): string {
+  protected rewrittenSource(): string {
     return this.node.rewrittenSource(this.code);
   }
 
@@ -71,19 +56,19 @@ abstract class Action {
    * @protected
    * @returns source code of this node.
    */
-  _source(): string {
-    return this.node._fileContent();
+  protected source(): string {
+    return this.node.fileContent();
   }
 
   /**
    * Squeeze spaces from source code.
    * @protected
    */
-  _squeezeSpaces(): void {
-    const beforeCharIsSpace = this._source()[this._beginPos - 1] === " ";
-    const afterCharIsSpace = this._source()[this._endPos] == " ";
+  protected squeezeSpaces(): void {
+    const beforeCharIsSpace = this.source()[this.beginPos - 1] === " ";
+    const afterCharIsSpace = this.source()[this.endPos] == " ";
     if (beforeCharIsSpace && afterCharIsSpace) {
-      this._beginPos = this._beginPos - 1;
+      this.beginPos = this.beginPos - 1;
     }
   }
 
@@ -91,14 +76,14 @@ abstract class Action {
    * Squeeze empty lines from source code.
    * @protected
    */
-  _squeezeLines(): void {
-    const lines = this._source().split("\n");
+  protected squeezeLines(): void {
+    const lines = this.source().split("\n");
     const beginLine = this.node.loc!.start.line;
     const endLine = this.node.loc!.end.line;
     const beforeLineIsBlank = endLine === 1 || lines[beginLine - 2] === "";
     const afterLineIsBlank = lines[endLine] === "";
     if (lines.length > 1 && beforeLineIsBlank && afterLineIsBlank) {
-      this._endPos = this._endPos + "\n".length;
+      this.endPos = this.endPos + "\n".length;
     }
   }
 
@@ -107,19 +92,19 @@ abstract class Action {
    * e.g. `foobar({ foo: bar })`, if we remove `foo: bar`, braces should also be removed.
    * @protected
    */
-  _removeBraces(): void {
-    if (this._prevTokenIs("{") && this._nextTokenIs("}")) {
-      this._beginPos = this._beginPos - 1;
-      this._endPos = this._endPos + 1;
-    } else if (this._prevTokenIs("{ ") && this._nextTokenIs(" }")) {
-      this._beginPos = this._beginPos - 2;
-      this._endPos = this._endPos + 2;
-    } else if (this._prevTokenIs("{") && this._nextTokenIs(" }")) {
-      this._beginPos = this._beginPos - 1;
-      this._endPos = this._endPos + 2;
-    } else if (this._prevTokenIs("{ ") && this._nextTokenIs("}")) {
-      this._beginPos = this._beginPos - 2;
-      this._endPos = this._endPos + 1;
+  protected removeBraces(): void {
+    if (this.prevTokenIs("{") && this.nextTokenIs("}")) {
+      this.beginPos = this.beginPos - 1;
+      this.endPos = this.endPos + 1;
+    } else if (this.prevTokenIs("{ ") && this.nextTokenIs(" }")) {
+      this.beginPos = this.beginPos - 2;
+      this.endPos = this.endPos + 2;
+    } else if (this.prevTokenIs("{") && this.nextTokenIs(" }")) {
+      this.beginPos = this.beginPos - 1;
+      this.endPos = this.endPos + 2;
+    } else if (this.prevTokenIs("{ ") && this.nextTokenIs("}")) {
+      this.beginPos = this.beginPos - 2;
+      this.endPos = this.endPos + 1;
     }
   }
 
@@ -129,15 +114,15 @@ abstract class Action {
    * the code should be changed to `foobar(bar)`.
    * @protected
    */
-  _removeComma(): void {
-    if (this._prevTokenIs(",")) {
-      this._beginPos = this._beginPos - 1;
-    } else if (this._prevTokenIs(", ")) {
-      this._beginPos = this._beginPos - 2;
-    } else if (this._nextTokenIs(", ") && !this._startWith(":")) {
-      this._endPos = this._endPos + 2;
-    } else if (this._nextTokenIs(",") && !this._startWith(":")) {
-      this._endPos = this._endPos + 1;
+  protected removeComma(): void {
+    if (this.prevTokenIs(",")) {
+      this.beginPos = this.beginPos - 1;
+    } else if (this.prevTokenIs(", ")) {
+      this.beginPos = this.beginPos - 2;
+    } else if (this.nextTokenIs(", ") && !this.startWith(":")) {
+      this.endPos = this.endPos + 2;
+    } else if (this.nextTokenIs(",") && !this.startWith(":")) {
+      this.endPos = this.endPos + 1;
     }
   }
 
@@ -147,12 +132,12 @@ abstract class Action {
    * the code shoulde be changed to `<div>foobar</div>`.
    * @protected
    */
-  _removeSpace(): void {
+  protected removeSpace(): void {
     // this happens when removing a property in jsx element.
-    const beforeCharIsSpace = this._source()[this._beginPos - 1] === " ";
-    const afterCharIsGreatThan = this._source()[this._endPos] == ">";
+    const beforeCharIsSpace = this.source()[this.beginPos - 1] === " ";
+    const afterCharIsGreatThan = this.source()[this.endPos] == ">";
     if (beforeCharIsSpace && afterCharIsGreatThan) {
-      this._beginPos = this._beginPos - 1;
+      this.beginPos = this.beginPos - 1;
     }
   }
 
@@ -162,8 +147,8 @@ abstract class Action {
    * @param {string} substr
    * @returns {boolean} true if next token is equal to substr
    */
-  _nextTokenIs(substr: string): boolean {
-    return this._source().slice(this._endPos, this._endPos + substr.length) === substr;
+  private nextTokenIs(substr: string): boolean {
+    return this.source().slice(this.endPos, this.endPos + substr.length) === substr;
   }
 
   /**
@@ -172,8 +157,8 @@ abstract class Action {
    * @param {string} substr
    * @returns {boolean} true if previous token is equal to substr
    */
-  _prevTokenIs(substr: string): boolean {
-    return this._source().slice(this._beginPos - substr.length, this._beginPos) === substr;
+  private prevTokenIs(substr: string): boolean {
+    return this.source().slice(this.beginPos - substr.length, this.beginPos) === substr;
   }
 
   /**
@@ -182,8 +167,8 @@ abstract class Action {
    * @param {string} substr
    * @returns {boolean} true if the node source starts with semicolon
    */
-  _startWith(substr: string): boolean {
-    return this._source().slice(this._beginPos, this._beginPos + substr.length) === substr;
+  private startWith(substr: string): boolean {
+    return this.source().slice(this.beginPos, this.beginPos + substr.length) === substr;
   }
 }
 
@@ -196,9 +181,9 @@ class AppendAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions() {
-    this._beginPos = this.node.end - this.node.indent() - "}".length;
-    this._endPos = this._beginPos;
+  calculatePositions() {
+    this.beginPos = this.node.end - this.node.indent() - "}".length;
+    this.endPos = this.beginPos;
   }
 
   /**
@@ -206,7 +191,7 @@ class AppendAction extends Action {
    * @returns {string} rewritten code.
    */
   get rewrittenCode() {
-    const source = this._rewrittenSource();
+    const source = this.rewrittenSource();
     const indent = this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
     if (source.split("\n").length > 1) {
       return (
@@ -230,9 +215,9 @@ class PrependAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions(): void {
-    this._beginPos = (this.node as any).body.start + "{\n".length;
-    this._endPos = this._beginPos;
+  calculatePositions(): void {
+    this.beginPos = (this.node as any).body.start + "{\n".length;
+    this.endPos = this.beginPos;
   }
 
   /**
@@ -240,7 +225,7 @@ class PrependAction extends Action {
    * @returns {string} rewritten code.
    */
   get rewrittenCode(): string {
-    const source = this._rewrittenSource();
+    const source = this.rewrittenSource();
     const indent = this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
     if (source.split("\n").length > 1) {
       return (
@@ -284,10 +269,10 @@ class InsertAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions(): void {
+  calculatePositions(): void {
     const range = this.selector ? this.node.childNodeRange(this.selector) : this.node;
-    this._beginPos = this.at === "beginning" ? range.start : range.end;
-    this._endPos = this._beginPos;
+    this.beginPos = this.at === "beginning" ? range.start : range.end;
+    this.endPos = this.beginPos;
   }
 
   /**
@@ -295,7 +280,7 @@ class InsertAction extends Action {
    * @returns {string} rewritten code.
    */
   get rewrittenCode(): string {
-    return this._rewrittenSource();
+    return this.rewrittenSource();
   }
 }
 
@@ -320,13 +305,13 @@ class DeleteAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions(): void {
-    this._beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
-    this._endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
-    this._squeezeSpaces();
-    this._removeBraces();
-    this._removeComma();
-    this._removeSpace();
+  calculatePositions(): void {
+    this.beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
+    this.endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
+    this.squeezeSpaces();
+    this.removeBraces();
+    this.removeComma();
+    this.removeSpace();
   }
 
   /**
@@ -354,24 +339,24 @@ class RemoveAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions(): void {
-    if (this._takeWholeLine()) {
-      const lines = this._source().split("\n");
+  calculatePositions(): void {
+    if (this.takeWholeLine()) {
+      const lines = this.source().split("\n");
       const beginLine = this.node.loc!.start.line;
       const endLine = this.node.loc!.end.line;
-      this._beginPos = lines.slice(0, beginLine - 1).join("\n").length + (beginLine === 1 ? 0 : "\n".length);
-      this._endPos = lines.slice(0, endLine).join("\n").length;
+      this.beginPos = lines.slice(0, beginLine - 1).join("\n").length + (beginLine === 1 ? 0 : "\n".length);
+      this.endPos = lines.slice(0, endLine).join("\n").length;
       if (lines.length > endLine) {
-        this._endPos = this.endPos + "\n".length;
+        this.endPos = this.endPos + "\n".length;
       }
-      this._squeezeLines();
+      this.squeezeLines();
     } else {
-      this._beginPos = this.node.start;
-      this._endPos = this.node.end;
-      this._squeezeSpaces();
-      this._removeBraces();
-      this._removeComma();
-      this._removeSpace();
+      this.beginPos = this.node.start;
+      this.endPos = this.node.end;
+      this.squeezeSpaces();
+      this.removeBraces();
+      this.removeComma();
+      this.removeSpace();
     }
   }
 
@@ -387,8 +372,8 @@ class RemoveAction extends Action {
    * @private
    * @returns {boolean}
    */
-  _takeWholeLine(): boolean {
-    const sourceFromFile = this._source()
+  private takeWholeLine(): boolean {
+    const sourceFromFile = this.source()
       .split("\n")
       .slice(this.node.loc!.start.line - 1, this.node.loc!.end.line)
       .join("\n")
@@ -427,9 +412,9 @@ class ReplaceAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions(): void {
-    this._beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
-    this._endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
+  calculatePositions(): void {
+    this.beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
+    this.endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
   }
 
   /**
@@ -437,7 +422,7 @@ class ReplaceAction extends Action {
    * @returns {string} rewritten code.
    */
   get rewrittenCode(): string {
-    return this._rewrittenSource();
+    return this.rewrittenSource();
   }
 }
 
@@ -467,13 +452,13 @@ class ReplaceWithAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions(): void {
+  calculatePositions(): void {
     if (this.autoIndent) {
-      this._beginPos = this.node.start;
+      this.beginPos = this.node.start;
     } else {
-      this._beginPos = this.node.start - this.node.loc!.start.column;
+      this.beginPos = this.node.start - this.node.loc!.start.column;
     }
-    this._endPos = this.node.end;
+    this.endPos = this.node.end;
   }
 
   /**
@@ -481,9 +466,9 @@ class ReplaceWithAction extends Action {
    * @returns {string} rewritten code.
    */
   get rewrittenCode(): string {
-    if (this.autoIndent && this._rewrittenSource().includes("\n")) {
+    if (this.autoIndent && this.rewrittenSource().includes("\n")) {
       const newCode: string[] = [];
-      this._rewrittenSource()
+      this.rewrittenSource()
         .split("\n")
         .forEach((line, index) => {
           if (index === 0 || line === "") {
@@ -494,7 +479,7 @@ class ReplaceWithAction extends Action {
         });
       return newCode.join("\n");
     } else {
-      return this._rewrittenSource();
+      return this.rewrittenSource();
     }
   }
 }
@@ -516,9 +501,9 @@ class CommentOutAction extends Action {
    * Calculate the begin and end positions.
    * @protected
    */
-  _calculatePositions(): void {
-    this._beginPos = this.node.start;
-    this._endPos = this.node.end;
+  calculatePositions(): void {
+    this.beginPos = this.node.start;
+    this.endPos = this.node.end;
   }
 
   /**

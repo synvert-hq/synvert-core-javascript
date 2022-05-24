@@ -21,16 +21,16 @@ class NpmVersion {
    * @returns {boolean} true if matches, otherwise false.
    */
   match(): boolean {
-    if (!this._packageExist()) {
+    if (!this.packageExist()) {
       return true;
     }
     const [operator, version] = this.version.split(" ");
-    if (this._packageLockExist()) {
-      const packageVersion = this._npmPackageVersion();
+    if (this.packageLockExist()) {
+      const packageVersion = this.npmPackageVersion();
       return compareVersions.compare(packageVersion, version, operator as compareVersions.CompareOperator);
     }
-    if (this._yarnLockExist()) {
-      const packageVersion = this._yarnPackageVersion();
+    if (this.yarnLockExist()) {
+      const packageVersion = this.yarnPackageVersion();
       return compareVersions.compare(packageVersion, version, operator as compareVersions.CompareOperator);
     }
 
@@ -42,8 +42,8 @@ class NpmVersion {
    * @private
    * @returns {string}
    */
-  _npmPackageVersion(): string {
-    const packageLockTree = this._packageLockTree();
+  private npmPackageVersion(): string {
+    const packageLockTree = this.packageLockTree();
     if (packageLockTree.packages) {
       return packageLockTree.packages[`node_modules/${this.name}`].version;
     } else {
@@ -56,9 +56,9 @@ class NpmVersion {
    * @private
    * @returns {string}
    */
-  _yarnPackageVersion(): string {
-    const packageTree = this._packageTree();
-    const yarnLockTree = this._yarnLockTree();
+  private yarnPackageVersion(): string {
+    const packageTree = this.packageTree();
+    const yarnLockTree = this.yarnLockTree();
     return yarnLockTree[`${this.name}@${packageTree.dependencies[this.name]}`];
   }
 
@@ -66,8 +66,8 @@ class NpmVersion {
    * Get parse result of package.json.
    * @private
    */
-  _packageTree(): any {
-    return JSON.parse(fs.readFileSync(this._packagePath(), "utf-8"));
+  private packageTree(): any {
+    return JSON.parse(fs.readFileSync(this.packagePath(), "utf-8"));
   }
 
   /**
@@ -75,8 +75,8 @@ class NpmVersion {
    * @private
    * @returns {boolean}
    */
-  _packageExist(): boolean {
-    return fs.existsSync(this._packagePath());
+  private packageExist(): boolean {
+    return fs.existsSync(this.packagePath());
   }
 
   /**
@@ -84,7 +84,7 @@ class NpmVersion {
    * @private
    * @returns {string}
    */
-  _packagePath(): string {
+  private packagePath(): string {
     return path.join(Configuration.path, "package.json");
   }
 
@@ -92,8 +92,8 @@ class NpmVersion {
    * Get parse result of package-lock.json.
    * @private
    */
-  _packageLockTree(): any {
-    return JSON.parse(fs.readFileSync(this._packageLockPath(), "utf-8"));
+  private packageLockTree(): any {
+    return JSON.parse(fs.readFileSync(this.packageLockPath(), "utf-8"));
   }
 
   /**
@@ -101,8 +101,8 @@ class NpmVersion {
    * @private
    * @returns {boolean}
    */
-  _packageLockExist(): boolean {
-    return fs.existsSync(this._packageLockPath());
+  private packageLockExist(): boolean {
+    return fs.existsSync(this.packageLockPath());
   }
 
   /**
@@ -110,7 +110,7 @@ class NpmVersion {
    * @private
    * @returns {string}
    */
-  _packageLockPath(): string {
+  private packageLockPath(): string {
     return path.join(Configuration.path, "package-lock.json");
   }
 
@@ -118,8 +118,8 @@ class NpmVersion {
    * Get parse result of yarn.lock.
    * @private
    */
-  _yarnLockTree(): any {
-    return lockfile.parse(fs.readFileSync(this._yarnLockPath(), "utf-8"));
+  private yarnLockTree(): any {
+    return lockfile.parse(fs.readFileSync(this.yarnLockPath(), "utf-8"));
   }
 
   /**
@@ -127,8 +127,8 @@ class NpmVersion {
    * @private
    * @returns {boolean}
    */
-  _yarnLockExist(): boolean {
-    return fs.existsSync(this._yarnLockPath());
+  private yarnLockExist(): boolean {
+    return fs.existsSync(this.yarnLockPath());
   }
 
   /**
@@ -136,7 +136,7 @@ class NpmVersion {
    * @private
    * @returns {string}
    */
-  _yarnLockPath(): string {
+  private yarnLockPath(): string {
     return path.join(Configuration.path, "yarn.lock");
   }
 }

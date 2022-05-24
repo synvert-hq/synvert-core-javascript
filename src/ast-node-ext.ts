@@ -9,7 +9,7 @@ import { NodeExt } from "./node-ext";
 
 declare module "acorn" {
   interface Node {
-    _fileSourceCode: string;
+    fileSourceCode: string; // private modifier
 
     childNodeRange: (childNodeName: string) => { start: number, end: number };
     recursiveChildren: (func: (childNode: acorn.Node) => void) => void;
@@ -20,8 +20,8 @@ declare module "acorn" {
     indent: () => number;
     rewrittenSource: (code: string) => string;
     actualValue: (keys: string[]) => any;
-    _fileContent: () => string;
-    _matchValue: (actual: any, expected: any) => boolean;
+    fileContent: () => string;
+    matchValue: (actual: any, expected: any) => boolean;
   }
 }
 
@@ -169,11 +169,11 @@ Node.prototype.match = function (rules) {
     const expected = t(rules, multiKey).safeObject;
     switch (lastKey) {
       case "not":
-        return !this._matchValue(actual, expected);
+        return !this.matchValue(actual, expected);
       case "in":
-        return expected.some((expectedItem: any) => this._matchValue(actual, expectedItem));
+        return expected.some((expectedItem: any) => this.matchValue(actual, expectedItem));
       case "notIn":
-        return expected.every((expectedItem: any) => !this._matchValue(actual, expectedItem));
+        return expected.every((expectedItem: any) => !this.matchValue(actual, expectedItem));
       case "gt":
         return actual > expected;
       case "gte":
@@ -183,7 +183,7 @@ Node.prototype.match = function (rules) {
       case "lte":
         return actual <= expected;
       default:
-        return this._matchValue(actual, expected);
+        return this.matchValue(actual, expected);
     }
   });
 };
@@ -199,7 +199,7 @@ Node.prototype.match = function (rules) {
  */
 Node.prototype.childNodeSource = function (childName) {
   const { start, end } = this.childNodeRange(childName);
-  return this._fileContent().slice(start, end);
+  return this.fileContent().slice(start, end);
 };
 
 /**
@@ -230,7 +230,7 @@ Node.prototype.toSource = function (options = { fixIndent: false }) {
       })
       .join("\n");
   } else {
-    return this._fileContent().slice(this.start, this.end);
+    return this.fileContent().slice(this.start, this.end);
   }
 };
 
@@ -239,7 +239,7 @@ Node.prototype.toSource = function (options = { fixIndent: false }) {
  * @returns {number} indent.
  */
 Node.prototype.indent = function () {
-  return this._fileContent().split("\n")[this.loc!.start.line - 1].search(/\S|$/);
+  return this.fileContent().split("\n")[this.loc!.start.line - 1].search(/\S|$/);
 };
 
 /**
@@ -257,7 +257,7 @@ Node.prototype.rewrittenSource = function (code) {
     const obj = this.actualValue(match.split("."));
     if (obj) {
       if (Array.isArray(obj)) {
-        return this._fileContent().slice(obj[0].start, obj[obj.length - 1].end);
+        return this.fileContent().slice(obj[0].start, obj[obj.length - 1].end);
       }
       const result = obj.hasOwnProperty("name") ? obj.name : obj;
       if (result.hasOwnProperty("type")) {
@@ -300,11 +300,11 @@ Node.prototype.actualValue = function (this: any, multiKeys) {
  * Get the source code of current file.
  * @returns {string} source code of current file.
  */
-Node.prototype._fileContent = function () {
-  if (!this._fileSourceCode) {
-    this._fileSourceCode = fs.readFileSync(this.loc!.source!, "utf-8");
+Node.prototype.fileContent = function () {
+  if (!this.fileSourceCode) {
+    this.fileSourceCode = fs.readFileSync(this.loc!.source!, "utf-8");
   }
-  return this._fileSourceCode;
+  return this.fileSourceCode;
 };
 
 /**
@@ -313,7 +313,7 @@ Node.prototype._fileContent = function () {
  * @param {*} expected
  * @returns {boolean} true if actual value matches expected value
  */
-Node.prototype._matchValue = function (actual, expected) {
+Node.prototype.matchValue = function (actual, expected) {
   if (actual === expected) return true;
   if (!actual) return false;
   if (actual.hasOwnProperty("name") && actual.name === expected) return true;

@@ -52,6 +52,6 @@ Array.prototype.toSource = function (options = { fixIndent: false }) {
       })
       .join("\n");
   } else {
-    return this.first()._fileContent().slice(this.first().start, this.last().end);
+    return this.first().fileContent().slice(this.first().start, this.last().end);
   }
 };

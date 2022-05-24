@@ -31,10 +31,10 @@ const espree = require("@xinminlabs/espree");
  * @borrows Instance#withinNode as Instance#withNode
  */
 class Instance {
+  public currentNode!: Node;
+  private currentFileSource!: string;
+  private currentFilePath!: string;
   private actions: Action[];
-  private _currentNode!: Node;
-  private _currentFileSource!: string;
-  private _currentFilePath!: string;
 
   /**
    * Current instance.
@@ -49,46 +49,6 @@ class Instance {
    */
   constructor(private filePattern: string, private func: (instance: Instance) => void) {
     this.actions = [];
-  }
-
-  /**
-   * Get current node.
-   * @returns {Node} current node
-   */
-  get currentNode(): Node {
-    return this._currentNode;
-  }
-
-  /**
-   * Set current node.
-   * @param {Node} node
-   */
-  set currentNode(node: Node) {
-    this._currentNode = node;
-  }
-
-  /**
-   * Get current file source.
-   * @returns {string} current file source
-   */
-  get currentFileSource(): string {
-    return this._currentFileSource;
-  }
-
-  /**
-   * Set current file source.
-   * @param {string} fileSource
-   */
-  set currentFileSource(fileSource: string) {
-    this._currentFileSource = fileSource;
-  }
-
-  /**
-   * Get current relative file path.
-   * @returns {string} current relative file path
-   */
-  get currentFilePath(): string {
-    return this._currentFilePath;
   }
 
   /**
@@ -382,7 +342,7 @@ class Instance {
    * @param {string} filePath - file path
    */
   _processFile(filePath: string): void {
-    this._currentFilePath = filePath;
+    this.currentFilePath = filePath;
     if (Configuration.showRunProcess) {
       console.log(filePath);
     }
@@ -391,13 +351,13 @@ class Instance {
       let source = fs.readFileSync(filePath, "utf-8");
       this.currentFileSource = source;
       try {
-        const node = espree.parse(source, this._parseOptions(filePath));
+        const node = espree.parse(source, this.parseOptions(filePath));
 
         this.processWithNode(node, this.func);
 
         if (this.actions.length > 0) {
-          this.actions.sort(this._compareActions);
-          conflictActions = this._getConflictActions();
+          this.actions.sort(this.compareActions);
+          conflictActions = this.getConflictActions();
           this.actions.reverse().forEach((action) => {
             source = source.slice(0, action.beginPos) + action.rewrittenCode + source.slice(action.endPos);
           });
@@ -424,7 +384,7 @@ class Instance {
    * @param {string} filePath
    * @returns {Object} parser options
    */
-  _parseOptions(filePath: string) {
+  private parseOptions(filePath: string) {
     const options = {
       ecmaVersion: "latest",
       loc: true,
@@ -445,7 +405,7 @@ class Instance {
    * @param {Node} nodeB
    * @returns {number} returns 1 if nodeA goes before nodeB, -1 if nodeA goes after nodeB
    */
-  _compareActions(nodeA: Action, nodeB: Action): 0 | 1 | -1 {
+  private compareActions(nodeA: Action, nodeB: Action): 0 | 1 | -1 {
     if (nodeA.beginPos > nodeB.beginPos) return 1;
     if (nodeA.beginPos < nodeB.beginPos) return -1;
     if (nodeA.endPos > nodeB.endPos) return 1;
@@ -458,7 +418,7 @@ class Instance {
    * @private
    * @returns {Action[]} conflict actions
    */
-  _getConflictActions(): Action[] {
+  private getConflictActions(): Action[] {
     let i = this.actions.length - 1;
     let j = i - 1;
     const conflictActions: Action[] = [];

@@ -51,7 +51,7 @@ abstract class Condition {
    * @private
    * @returns {Node}
    */
-  _targetNode(): Node {
+  protected targetNode(): Node {
     if (this.options.in) {
       return t(this.instance.currentNode, this.options.in).safeObject;
     }
@@ -69,7 +69,7 @@ class IfExistCondition extends Condition {
    */
   protected match(): boolean {
     let match = false;
-    this._targetNode().recursiveChildren((childNode) => {
+    this.targetNode().recursiveChildren((childNode) => {
       if (!match) {
         match = childNode.match(this.rules);
       }
@@ -88,7 +88,7 @@ class UnlessExistCondition extends Condition {
    */
   protected match(): boolean {
     let match = false;
-    this._targetNode().recursiveChildren((childNode) => {
+    this.targetNode().recursiveChildren((childNode) => {
       if (!match) {
         match = childNode.match(this.rules);
       }
@@ -106,7 +106,7 @@ class IfOnlyExistCondition extends Condition {
    * Check if only have one child node and the child node matches rules.
    */
   protected match(): boolean {
-    return this._targetNode().arrayBody().length === 1 && this._targetNode().arrayBody()[0].match(this.rules);
+    return this.targetNode().arrayBody().length === 1 && this.targetNode().arrayBody()[0].match(this.rules);
   }
 }
 
@@ -167,7 +167,7 @@ class IfAllCondition extends Condition {
    */
   _matchingNodes(): Node[] {
     const nodes: Node[] = [];
-    this._targetNode().recursiveChildren((childNode) => {
+    this.targetNode().recursiveChildren((childNode) => {
       if (childNode.match(this.rules)) {
         nodes.push(childNode);
       }
