@@ -14,7 +14,7 @@ declare module "acorn" {
     childNodeRange: (childNodeName: string) => { start: number, end: number };
     recursiveChildren: (func: (childNode: acorn.Node) => void) => void;
     arrayBody: () => acorn.Node[];
-    match: (rules: object) => boolean;
+    match: (rules: any) => boolean;
     childNodeSource: (childName: string) => string;
     toSource(options?: { fixIndent: boolean }): string;
     indent: () => number;

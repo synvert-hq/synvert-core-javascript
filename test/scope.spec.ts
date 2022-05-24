@@ -1,6 +1,6 @@
-const { QueryScope, WithinScope, GotoScope } = require("../lib/scope");
-const Instance = require("../lib/instance");
-const { parse } = require("./helper");
+import { QueryScope, WithinScope, GotoScope } from "../src/scope";
+import Instance from "../src/instance";
+import { parse } from "./helper";
 
 describe("QueryScope", () => {
   const source = `class FooBar {}`;

@@ -1,7 +1,7 @@
-const Synvert = require("../lib/synvert");
+import { Rewriter } from "../src/synvert";
 
 describe("Synvert", function () {
   test("Rewriter is defined", function () {
-    expect(Synvert.Rewriter).toBeDefined();
+    expect(Rewriter).toBeDefined();
   });
 });

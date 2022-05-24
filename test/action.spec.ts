@@ -1,7 +1,8 @@
-const mock = require("mock-fs");
+import mock from "mock-fs";
 
-const Instance = require("../lib/instance");
-const {
+import Instance from "../src/instance";
+import {
+  Action,
   AppendAction,
   PrependAction,
   InsertAction,
@@ -10,8 +11,8 @@ const {
   ReplaceAction,
   ReplaceWithAction,
   CommentOutAction,
-} = require("../lib/action");
-const { parse } = require("./helper");
+} from "../src/action";
+import { parse } from "./helper";
 
 describe("AppendAction", () => {
   const code = `class FooBar {\n}`;
@@ -28,7 +29,7 @@ describe("AppendAction", () => {
   });
 
   describe("single line", () => {
-    let action;
+    let action: Action;
 
     beforeEach(() => {
       action = new AppendAction(instance, "foobar() {}").process();
@@ -48,7 +49,7 @@ describe("AppendAction", () => {
   });
 
   describe("multiple lines", () => {
-    let action;
+    let action: Action;
 
     beforeEach(() => {
       action = new AppendAction(instance, "foo() {}\nbar() {}").process();
@@ -83,7 +84,7 @@ describe("PrependAction", () => {
   });
 
   describe("single line", () => {
-    let action;
+    let action: Action;
 
     beforeEach(() => {
       action = new PrependAction(instance, "foobar() {}").process();
@@ -103,7 +104,7 @@ describe("PrependAction", () => {
   });
 
   describe("multiple lines", () => {
-    let action;
+    let action: Action;
 
     beforeEach(() => {
       action = new PrependAction(instance, "foo() {}\nbar() {}").process();
@@ -127,7 +128,7 @@ describe("InsertAction", () => {
   const node = parse("this.foo");
   const instance = new Instance("", function () {});
   instance.currentNode = node;
-  let action;
+  let action: Action;
 
   describe("at beginning", () => {
     beforeEach(() => {
@@ -167,10 +168,11 @@ describe("InsertAction", () => {
 });
 
 describe("DeleteAction", () => {
-  const node = parse("this.foo.bind(this)");
+  const code = "this.foo.bind(this)";
+  const node = parse(code);
   const instance = new Instance("", function () {});
   instance.currentNode = node;
-  let action;
+  let action: Action;
 
   beforeEach(() => {
     mock({ "code.js": code });
@@ -203,11 +205,11 @@ describe("DeleteAction", () => {
 
 describe("RemoveAction", () => {
   describe("single line", () => {
-    code = "this.foo.bind(this);";
+    const code = "this.foo.bind(this);";
     const node = parse(code);
     const instance = new Instance("", function () {});
     instance.currentNode = node.expression;
-    let action;
+    let action: Action;
 
     beforeEach(() => {
       mock({ "code.js": code });
@@ -243,7 +245,7 @@ describe("RemoveAction", () => {
     const node = parse(code);
     const instance = new Instance("", function () {});
     instance.currentNode = node.body.body[0];
-    let action;
+    let action: Action;
 
     beforeEach(() => {
       mock({ "code.js": code });
@@ -275,7 +277,7 @@ describe("ReplaceAction", () => {
   const node = parse("class FooBar {}");
   const instance = new Instance("", function () {});
   instance.currentNode = node;
-  let action;
+  let action: Action;
 
   beforeEach(() => {
     action = new ReplaceAction(instance, "id", { with: "Synvert" }).process();
@@ -298,10 +300,10 @@ describe("ReplaceWithAction", () => {
   const node = parse("!!foobar");
   const instance = new Instance("", function () {});
   instance.currentNode = node;
-  let action;
+  let action: Action;
 
   beforeEach(() => {
-    action = new ReplaceWithAction({ currentNode: node }, "Boolean({{expression.argument.argument}})").process();
+    action = new ReplaceWithAction(instance, "Boolean({{expression.argument.argument}})").process();
   });
 
   it("gets beginPos", function () {
@@ -326,11 +328,11 @@ describe("CommentOutAction", () => {
   const node = parse(code);
   const instance = new Instance("", function () {});
   instance.currentNode = node;
-  let action;
+  let action: Action;
 
   beforeEach(() => {
     mock({ "code.js": code });
-    action = new CommentOutAction({ currentNode: node }).process();
+    action = new CommentOutAction(instance).process();
   });
 
   afterEach(() => {

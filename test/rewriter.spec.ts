@@ -1,8 +1,8 @@
-const fs = require("fs");
-const mock = require("mock-fs");
-const { RewriterNotFoundError } = require("../lib/error");
+import fs from "fs";
+import mock from "mock-fs";
+import { RewriterNotFoundError } from "../src/error";
 
-const Rewriter = require("../lib/rewriter");
+import Rewriter from "../src/rewriter";
 
 describe("static register", () => {
   it("registers and fetches", () => {
@@ -47,8 +47,7 @@ describe("static register", () => {
   describe("group and name", () => {
     test("get group and name", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {});
-      expect(rewriter.group).toBe("snippet group");
-      expect(rewriter.name).toBe("snippet name");
+      expect(Rewriter.fetch("snippet group", "snippet name")).not.toBeUndefined();
     });
   });
 
@@ -73,10 +72,6 @@ describe("static register", () => {
       rewriter.process();
       const subSnippets = rewriter.subSnippets;
       expect(subSnippets.length).toBe(2);
-      expect(subSnippets[0].group).toBe("group1");
-      expect(subSnippets[0].name).toBe("name1");
-      expect(subSnippets[1].group).toBe("group2");
-      expect(subSnippets[1].name).toBe("name2");
     });
   });
 

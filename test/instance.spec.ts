@@ -1,7 +1,7 @@
-const fs = require("fs");
-const mock = require("mock-fs");
+import fs from "fs";
+import mock from "mock-fs";
 
-const Instance = require("../lib/instance");
+import Instance from "../src/instance";
 
 describe("Instance", () => {
   describe("process", () => {

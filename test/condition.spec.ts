@@ -1,6 +1,6 @@
-const { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition } = require("../lib/condition");
-const Instance = require("../lib/instance");
-const { parse } = require("./helper");
+import { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition } from "../src/condition";
+import Instance from "../src/instance";
+import { parse } from "./helper";
 
 describe("IfExistCondition", () => {
   const source = `
