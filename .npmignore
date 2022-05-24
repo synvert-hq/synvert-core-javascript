@@ -1,3 +1,5 @@
-node_modules
-test
-.github
+src/
+test/
+.github/
+tsconfig.*
+jest.config.js
