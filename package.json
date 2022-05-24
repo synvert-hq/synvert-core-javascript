@@ -4,8 +4,10 @@
   "description": "write javascript code to change javascript code",
   "main": "lib/synvert.js",
   "scripts": {
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest",
-    "watch:test": "jest --watch"
+    "watch:test": "jest --watch",
+    "prepack": "npm run build"
   },
   "author": "Richard Huang",
   "keywords": [
