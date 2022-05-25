@@ -53,7 +53,7 @@ class QueryScope extends Scope {
     instance.processWithNode(currentNode, () => {
       this.nodeQuery.parse(currentNode as NodeExt).forEach((matchingNode) => {
         instance.processWithNode(matchingNode, () => {
-          this.func.call(this, this.instance);
+          this.func.call(this.instance, this.instance);
         });
       });
     });
@@ -91,7 +91,7 @@ class WithinScope extends Scope {
     instance.processWithNode(currentNode, () => {
       matchingNodes.forEach((matchingNode) => {
         instance.processWithNode(matchingNode, () => {
-          this.func.call(this, this.instance);
+          this.func.call(this.instance, this.instance);
         });
       });
     });
@@ -143,7 +143,7 @@ class GotoScope extends Scope {
     if (!childNode) return;
 
     this.instance.processWithOtherNode(childNode, () => {
-      this.func.call(this, this.instance);
+      this.func.call(this.instance, this.instance);
     });
   }
 }

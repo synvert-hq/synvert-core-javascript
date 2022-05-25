@@ -36,7 +36,7 @@ abstract class Condition {
    */
   process(): void {
     if (this.match()) {
-      this.func.call(this, this.instance);
+      this.func.call(this.instance, this.instance);
     }
   }
 
@@ -136,9 +136,9 @@ class IfAllCondition extends Condition {
       return;
     }
     if (nodes.every(this._matchFunc.bind(this))) {
-      this.func.call(this, this.instance);
+      this.func.call(this.instance, this.instance);
     } else {
-      this.elseFunc.call(this, this.instance);
+      this.elseFunc.call(this.instance, this.instance);
     }
   }
 
