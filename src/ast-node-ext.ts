@@ -5,7 +5,7 @@ import { KEYS } from "eslint-visitor-keys";
 import { t } from "typy";
 import flatten from "flat";
 import { NotSupportedError } from "./error";
-import { NodeExt } from "./node-ext";
+import { NodeArrayExt, NodeExt } from "./types/node-ext";
 
 declare module "acorn" {
   interface Node {

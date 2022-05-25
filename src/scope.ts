@@ -4,7 +4,7 @@ import Instance from "./instance";
 import { Node } from "acorn";
 import "./ast-node-ext";
 import EspreeAdapter from "./espree-adapter";
-import { NodeExt } from "./node-ext";
+import { NodeExt } from "./types/node-ext";
 
 NodeQuery.configure(new EspreeAdapter());
 
