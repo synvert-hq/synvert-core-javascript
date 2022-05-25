@@ -427,7 +427,7 @@ class Instance {
     let beginPos = this.actions[i].beginPos;
     while (j > -1) {
       if (beginPos < this.actions[j].endPos) {
-        conflictActions.push(this.actions[j]);
+        conflictActions.push(this.actions.splice(j, 1)[0]);
       } else {
         i = j;
         beginPos = this.actions[i].beginPos;
