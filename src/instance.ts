@@ -58,7 +58,7 @@ class Instance {
    */
   process(): void {
     if (fs.existsSync(Configuration.path) && minimatch(Configuration.path, this.filePattern)) {
-      return this._processFile(Configuration.path);
+      return this.processFile(Configuration.path);
     }
 
     glob
@@ -69,7 +69,7 @@ class Instance {
         realpath: true,
         absolute: true,
       })
-      .forEach((filePath) => this._processFile(filePath));
+      .forEach((filePath) => this.processFile(filePath));
   }
 
   /**
@@ -341,7 +341,7 @@ class Instance {
    * @private
    * @param {string} filePath - file path
    */
-  _processFile(filePath: string): void {
+  private processFile(filePath: string): void {
     this.currentFilePath = filePath;
     if (Configuration.showRunProcess) {
       console.log(filePath);
