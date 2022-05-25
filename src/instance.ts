@@ -32,8 +32,8 @@ const espree = require("@xinminlabs/espree");
  */
 class Instance {
   public currentNode!: Node;
-  private currentFileSource!: string;
-  private currentFilePath!: string;
+  public currentFileSource!: string;
+  public currentFilePath!: string;
   private actions: Action[];
 
   /**
