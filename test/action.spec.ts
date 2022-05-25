@@ -150,7 +150,10 @@ describe("InsertAction", () => {
 
   describe("at end of object", () => {
     beforeEach(() => {
-      action = new InsertAction(instance, ".bar", { to: "expression.object", at: "end" }).process();
+      action = new InsertAction(instance, ".bar", {
+        to: "expression.object",
+        at: "end",
+      }).process();
     });
 
     it("gets beginPos", function () {
@@ -303,7 +306,10 @@ describe("ReplaceWithAction", () => {
   let action: Action;
 
   beforeEach(() => {
-    action = new ReplaceWithAction(instance, "Boolean({{expression.argument.argument}})").process();
+    action = new ReplaceWithAction(
+      instance,
+      "Boolean({{expression.argument.argument}})"
+    ).process();
   });
 
   it("gets beginPos", function () {

@@ -33,7 +33,11 @@ class QueryScope extends Scope {
    * @param {String} queryString
    * @param {Function} func - a function to be called on all matching nodes.
    */
-  constructor(instance: Instance, queryString: string, private func: (instance: Instance) => void) {
+  constructor(
+    instance: Instance,
+    queryString: string,
+    private func: (instance: Instance) => void
+  ) {
     super(instance);
     this.nodeQuery = new NodeQuery(queryString);
   }
@@ -71,7 +75,11 @@ class WithinScope extends Scope {
    * @param {Object} rules
    * @param {Function} func - a function to be called if rules are matched.
    */
-  constructor(instance: Instance, private rules: any, private func: (instance: Instance) => void) {
+  constructor(
+    instance: Instance,
+    private rules: any,
+    private func: (instance: Instance) => void
+  ) {
     super(instance);
   }
 
@@ -128,7 +136,11 @@ class GotoScope extends Scope {
    * @param {string} childNodeName
    * @param {Function} func
    */
-  constructor(instance: Instance, private childNodeName: string, private func: (instance: Instance) => void) {
+  constructor(
+    instance: Instance,
+    private childNodeName: string,
+    private func: (instance: Instance) => void
+  ) {
     super(instance);
   }
 

@@ -28,7 +28,10 @@ class NodeVersion {
     if (!versionFile) {
       return true;
     }
-    const version = fs.readFileSync(path.join(Configuration.path, versionFile), "utf-8");
+    const version = fs.readFileSync(
+      path.join(Configuration.path, versionFile),
+      "utf-8"
+    );
     return compareVersions.compare(version, this.version, ">=");
   }
 }

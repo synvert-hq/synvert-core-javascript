@@ -1,4 +1,9 @@
-import { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition } from "../src/condition";
+import {
+  IfExistCondition,
+  UnlessExistCondition,
+  IfOnlyExistCondition,
+  IfAllCondition,
+} from "../src/condition";
 import Instance from "../src/instance";
 import { parse } from "./helper";
 
@@ -16,17 +21,25 @@ describe("IfExistCondition", () => {
 
     test("does not call function if no matching node", () => {
       let run = false;
-      new IfExistCondition(instance, { type: "MemberExpression", object: "jQuery", property: "ajax" }, function () {
-        run = true;
-      }).process();
+      new IfExistCondition(
+        instance,
+        { type: "MemberExpression", object: "jQuery", property: "ajax" },
+        function () {
+          run = true;
+        }
+      ).process();
       expect(run).toBe(false);
     });
 
     test("calls function if there is a matching node", () => {
       let run = false;
-      new IfExistCondition(instance, { type: "MemberExpression", object: "$", property: "ajax" }, function () {
-        run = true;
-      }).process();
+      new IfExistCondition(
+        instance,
+        { type: "MemberExpression", object: "$", property: "ajax" },
+        function () {
+          run = true;
+        }
+      ).process();
       expect(run).toBe(true);
     });
 
@@ -59,17 +72,25 @@ describe("UnlessExistCondition", () => {
 
     test("calls function if no matching node", () => {
       let run = false;
-      new UnlessExistCondition(instance, { type: "MemberExpression", object: "jQuery", property: "ajax" }, function () {
-        run = true;
-      }).process();
+      new UnlessExistCondition(
+        instance,
+        { type: "MemberExpression", object: "jQuery", property: "ajax" },
+        function () {
+          run = true;
+        }
+      ).process();
       expect(run).toBe(true);
     });
 
     test("does not call function if there is a matching node", () => {
       let run = false;
-      new UnlessExistCondition(instance, { type: "MemberExpression", object: "$", property: "ajax" }, function () {
-        run = true;
-      }).process();
+      new UnlessExistCondition(
+        instance,
+        { type: "MemberExpression", object: "$", property: "ajax" },
+        function () {
+          run = true;
+        }
+      ).process();
       expect(run).toBe(false);
     });
 
@@ -106,7 +127,10 @@ describe("IfOnlyExistCondition", () => {
       let run = false;
       new IfOnlyExistCondition(
         instance,
-        { type: "ExpressionStatement", expression: { type: "Literal", value: "strict" } },
+        {
+          type: "ExpressionStatement",
+          expression: { type: "Literal", value: "strict" },
+        },
         function () {
           run = true;
         }
@@ -130,7 +154,10 @@ describe("IfOnlyExistCondition", () => {
       let run = false;
       new IfOnlyExistCondition(
         instance,
-        { type: "ExpressionStatement", expression: { type: "Literal", value: "use strict" } },
+        {
+          type: "ExpressionStatement",
+          expression: { type: "Literal", value: "use strict" },
+        },
         function () {
           run = true;
         }
