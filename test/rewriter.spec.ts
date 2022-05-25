@@ -47,7 +47,8 @@ describe("static register", () => {
   describe("group and name", () => {
     test("get group and name", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {});
-      expect(Rewriter.fetch("snippet group", "snippet name")).not.toBeUndefined();
+      expect(rewriter.group).toBe("snippet group");
+      expect(rewriter.name).toBe("snippet name");
     });
   });
 
@@ -72,6 +73,10 @@ describe("static register", () => {
       rewriter.process();
       const subSnippets = rewriter.subSnippets;
       expect(subSnippets.length).toBe(2);
+      expect(subSnippets[0].group).toBe("group1");
+      expect(subSnippets[0].name).toBe("name1");
+      expect(subSnippets[1].group).toBe("group2");
+      expect(subSnippets[1].name).toBe("name2");
     });
   });
 

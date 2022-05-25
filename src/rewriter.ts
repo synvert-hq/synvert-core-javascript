@@ -86,7 +86,7 @@ class Rewriter {
    * @param {string} name - snippet name
    * @param {Function} func - a function defines the behaviors of the rewriter
    */
-  constructor(private group: string, private name: string, private func: (rewriter: Rewriter) => void) {
+  constructor(public group: string, public name: string, private func: (rewriter: Rewriter) => void) {
     Rewriter.register(group, name, this);
   }
 
