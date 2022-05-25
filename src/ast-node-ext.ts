@@ -80,15 +80,20 @@ Node.prototype.childNodeRange = function (this: any, childName) {
   } else {
     const [directChildName, ...nestedChildName] = childName.split(".");
     if (this[directChildName]) {
-      const childNode: NodeExt = this[directChildName];
+      const childNode: NodeExt | NodeArrayExt = this[directChildName];
 
       if (Array.isArray(childNode)) {
         const [childDirectChildName, ...childNestedChildName] = nestedChildName;
-        const childChildNode = childNode[childDirectChildName] as NodeExt;
 
         if (childNestedChildName.length > 0) {
-          return childChildNode.childNodeRange(childNestedChildName.join("."));
+          return (childNode[childDirectChildName] as NodeExt).childNodeRange(childNestedChildName.join("."));
+        }
+
+        if (typeof childNode[childDirectChildName] === "function") {
+          const childChildNode = (childNode[childDirectChildName] as () => { start: number, end: number }).bind(childNode);
+          return { start: childChildNode().start, end: childChildNode().end };
         } else if (!Number.isNaN(childDirectChildName)) {
+          const childChildNode = childNode.at(Number.parseInt(childDirectChildName)) as NodeExt;
           if (childChildNode) {
             return { start: childChildNode.start, end: childChildNode.end };
           } else {

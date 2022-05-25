@@ -30,6 +30,12 @@ describe("ast node", () => {
       expect(node.childNodeRange("expression.arguments.0")).toEqual({ start: 5, end: 5 });
     });
 
+    test("expression with first element", () => {
+      const node = parse("test(foo, bar)");
+      expect(node.childNodeRange("expression.arguments")).toEqual({ start: 4, end: 14 });
+      expect(node.childNodeRange("expression.arguments.first")).toEqual({ start: 5, end: 8 });
+    });
+
     test("method definition", () => {
       const node = parse(`
         class Foobar {
