@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.0 (2022-05-25)
+
+* Add `findNode` dsl
+* Migrate to Typescript
+
 ## 0.40.0 (2022-03-05)
 
 * Remove space when removing a property in jsx element.
