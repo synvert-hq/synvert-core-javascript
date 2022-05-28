@@ -17,17 +17,11 @@ new Synvert.Rewriter("jquery", "deprecate-event-shorthand", () => {
     // $('#test').click(function(e) { });
     // =>
     // $('#test').on('click', function(e) { });
-    withNode(
-      {
-        type: "CallExpression",
-        callee: { type: "MemberExpression", object: /^\$/, property: 'click' },
-        arguments: { length: 1, first: { type: { in: ["FunctionExpression", "ArrowFunctionExpression"] } } },
-      },
-      () => {
-        replace("callee.property", { with: "on" });
-        insert("'click', ", { to: "arguments.0", at: "beginning" });
-      }
-    );
+    findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
+                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
+      replace("callee.property", { with: "on" });
+      insert("'click', ", { to: "arguments.0", at: "beginning" });
+    });
 
     // $form.submit();
     // =>
@@ -61,6 +55,7 @@ DSL are as follows
 
 Scopes:
 
+* [findNode](./Instance.html#findNode) - recursively find matching ast nodes by node query language
 * [withNodes](./Instance.html#withNodes) - recursively find matching ast nodes
 * [withNode](./Instance.html#withNode) - alias to withNode
 * [gotoNode](./Instance.html#gotoNode) - go to a child node
