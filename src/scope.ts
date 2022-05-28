@@ -23,6 +23,8 @@ abstract class Scope {
 /**
  * QueryScope finds out nodes by using node query language, then changes its scope to matching node.
  * @extends Scope
+ *
+ * @see {@link https://github.com/xinminlabs/node-query-javascript} for node query language
  */
 class QueryScope extends Scope {
   private nodeQuery: NodeQuery<NodeExt>;
