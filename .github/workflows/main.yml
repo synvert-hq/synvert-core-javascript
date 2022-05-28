@@ -22,11 +22,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18
+      - name: npm install
+        run: npm install
+      - name: npm run build
+        run: npm run build
+      - name: Generate docs
         uses: andstor/jsdoc-action@v1
         with:
-          source_dir: ./src
-          output_dir: ./out
+          source_dir: ./lib
+          output_dir: ./docs
           template: minami
           front_page: README.md
 
@@ -34,4 +41,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./out
+          publish_dir: ./docs
