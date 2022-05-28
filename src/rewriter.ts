@@ -67,7 +67,12 @@ class Rewriter {
    * @param {Object} options - the rewriter options.
    * @returns {Rewriter} the registered rewriter.
    */
-  static call(group: string, name: string, sandbox?: boolean, options = {}): Rewriter | undefined {
+  static call(
+    group: string,
+    name: string,
+    sandbox?: boolean,
+    options = {}
+  ): Rewriter | undefined {
     const rewriter = this.fetch(group, name);
     if (!rewriter) return;
 
@@ -86,7 +91,11 @@ class Rewriter {
    * @param {string} name - snippet name
    * @param {Function} func - a function defines the behaviors of the rewriter
    */
-  constructor(public group: string, public name: string, private func: (rewriter: Rewriter) => void) {
+  constructor(
+    public group: string,
+    public name: string,
+    private func: (rewriter: Rewriter) => void
+  ) {
     Rewriter.register(group, name, this);
   }
 
@@ -168,7 +177,12 @@ class Rewriter {
    */
   addSnippet(group: string, name: string, options: object = {}): void {
     const currentRewriter = Rewriter.current;
-    const rewriter = Rewriter.call(group, name, currentRewriter.sandbox, options);
+    const rewriter = Rewriter.call(
+      group,
+      name,
+      currentRewriter.sandbox,
+      options
+    );
     if (rewriter) {
       currentRewriter.subSnippets.push(rewriter);
     }
@@ -206,8 +220,14 @@ declare global {
   var ifNode: (version: string) => void;
   var ifNpm: (name: string, version: string) => void;
   var addSnippet: (group: string, name: string, options?: object) => void;
-  var withinFiles: (filePattern: string, func: (instance: Instance) => void) => void;
-  var withinFile: (filePattern: string, func: (instance: Instance) => void) => void;
+  var withinFiles: (
+    filePattern: string,
+    func: (instance: Instance) => void
+  ) => void;
+  var withinFile: (
+    filePattern: string,
+    func: (instance: Instance) => void
+  ) => void;
 }
 
 global.description = Rewriter.prototype.description;
