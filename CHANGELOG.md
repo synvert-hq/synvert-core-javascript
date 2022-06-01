@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.0.1 (2022-06-01)
+
+* Fix `Rewriter#description` signature
+* Make `NodeVersion` and `NpmVersion` fields public
+* Update `@xinminlabs/node-query` to 1.7.1
+
 ## 1.0.0 (2022-05-25)
 
 * Add `findNode` dsl
