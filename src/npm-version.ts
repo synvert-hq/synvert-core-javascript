@@ -14,7 +14,7 @@ class NpmVersion {
    * @param {string} name - npm name
    * @param {string} version - npm version, e.g. ">= 1.0.0"
    */
-  constructor(private name: string, private version: string) {}
+  constructor(public name: string, public version: string) {}
 
   /**
    * Check if the specified npm version in package-lock.json or yarn.lock matches npm version comparator.

@@ -12,7 +12,7 @@ class NodeVersion {
    * Create a NodeVersion
    * @param {string} version  - node version, e.g. '14.0'
    */
-  constructor(private version: string) {}
+  constructor(public version: string) {}
 
   /**
    * Check if the specified node version matches current node version.
