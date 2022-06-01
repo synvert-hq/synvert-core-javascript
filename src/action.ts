@@ -148,7 +148,9 @@ abstract class Action {
    * @returns {boolean} true if next token is equal to substr
    */
   private nextTokenIs(substr: string): boolean {
-    return this.source().slice(this.endPos, this.endPos + substr.length) === substr;
+    return (
+      this.source().slice(this.endPos, this.endPos + substr.length) === substr
+    );
   }
 
   /**
@@ -158,7 +160,10 @@ abstract class Action {
    * @returns {boolean} true if previous token is equal to substr
    */
   private prevTokenIs(substr: string): boolean {
-    return this.source().slice(this.beginPos - substr.length, this.beginPos) === substr;
+    return (
+      this.source().slice(this.beginPos - substr.length, this.beginPos) ===
+      substr
+    );
   }
 
   /**
@@ -168,7 +173,10 @@ abstract class Action {
    * @returns {boolean} true if the node source starts with semicolon
    */
   private startWith(substr: string): boolean {
-    return this.source().slice(this.beginPos, this.beginPos + substr.length) === substr;
+    return (
+      this.source().slice(this.beginPos, this.beginPos + substr.length) ===
+      substr
+    );
   }
 }
 
@@ -192,7 +200,8 @@ class AppendAction extends Action {
    */
   get rewrittenCode() {
     const source = this.rewrittenSource();
-    const indent = this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
+    const indent =
+      this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
     if (source.split("\n").length > 1) {
       return (
         source
@@ -226,7 +235,8 @@ class PrependAction extends Action {
    */
   get rewrittenCode(): string {
     const source = this.rewrittenSource();
-    const indent = this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
+    const indent =
+      this.node.type == "Program" ? "" : " ".repeat(this.node.indent() + 2);
     if (source.split("\n").length > 1) {
       return (
         source
@@ -270,7 +280,9 @@ class InsertAction extends Action {
    * @protected
    */
   calculatePositions(): void {
-    const range = this.selector ? this.node.childNodeRange(this.selector) : this.node;
+    const range = this.selector
+      ? this.node.childNodeRange(this.selector)
+      : this.node;
     this.beginPos = this.at === "beginning" ? range.start : range.end;
     this.endPos = this.beginPos;
   }
@@ -306,8 +318,16 @@ class DeleteAction extends Action {
    * @protected
    */
   calculatePositions(): void {
-    this.beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
-    this.endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
+    this.beginPos = Math.min(
+      ...this.selectors.map(
+        (selector) => this.node.childNodeRange(selector).start
+      )
+    );
+    this.endPos = Math.max(
+      ...this.selectors.map(
+        (selector) => this.node.childNodeRange(selector).end
+      )
+    );
     this.squeezeSpaces();
     this.removeBraces();
     this.removeComma();
@@ -344,7 +364,9 @@ class RemoveAction extends Action {
       const lines = this.source().split("\n");
       const beginLine = this.node.loc!.start.line;
       const endLine = this.node.loc!.end.line;
-      this.beginPos = lines.slice(0, beginLine - 1).join("\n").length + (beginLine === 1 ? 0 : "\n".length);
+      this.beginPos =
+        lines.slice(0, beginLine - 1).join("\n").length +
+        (beginLine === 1 ? 0 : "\n".length);
       this.endPos = lines.slice(0, endLine).join("\n").length;
       if (lines.length > endLine) {
         this.endPos = this.endPos + "\n".length;
@@ -403,7 +425,11 @@ class ReplaceAction extends Action {
    * @param {string|string[]} selectors - name of child nodes
    * @param {Object} options - { with } new code to be replaced
    */
-  constructor(instance: Instance, selectors: string | string[], options: ReplaceActionOptions) {
+  constructor(
+    instance: Instance,
+    selectors: string | string[],
+    options: ReplaceActionOptions
+  ) {
     super(instance, options.with);
     this.selectors = Array.isArray(selectors) ? selectors : Array(selectors);
   }
@@ -413,8 +439,16 @@ class ReplaceAction extends Action {
    * @protected
    */
   calculatePositions(): void {
-    this.beginPos = Math.min(...this.selectors.map((selector) => this.node.childNodeRange(selector).start));
-    this.endPos = Math.max(...this.selectors.map((selector) => this.node.childNodeRange(selector).end));
+    this.beginPos = Math.min(
+      ...this.selectors.map(
+        (selector) => this.node.childNodeRange(selector).start
+      )
+    );
+    this.endPos = Math.max(
+      ...this.selectors.map(
+        (selector) => this.node.childNodeRange(selector).end
+      )
+    );
   }
 
   /**
@@ -443,7 +477,11 @@ class ReplaceWithAction extends Action {
    * @param {string} code - new code to be replaced
    * @param {Object} options - default is { autoIndent: true } if auto fix indent
    */
-  constructor(instance: Instance, code: string, options: ReplaceWithActionOptions = { autoIndent: true }) {
+  constructor(
+    instance: Instance,
+    code: string,
+    options: ReplaceWithActionOptions = { autoIndent: true }
+  ) {
     super(instance, code);
     this.autoIndent = options.autoIndent;
   }
@@ -511,9 +549,15 @@ class CommentOutAction extends Action {
    * @returns {string} rewritten code.
    */
   get rewrittenCode(): string {
-    const lines = (" ".repeat(this.node.loc!.end.column - 1) + this.node.toSource()).split("\n");
+    const lines = (
+      " ".repeat(this.node.loc!.end.column - 1) + this.node.toSource()
+    ).split("\n");
     const column = Math.min(...lines.map((line) => line.search(/\S/)));
-    return lines.map((line) => (column > -1 ? line.slice(0, column) + "// " + line.slice(column) : line)).join("\n");
+    return lines
+      .map((line) =>
+        column > -1 ? line.slice(0, column) + "// " + line.slice(column) : line
+      )
+      .join("\n");
   }
 }
 

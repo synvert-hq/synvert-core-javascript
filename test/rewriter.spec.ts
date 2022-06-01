@@ -11,10 +11,14 @@ describe("static register", () => {
 
     expect(() => {
       Rewriter.fetch("new group", "name");
-    }).toThrowError(new RewriterNotFoundError("Rewriter new group name not found"));
+    }).toThrowError(
+      new RewriterNotFoundError("Rewriter new group name not found")
+    );
     expect(() => {
       Rewriter.fetch("group", "new name");
-    }).toThrowError(new RewriterNotFoundError("Rewriter group new name not found"));
+    }).toThrowError(
+      new RewriterNotFoundError("Rewriter group new name not found")
+    );
   });
 
   it("calls", () => {

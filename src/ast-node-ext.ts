@@ -1,4 +1,4 @@
-import './array-ext';
+import "./array-ext";
 import fs from "fs";
 import { Node } from "acorn";
 import { KEYS } from "eslint-visitor-keys";
@@ -11,7 +11,7 @@ declare module "acorn" {
   interface Node {
     fileSourceCode: string; // private modifier
 
-    childNodeRange: (childNodeName: string) => { start: number, end: number };
+    childNodeRange: (childNodeName: string) => { start: number; end: number };
     recursiveChildren: (func: (childNode: acorn.Node) => void) => void;
     arrayBody: () => acorn.Node[];
     match: (rules: any) => boolean;
@@ -59,9 +59,15 @@ Node.prototype.childNodeRange = function (this: any, childName) {
     return { start: this.start, end: this.key.start };
   } else if (this.type === "MemberExpression" && childName === "dot") {
     return { start: this.property.start - 1, end: this.property.start };
-  } else if (["MemberExpression", "CallExpression"].includes(this.type) && childName === "arguments") {
+  } else if (
+    ["MemberExpression", "CallExpression"].includes(this.type) &&
+    childName === "arguments"
+  ) {
     if (this.arguments && this.arguments.length > 0) {
-      return { start: this.arguments[0].start - 1, end: this.arguments[this.arguments.length - 1].end + 1 };
+      return {
+        start: this.arguments[0].start - 1,
+        end: this.arguments[this.arguments.length - 1].end + 1,
+      };
     } else {
       return { start: this.end - 2, end: this.end };
     }
@@ -69,12 +75,18 @@ Node.prototype.childNodeRange = function (this: any, childName) {
     return { start: this.start, end: this.start + 5 };
   } else if (this.type === "FunctionExpression" && childName === "params") {
     if (this.params && this.params.length > 0) {
-      return { start: this.params[0].start - 1, end: this.params[this.params.length - 1].end + 1 };
+      return {
+        start: this.params[0].start - 1,
+        end: this.params[this.params.length - 1].end + 1,
+      };
     } else {
       return { start: this.end - 2, end: this.end };
     }
   } else if (this.type === "ImportDeclaration" && childName === "specifiers") {
-    return { start: this.start + this.toSource().indexOf("{"), end: this.start + this.toSource().indexOf("}") + 1 };
+    return {
+      start: this.start + this.toSource().indexOf("{"),
+      end: this.start + this.toSource().indexOf("}") + 1,
+    };
   } else if (this.type === "Property" && childName === "semicolon") {
     return { start: this.key.end, end: this.key.end + 1 };
   } else {
@@ -86,14 +98,23 @@ Node.prototype.childNodeRange = function (this: any, childName) {
         const [childDirectChildName, ...childNestedChildName] = nestedChildName;
 
         if (childNestedChildName.length > 0) {
-          return (childNode[childDirectChildName] as NodeExt).childNodeRange(childNestedChildName.join("."));
+          return (childNode[childDirectChildName] as NodeExt).childNodeRange(
+            childNestedChildName.join(".")
+          );
         }
 
         if (typeof childNode[childDirectChildName] === "function") {
-          const childChildNode = (childNode[childDirectChildName] as () => { start: number, end: number }).bind(childNode);
+          const childChildNode = (
+            childNode[childDirectChildName] as () => {
+              start: number;
+              end: number;
+            }
+          ).bind(childNode);
           return { start: childChildNode().start, end: childChildNode().end };
         } else if (!Number.isNaN(childDirectChildName)) {
-          const childChildNode = childNode.at(Number.parseInt(childDirectChildName)) as NodeExt;
+          const childChildNode = childNode.at(
+            Number.parseInt(childDirectChildName)
+          ) as NodeExt;
           if (childChildNode) {
             return { start: childChildNode.start, end: childChildNode.end };
           } else {
@@ -101,7 +122,9 @@ Node.prototype.childNodeRange = function (this: any, childName) {
             return { start: this.end - 1, end: this.end - 1 };
           }
         } else {
-          throw new NotSupportedError(`childNodeRange is not handled for ${this.toSource()}, child name: ${childName}`);
+          throw new NotSupportedError(
+            `childNodeRange is not handled for ${this.toSource()}, child name: ${childName}`
+          );
         }
       }
 
@@ -114,7 +137,9 @@ Node.prototype.childNodeRange = function (this: any, childName) {
       }
     }
 
-    throw new NotSupportedError(`childNodeRange is not handled for ${this.toSource()}, child name: ${childName}`);
+    throw new NotSupportedError(
+      `childNodeRange is not handled for ${this.toSource()}, child name: ${childName}`
+    );
   }
 };
 
@@ -170,15 +195,21 @@ Node.prototype.match = function (rules) {
   return Object.keys(flatten(rules, { safe: true })).every((multiKey) => {
     const keys = multiKey.split(".");
     const lastKey = keys.last();
-    const actual = KEYWORDS.includes(lastKey) ? this.actualValue(keys.slice(0, -1)) : this.actualValue(keys);
+    const actual = KEYWORDS.includes(lastKey)
+      ? this.actualValue(keys.slice(0, -1))
+      : this.actualValue(keys);
     const expected = t(rules, multiKey).safeObject;
     switch (lastKey) {
       case "not":
         return !this.matchValue(actual, expected);
       case "in":
-        return expected.some((expectedItem: any) => this.matchValue(actual, expectedItem));
+        return expected.some((expectedItem: any) =>
+          this.matchValue(actual, expectedItem)
+        );
       case "notIn":
-        return expected.every((expectedItem: any) => !this.matchValue(actual, expectedItem));
+        return expected.every(
+          (expectedItem: any) => !this.matchValue(actual, expectedItem)
+        );
       case "gt":
         return actual > expected;
       case "gte":
@@ -244,7 +275,9 @@ Node.prototype.toSource = function (options = { fixIndent: false }) {
  * @returns {number} indent.
  */
 Node.prototype.indent = function () {
-  return this.fileContent().split("\n")[this.loc!.start.line - 1].search(/\S|$/);
+  return this.fileContent()
+    .split("\n")
+    [this.loc!.start.line - 1].search(/\S|$/);
 };
 
 /**
