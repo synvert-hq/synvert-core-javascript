@@ -27,11 +27,19 @@ class NpmVersion {
     const [operator, version] = this.version.split(" ");
     if (this.packageLockExist()) {
       const packageVersion = this.npmPackageVersion();
-      return compareVersions.compare(packageVersion, version, operator as compareVersions.CompareOperator);
+      return compareVersions.compare(
+        packageVersion,
+        version,
+        operator as compareVersions.CompareOperator
+      );
     }
     if (this.yarnLockExist()) {
       const packageVersion = this.yarnPackageVersion();
-      return compareVersions.compare(packageVersion, version, operator as compareVersions.CompareOperator);
+      return compareVersions.compare(
+        packageVersion,
+        version,
+        operator as compareVersions.CompareOperator
+      );
     }
 
     return true;

@@ -21,7 +21,12 @@ abstract class Condition {
    * @param {Object} options - to do find in specific child node, e.g. `{ in: 'callee' }`
    * @param {Function} func - a function to be called if rules are matched.
    */
-  constructor(protected instance: Instance, protected rules: any, options: ConditionOptions | ((instance: Instance) => void), func?: (instance: Instance) => void) {
+  constructor(
+    protected instance: Instance,
+    protected rules: any,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void
+  ) {
     if (typeof options === "object") {
       this.options = options;
       this.func = func!;
@@ -106,7 +111,10 @@ class IfOnlyExistCondition extends Condition {
    * Check if only have one child node and the child node matches rules.
    */
   protected match(): boolean {
-    return this.targetNode().arrayBody().length === 1 && this.targetNode().arrayBody()[0].match(this.rules);
+    return (
+      this.targetNode().arrayBody().length === 1 &&
+      this.targetNode().arrayBody()[0].match(this.rules)
+    );
   }
 }
 
@@ -123,7 +131,13 @@ class IfAllCondition extends Condition {
    * @param {Function} func - a function to be called if all matching nodes match options.match.
    * @param {Function} elseFunc - a function to be called if not all matching nodes match options.match.
    */
-  constructor(instance: Instance, rules: any, options: ConditionOptions | ((instance: Instance) => void), func: (instance: Instance) => void, private elseFunc: (instance: Instance) => void) {
+  constructor(
+    instance: Instance,
+    rules: any,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func: (instance: Instance) => void,
+    private elseFunc: (instance: Instance) => void
+  ) {
     super(instance, rules, options, func);
   }
 
@@ -176,4 +190,10 @@ class IfAllCondition extends Condition {
   }
 }
 
-export { ConditionOptions, IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition };
+export {
+  ConditionOptions,
+  IfExistCondition,
+  UnlessExistCondition,
+  IfOnlyExistCondition,
+  IfAllCondition,
+};
