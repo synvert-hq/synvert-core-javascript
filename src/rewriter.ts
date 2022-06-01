@@ -126,7 +126,9 @@ class Rewriter {
    * @param {string} description - rewriter description.
    * @returns {string} description
    */
-  description(description: string | null = null): void | string {
+  description(): string;
+  description(description: string): void;
+  description(description?: string): void | string {
     if (description) {
       Rewriter.current.desc = description;
     } else {
