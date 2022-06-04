@@ -18,17 +18,25 @@ describe("Scope", () => {
 
       test("does not call function if no matching node", () => {
         let run = false;
-        new QueryScope(instance, ".ClassDeclaration[id.name=Synvert]", function () {
-          run = true;
-        }).process();
+        new QueryScope(
+          instance,
+          ".ClassDeclaration[id.name=Synvert]",
+          function () {
+            run = true;
+          }
+        ).process();
         expect(run).toBe(false);
       });
 
       test("calls function if there is a matching node", () => {
         let run = false;
-        new QueryScope(instance, ".ClassDeclaration[id.name=FooBar]", function () {
-          run = true;
-        }).process();
+        new QueryScope(
+          instance,
+          ".ClassDeclaration[id.name=FooBar]",
+          function () {
+            run = true;
+          }
+        ).process();
         expect(run).toBe(true);
       });
     });
@@ -45,17 +53,25 @@ describe("Scope", () => {
 
       test("does not call function if no matching node", () => {
         let run = false;
-        new WithinScope(instance, { type: "ClassDeclaration", id: { name: "Synvert" } }, function () {
-          run = true;
-        }).process();
+        new WithinScope(
+          instance,
+          { type: "ClassDeclaration", id: { name: "Synvert" } },
+          function () {
+            run = true;
+          }
+        ).process();
         expect(run).toBe(false);
       });
 
       test("calls function if there is a matching node", () => {
         let run = false;
-        new WithinScope(instance, { type: "ClassDeclaration", id: { name: "FooBar" } }, function () {
-          run = true;
-        }).process();
+        new WithinScope(
+          instance,
+          { type: "ClassDeclaration", id: { name: "FooBar" } },
+          function () {
+            run = true;
+          }
+        ).process();
         expect(run).toBe(true);
       });
     });
