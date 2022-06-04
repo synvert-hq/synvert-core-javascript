@@ -1,8 +1,8 @@
 export enum SourceType {
   Module = "module",
-  Script = "script"
+  Script = "script",
 }
 
 export type RewriterOptions = {
-  sourceType?: SourceType
-}
+  sourceType?: SourceType;
+};

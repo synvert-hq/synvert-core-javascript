@@ -10,12 +10,21 @@ describe("Instance", () => {
   describe("process", () => {
     test("writes new code to file", () => {
       const instance = new Instance(rewriter, "*.js", () => {
-        findNode(".CallExpression[callee=.MemberExpression[property=trimLeft]]", () => {
-          replace("callee.property", { with: "trimStart" });
-        });
-        withNode({ type: "CallExpression", callee: { type: "MemberExpression", property: "trimRight" } }, () => {
-          replace("callee.property", { with: "trimEnd" });
-        });
+        findNode(
+          ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
+          () => {
+            replace("callee.property", { with: "trimStart" });
+          }
+        );
+        withNode(
+          {
+            type: "CallExpression",
+            callee: { type: "MemberExpression", property: "trimRight" },
+          },
+          () => {
+            replace("callee.property", { with: "trimEnd" });
+          }
+        );
       });
       Instance.current = instance;
       const input = `

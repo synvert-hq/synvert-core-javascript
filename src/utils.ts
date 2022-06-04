@@ -18,6 +18,6 @@ const indent = (str: string, count: number): string => {
       return " ".repeat(count) + line;
     })
     .join("\n");
-}
+};
 
 export { indent };

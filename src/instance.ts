@@ -6,7 +6,13 @@ import { Node } from "acorn";
 import Configuration from "./configuration";
 import Rewriter from "./rewriter";
 import { QueryScope, WithinScope, GotoScope } from "./scope";
-import { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition, ConditionOptions } from "./condition";
+import {
+  IfExistCondition,
+  UnlessExistCondition,
+  IfOnlyExistCondition,
+  IfAllCondition,
+  ConditionOptions,
+} from "./condition";
 import {
   Action,
   InsertActionOptions,
@@ -48,7 +54,11 @@ class Instance {
    * @param {string} filePattern - pattern to find files, e.g. `lib/*.js`
    * @param {Function} func - a function to find nodes, match conditions and rewrite code.
    */
-  constructor(private rewriter: Rewriter, private filePattern: string, private func: (instance: Instance) => void) {
+  constructor(
+    private rewriter: Rewriter,
+    private filePattern: string,
+    private func: (instance: Instance) => void
+  ) {
     this.actions = [];
   }
 
@@ -58,7 +68,10 @@ class Instance {
    * then write the code back to the original file.
    */
   process(): void {
-    if (fs.existsSync(Configuration.path) && minimatch(Configuration.path, this.filePattern)) {
+    if (
+      fs.existsSync(Configuration.path) &&
+      minimatch(Configuration.path, this.filePattern)
+    ) {
       return this.processFile(Configuration.path);
     }
 
@@ -153,7 +166,11 @@ class Instance {
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - to continue operating on the matching nodes.
    */
-  ifExistNode(rules: any, options: ConditionOptions, func: (instance: Instance) => void) {
+  ifExistNode(
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ) {
     new IfExistCondition(Instance.current, rules, options, func).process();
   }
 
@@ -168,7 +185,11 @@ class Instance {
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - to continue operating on the matching nodes.
    */
-  unlessExistNode(rules: any, options: ConditionOptions, func: (instance: Instance) => void) {
+  unlessExistNode(
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ) {
     new UnlessExistCondition(Instance.current, rules, options, func).process();
   }
 
@@ -183,7 +204,11 @@ class Instance {
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - to continue operating on the matching nodes.
    */
-  ifOnlyExistNode(rules: any, options: ConditionOptions, func: (instance: Instance) => void) {
+  ifOnlyExistNode(
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ) {
     new IfOnlyExistCondition(Instance.current, rules, options, func).process();
   }
 
@@ -199,8 +224,19 @@ class Instance {
    * @param {Function} func - to continue if all the matching nodes match options.match.
    * @param {Function} elseFunc - to continue if not all the matching nodes match options.match.
    */
-  ifAllNodes(rules: any, options: ConditionOptions, func: (instance: Instance) => void, elseFunc: (instance: Instance) => void) {
-    new IfAllCondition(Instance.current, rules, options, func, elseFunc).process();
+  ifAllNodes(
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ) {
+    new IfAllCondition(
+      Instance.current,
+      rules,
+      options,
+      func,
+      elseFunc
+    ).process();
   }
 
   /**
@@ -218,7 +254,9 @@ class Instance {
    * @param {string} code - need to be appended.
    */
   append(code: string): void {
-    Instance.current.actions.push(new AppendAction(Instance.current, code).process());
+    Instance.current.actions.push(
+      new AppendAction(Instance.current, code).process()
+    );
   }
 
   /**
@@ -234,7 +272,9 @@ class Instance {
    * @param {string} code - need to be prepended.
    */
   prepend(code: string): void {
-    Instance.current.actions.push(new PrependAction(Instance.current, code).process());
+    Instance.current.actions.push(
+      new PrependAction(Instance.current, code).process()
+    );
   }
 
   /**
@@ -252,7 +292,9 @@ class Instance {
    * @param {Object} options - insert position, beginning or end, end is the default
    */
   insert(code: string, options: InsertActionOptions): void {
-    Instance.current.actions.push(new InsertAction(Instance.current, code, options).process());
+    Instance.current.actions.push(
+      new InsertAction(Instance.current, code, options).process()
+    );
   }
 
   /**
@@ -269,7 +311,9 @@ class Instance {
    * @param {string} selectors - name of child nodes
    */
   delete(selectors: string | string[]): void {
-    Instance.current.actions.push(new DeleteAction(Instance.current, selectors).process());
+    Instance.current.actions.push(
+      new DeleteAction(Instance.current, selectors).process()
+    );
   }
 
   /**
@@ -308,7 +352,9 @@ class Instance {
    * @param {Object} options - code need to be replaced with.
    */
   replace(selectors: string | string[], options: ReplaceActionOptions): void {
-    Instance.current.actions.push(new ReplaceAction(Instance.current, selectors, options).process());
+    Instance.current.actions.push(
+      new ReplaceAction(Instance.current, selectors, options).process()
+    );
   }
 
   /**
@@ -326,7 +372,9 @@ class Instance {
    * @param {Object} options - { autoIndent: true } if auto fix indent
    */
   replaceWith(code: string, options: ReplaceWithActionOptions): void {
-    Instance.current.actions.push(new ReplaceWithAction(Instance.current, code, options).process());
+    Instance.current.actions.push(
+      new ReplaceWithAction(Instance.current, code, options).process()
+    );
   }
 
   /**
@@ -334,7 +382,9 @@ class Instance {
    * It creates a {@link CommentOutAction} to comment out current node.
    */
   commentOut(): void {
-    Instance.current.actions.push(new CommentOutAction(Instance.current).process());
+    Instance.current.actions.push(
+      new CommentOutAction(Instance.current).process()
+    );
   }
 
   /**
@@ -360,7 +410,10 @@ class Instance {
           this.actions.sort(this.compareActions);
           conflictActions = this.getConflictActions();
           this.actions.reverse().forEach((action) => {
-            source = source.slice(0, action.beginPos) + action.rewrittenCode + source.slice(action.endPos);
+            source =
+              source.slice(0, action.beginPos) +
+              action.rewrittenCode +
+              source.slice(action.endPos);
           });
           this.actions = [];
 
@@ -393,7 +446,10 @@ class Instance {
       sourceFile: filePath,
       ecmaFeatures: {},
     };
-    if (Configuration.enableEcmaFeaturesJsx || path.extname(filePath) === ".jsx") {
+    if (
+      Configuration.enableEcmaFeaturesJsx ||
+      path.extname(filePath) === ".jsx"
+    ) {
       options["ecmaFeatures"] = { jsx: true };
     }
     return options;
@@ -442,20 +498,46 @@ class Instance {
 export default Instance;
 
 declare global {
-  var findNode: (queryString: string, func: (instance: Instance) => void) => void;
+  var findNode: (
+    queryString: string,
+    func: (instance: Instance) => void
+  ) => void;
   var withinNode: (rules: any, func: (instance: Instance) => void) => void;
   var withNode: (rules: any, func: (instance: Instance) => void) => void;
-  var gotoNode: (childNodeName: string, func: (instance: Instance) => void) => void;
-  var ifExistNode: (rules: any, options: ConditionOptions, func: (instance: Instance) => void) => void;
-  var unlessExistNode: (rules: any, options: ConditionOptions, func: (instance: Instance) => void) => void;
-  var ifOnlyExistNode: (rules: any, options: ConditionOptions, func: (instance: Instance) => void) => void;
-  var ifAllNodes: (rules: any, options: ConditionOptions, func: (instance: Instance) => void, elseFunc: (instance: Instance) => void) => void;
+  var gotoNode: (
+    childNodeName: string,
+    func: (instance: Instance) => void
+  ) => void;
+  var ifExistNode: (
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ) => void;
+  var unlessExistNode: (
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ) => void;
+  var ifOnlyExistNode: (
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ) => void;
+  var ifAllNodes: (
+    rules: any,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ) => void;
   var append: (code: string) => void;
   var prepend: (code: string) => void;
   var insert: (code: string, options: InsertActionOptions) => void;
   var deleteNode: (selectors: string | string[]) => void;
   var remove: () => void;
-  var replace: (selectors: string | string[], options: ReplaceActionOptions) => void;
+  var replace: (
+    selectors: string | string[],
+    options: ReplaceActionOptions
+  ) => void;
   var replaceWith: (code: string, options: ReplaceWithActionOptions) => void;
   var commentOut: () => void;
   var indent: (str: string, count: number) => string;
