@@ -4,6 +4,7 @@ import glob from "glob";
 import minimatch from "minimatch";
 import { Node } from "acorn";
 import Configuration from "./configuration";
+import Rewriter from "./rewriter";
 import { QueryScope, WithinScope, GotoScope } from "./scope";
 import { IfExistCondition, UnlessExistCondition, IfOnlyExistCondition, IfAllCondition, ConditionOptions } from "./condition";
 import {
@@ -47,7 +48,7 @@ class Instance {
    * @param {string} filePattern - pattern to find files, e.g. `lib/*.js`
    * @param {Function} func - a function to find nodes, match conditions and rewrite code.
    */
-  constructor(private filePattern: string, private func: (instance: Instance) => void) {
+  constructor(private rewriter: Rewriter, private filePattern: string, private func: (instance: Instance) => void) {
     this.actions = [];
   }
 
@@ -388,7 +389,7 @@ class Instance {
     const options = {
       ecmaVersion: "latest",
       loc: true,
-      sourceType: "module",
+      sourceType: this.rewriter.sourceType,
       sourceFile: filePath,
       ecmaFeatures: {},
     };

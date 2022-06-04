@@ -1,3 +1,4 @@
+import { RewriterOptions, SourceType } from "./types/options";
 import { RewriterNotFoundError } from "./error";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
@@ -14,6 +15,7 @@ class Rewriter {
   public subSnippets: Rewriter[] = [];
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
+  public sourceType: SourceType = SourceType.Module;
   public options: object = {};
   private sandbox: boolean = false;
   private desc?: string;
@@ -116,6 +118,12 @@ class Rewriter {
    * DSL *
    *******/
 
+  configure(options: RewriterOptions) {
+    if (options.sourceType) {
+      Rewriter.current.sourceType = options.sourceType;
+    }
+  }
+
   /**
    * Parse `description` dsl, it sets description of the rewriter.
    * Or get description.
@@ -194,7 +202,7 @@ class Rewriter {
       (!Rewriter.current.nodeVersion || Rewriter.current.nodeVersion.match()) &&
       (!Rewriter.current.npmVersion || Rewriter.current.npmVersion.match())
     ) {
-      const instance = new Instance(filePattern, func);
+      const instance = new Instance(Rewriter.current, filePattern, func);
       Instance.current = instance;
       instance.process();
     }
@@ -204,6 +212,7 @@ class Rewriter {
 export default Rewriter;
 
 declare global {
+  var configure: (options: RewriterOptions) => void;
   var description: (description: string | null) => void | string;
   var ifNode: (version: string) => void;
   var ifNpm: (name: string, version: string) => void;
@@ -212,6 +221,7 @@ declare global {
   var withinFile: (filePattern: string, func: (instance: Instance) => void) => void;
 }
 
+global.configure = Rewriter.prototype.configure;
 global.description = Rewriter.prototype.description;
 global.ifNode = Rewriter.prototype.ifNode;
 global.ifNpm = Rewriter.prototype.ifNpm;

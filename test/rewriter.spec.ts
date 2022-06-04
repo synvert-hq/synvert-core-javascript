@@ -3,6 +3,7 @@ import mock from "mock-fs";
 import { RewriterNotFoundError } from "../src/error";
 
 import Rewriter from "../src/rewriter";
+import { SourceType } from "../src/types/options";
 
 describe("static register", () => {
   it("registers and fetches", () => {
@@ -24,6 +25,15 @@ describe("static register", () => {
     });
     Rewriter.call("group", "name");
     expect(run).toBe(true);
+  });
+
+  describe("configure", () => {
+    const rewriter = new Rewriter("snippet group", "snippet name", () => {
+      configure({ sourceType: SourceType.Script });
+    });
+    expect(rewriter.sourceType).toBe(SourceType.Module);
+    rewriter.process();
+    expect(rewriter.sourceType).toBe(SourceType.Script);
   });
 
   describe("process", () => {

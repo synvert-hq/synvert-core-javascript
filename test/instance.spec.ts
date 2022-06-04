@@ -1,12 +1,15 @@
 import fs from "fs";
 import mock from "mock-fs";
 
+import Rewriter from "../src/rewriter";
 import Instance from "../src/instance";
 
 describe("Instance", () => {
+  const rewriter = new Rewriter("snippet group", "snippet name", () => {});
+
   describe("process", () => {
     test("writes new code to file", () => {
-      const instance = new Instance("*.js", () => {
+      const instance = new Instance(rewriter, "*.js", () => {
         findNode(".CallExpression[callee=.MemberExpression[property=trimLeft]]", () => {
           replace("callee.property", { with: "trimStart" });
         });
