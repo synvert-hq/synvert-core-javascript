@@ -13,23 +13,13 @@ import {
   IfAllCondition,
   ConditionOptions,
 } from "./condition";
-import {
-  Action,
-  InsertActionOptions,
-  ReplaceActionOptions,
-  ReplaceWithActionOptions,
-  AppendAction,
-  PrependAction,
-  InsertAction,
-  DeleteAction,
-  RemoveAction,
-  ReplaceAction,
-  ReplaceWithAction,
-  CommentOutAction,
-} from "./action";
 import { indent } from "./utils";
+import NodeMutation, { STRATEGY, InsertOptions, ReplaceWithOptions, ReplaceOptions, NotSupportedError, ConflictActionError } from "@xinminlabs/node-mutation";
+import EspreeAdapter from "./node-mutation/espree-adapter";
 
 const espree = require("@xinminlabs/espree");
+
+NodeMutation.configure({ adapter: new EspreeAdapter(),  strategy: STRATEGY.KEEP_RUNNING });
 
 /**
  * Instance is an execution unit, it finds specified ast nodes,
@@ -41,7 +31,7 @@ class Instance {
   public currentNode!: Node;
   public currentFileSource!: string;
   public currentFilePath!: string;
-  private actions: Action[];
+  private currentMutation!: NodeMutation<Node>;
 
   /**
    * Current instance.
@@ -58,9 +48,7 @@ class Instance {
     private rewriter: Rewriter,
     private filePattern: string,
     private func: (instance: Instance) => void
-  ) {
-    this.actions = [];
-  }
+  ) {}
 
   /**
    * Process the instance.
@@ -254,9 +242,7 @@ class Instance {
    * @param {string} code - need to be appended.
    */
   append(code: string): void {
-    Instance.current.actions.push(
-      new AppendAction(Instance.current, code).process()
-    );
+    Instance.current.currentMutation.append(Instance.current.currentNode, code);
   }
 
   /**
@@ -272,9 +258,7 @@ class Instance {
    * @param {string} code - need to be prepended.
    */
   prepend(code: string): void {
-    Instance.current.actions.push(
-      new PrependAction(Instance.current, code).process()
-    );
+    Instance.current.currentMutation.prepend(Instance.current.currentNode, code);
   }
 
   /**
@@ -291,10 +275,8 @@ class Instance {
    * @param {string} code - code need to be inserted
    * @param {Object} options - insert position, beginning or end, end is the default
    */
-  insert(code: string, options: InsertActionOptions): void {
-    Instance.current.actions.push(
-      new InsertAction(Instance.current, code, options).process()
-    );
+  insert(code: string, options: InsertOptions): void {
+    Instance.current.currentMutation.insert(Instance.current.currentNode, code, options);
   }
 
   /**
@@ -311,9 +293,7 @@ class Instance {
    * @param {string} selectors - name of child nodes
    */
   delete(selectors: string | string[]): void {
-    Instance.current.actions.push(
-      new DeleteAction(Instance.current, selectors).process()
-    );
+    Instance.current.currentMutation.delete(Instance.current.currentNode, selectors);
   }
 
   /**
@@ -334,7 +314,7 @@ class Instance {
    * });
    */
   remove(): void {
-    Instance.current.actions.push(new RemoveAction(Instance.current).process());
+    Instance.current.currentMutation.remove(Instance.current.currentNode);
   }
 
   /**
@@ -351,10 +331,8 @@ class Instance {
    * @param {string|array} selectors - name of child nodes.
    * @param {Object} options - code need to be replaced with.
    */
-  replace(selectors: string | string[], options: ReplaceActionOptions): void {
-    Instance.current.actions.push(
-      new ReplaceAction(Instance.current, selectors, options).process()
-    );
+  replace(selectors: string | string[], options: ReplaceOptions): void {
+    Instance.current.currentMutation.replace(Instance.current.currentNode, selectors, options);
   }
 
   /**
@@ -371,20 +349,8 @@ class Instance {
    * @param {string} code - code need to be replaced.
    * @param {Object} options - { autoIndent: true } if auto fix indent
    */
-  replaceWith(code: string, options: ReplaceWithActionOptions): void {
-    Instance.current.actions.push(
-      new ReplaceWithAction(Instance.current, code, options).process()
-    );
-  }
-
-  /**
-   * Parse commnetOut dsl.
-   * It creates a {@link CommentOutAction} to comment out current node.
-   */
-  commentOut(): void {
-    Instance.current.actions.push(
-      new CommentOutAction(Instance.current).process()
-    );
+  replaceWith(code: string, options: ReplaceWithOptions): void {
+    Instance.current.currentMutation.replaceWith(Instance.current.currentNode, code, options);
   }
 
   /**
@@ -397,8 +363,8 @@ class Instance {
     if (Configuration.showRunProcess) {
       console.log(filePath);
     }
+    this.currentMutation = new NodeMutation<Node>(filePath);
     while (true) {
-      let conflictActions = [];
       let source = fs.readFileSync(filePath, "utf-8");
       this.currentFileSource = source;
       try {
@@ -406,20 +372,8 @@ class Instance {
 
         this.processWithNode(node, this.func);
 
-        if (this.actions.length > 0) {
-          this.actions.sort(this.compareActions);
-          conflictActions = this.getConflictActions();
-          this.actions.reverse().forEach((action) => {
-            source =
-              source.slice(0, action.beginPos) +
-              action.rewrittenCode +
-              source.slice(action.endPos);
-          });
-          this.actions = [];
-
-          fs.writeFileSync(filePath, source);
-        }
-        if (conflictActions.length === 0) {
+        const { conflict } = this.currentMutation.process();
+        if (!conflict) {
           break;
         }
       } catch (e) {
@@ -453,45 +407,6 @@ class Instance {
       options["ecmaFeatures"] = { jsx: true };
     }
     return options;
-  }
-
-  /**
-   * Node sort function.
-   * @private
-   * @param {Node} nodeA
-   * @param {Node} nodeB
-   * @returns {number} returns 1 if nodeA goes before nodeB, -1 if nodeA goes after nodeB
-   */
-  private compareActions(nodeA: Action, nodeB: Action): 0 | 1 | -1 {
-    if (nodeA.beginPos > nodeB.beginPos) return 1;
-    if (nodeA.beginPos < nodeB.beginPos) return -1;
-    if (nodeA.endPos > nodeB.endPos) return 1;
-    if (nodeA.endPos < nodeB.endPos) return -1;
-    return 0;
-  }
-
-  /**
-   * Get conflict actions.
-   * @private
-   * @returns {Action[]} conflict actions
-   */
-  private getConflictActions(): Action[] {
-    let i = this.actions.length - 1;
-    let j = i - 1;
-    const conflictActions: Action[] = [];
-    if (i < 0) return [];
-
-    let beginPos = this.actions[i].beginPos;
-    while (j > -1) {
-      if (beginPos < this.actions[j].endPos) {
-        conflictActions.push(this.actions.splice(j, 1)[0]);
-      } else {
-        i = j;
-        beginPos = this.actions[i].beginPos;
-      }
-      j--;
-    }
-    return conflictActions;
   }
 }
 
@@ -531,15 +446,14 @@ declare global {
   ) => void;
   var append: (code: string) => void;
   var prepend: (code: string) => void;
-  var insert: (code: string, options: InsertActionOptions) => void;
+  var insert: (code: string, options: InsertOptions) => void;
   var deleteNode: (selectors: string | string[]) => void;
   var remove: () => void;
   var replace: (
     selectors: string | string[],
-    options: ReplaceActionOptions
+    options: ReplaceOptions
   ) => void;
-  var replaceWith: (code: string, options: ReplaceWithActionOptions) => void;
-  var commentOut: () => void;
+  var replaceWith: (code: string, options: ReplaceWithOptions) => void;
   var indent: (str: string, count: number) => string;
 }
 
@@ -558,5 +472,4 @@ global.deleteNode = Instance.prototype.delete;
 global.remove = Instance.prototype.remove;
 global.replace = Instance.prototype.replace;
 global.replaceWith = Instance.prototype.replaceWith;
-global.commentOut = Instance.prototype.commentOut;
 global.indent = indent;
