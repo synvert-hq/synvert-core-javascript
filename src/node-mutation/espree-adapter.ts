@@ -24,25 +24,31 @@ class EspreeAdapter implements Adapter<NodeExt> {
    * @returns {string} rewritten code.
    */
   rewrittenSource(node: NodeExt, code: string): string {
-    return code.replace(/{{([a-zA-z0-9\.]+?)}}/gm, (_string, match, _offset) => {
-      if (!match) return null;
+    return code.replace(
+      /{{([a-zA-z0-9\.]+?)}}/gm,
+      (_string, match, _offset) => {
+        if (!match) return null;
 
-      const obj = this.actualValue(node, match.split("."));
-      if (obj) {
-        if (Array.isArray(obj)) {
-          return this.fileContent(node).slice(obj[0].start, obj[obj.length - 1].end);
-        }
-        const result = obj.hasOwnProperty("name") ? obj.name : obj;
-        if (result.hasOwnProperty("type")) {
-          return result.toSource();
+        const obj = this.actualValue(node, match.split("."));
+        if (obj) {
+          if (Array.isArray(obj)) {
+            return this.fileContent(node).slice(
+              obj[0].start,
+              obj[obj.length - 1].end
+            );
+          }
+          const result = obj.hasOwnProperty("name") ? obj.name : obj;
+          if (result.hasOwnProperty("type")) {
+            return result.toSource();
+          } else {
+            return result;
+          }
         } else {
-          return result;
+          return code;
         }
-      } else {
-        return code;
       }
-    });
-  };
+    );
+  }
 
   /**
    * Get the source code of current file.
@@ -50,7 +56,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
    */
   fileContent(node: NodeExt): string {
     return fs.readFileSync(node.loc!.source!, "utf-8");
-  };
+  }
 
   /**
    * Get the source range of child node.
@@ -58,11 +64,17 @@ class EspreeAdapter implements Adapter<NodeExt> {
    * @returns {Object} child node range, e.g. { start: 0, end: 10 }
    * @throws {NotSupportedError} if we can't get the range.
    */
-  childNodeRange(node: NodeExt, childName: string): { start: number, end: number } {
+  childNodeRange(
+    node: NodeExt,
+    childName: string
+  ): { start: number; end: number } {
     if (node.type === "MethodDefinition" && childName === "async") {
       return { start: node.start, end: (node.key as NodeExt).start };
     } else if (node.type === "MemberExpression" && childName === "dot") {
-      return { start: (node.property as NodeExt).start - 1, end: (node.property as NodeExt).start };
+      return {
+        start: (node.property as NodeExt).start - 1,
+        end: (node.property as NodeExt).start,
+      };
     } else if (
       ["MemberExpression", "CallExpression"].includes(node.type) &&
       childName === "arguments"
@@ -70,7 +82,10 @@ class EspreeAdapter implements Adapter<NodeExt> {
       if (node.arguments && node.arguments.length > 0) {
         return {
           start: (node.arguments as NodeArrayExt)[0].start - 1,
-          end: (node.arguments as NodeArrayExt)[(node.arguments as NodeArrayExt).length - 1].end + 1,
+          end:
+            (node.arguments as NodeArrayExt)[
+              (node.arguments as NodeArrayExt).length - 1
+            ].end + 1,
         };
       } else {
         return { start: node.end - 2, end: node.end };
@@ -81,25 +96,35 @@ class EspreeAdapter implements Adapter<NodeExt> {
       if (node.params && node.params.length > 0) {
         return {
           start: (node.params as NodeArrayExt)[0].start - 1,
-          end: (node.params as NodeArrayExt)[(node.params as NodeArrayExt).length - 1].end + 1,
+          end:
+            (node.params as NodeArrayExt)[
+              (node.params as NodeArrayExt).length - 1
+            ].end + 1,
         };
       } else {
         return { start: node.end - 2, end: node.end };
       }
-    } else if (node.type === "ImportDeclaration" && childName === "specifiers") {
+    } else if (
+      node.type === "ImportDeclaration" &&
+      childName === "specifiers"
+    ) {
       return {
         start: node.start + node.toSource().indexOf("{"),
         end: node.start + node.toSource().indexOf("}") + 1,
       };
     } else if (node.type === "Property" && childName === "semicolon") {
-      return { start: (node.key as NodeExt).end, end: (node.key as NodeExt).end + 1 };
+      return {
+        start: (node.key as NodeExt).end,
+        end: (node.key as NodeExt).end + 1,
+      };
     } else {
       const [directChildName, ...nestedChildName] = childName.split(".");
       if (node[directChildName]) {
         const childNode: NodeExt | NodeArrayExt = node[directChildName];
 
         if (Array.isArray(childNode)) {
-          const [childDirectChildName, ...childNestedChildName] = nestedChildName;
+          const [childDirectChildName, ...childNestedChildName] =
+            nestedChildName;
 
           if (childNestedChildName.length > 0) {
             return (childNode[childDirectChildName] as NodeExt).childNodeRange(
@@ -145,8 +170,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
         `childNodeRange is not handled for ${node.toSource()}, child name: ${childName}`
       );
     }
-  };
-
+  }
 
   getStart(node: NodeExt): number {
     return node.start;
@@ -156,18 +180,20 @@ class EspreeAdapter implements Adapter<NodeExt> {
     return node.end;
   }
 
-  getStartLoc(node: NodeExt): { line: number, column: number } {
+  getStartLoc(node: NodeExt): { line: number; column: number } {
     const { line, column } = node.loc!.start;
     return { line: line, column: column + 1 };
   }
 
-  getEndLoc(node: NodeExt): { line: number, column: number } {
+  getEndLoc(node: NodeExt): { line: number; column: number } {
     const { line, column } = node.loc!.end;
     return { line: line, column: column + 1 };
   }
 
   getIndent(node: NodeExt): number {
-    return this.fileContent(node).split("\n")[this.getStartLoc(node).line - 1].search(/\S|$/);
+    return this.fileContent(node)
+      .split("\n")
+      [this.getStartLoc(node).line - 1].search(/\S|$/);
   }
 
   /**
@@ -194,7 +220,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
       }
     });
     return childNode;
-  };
+  }
 }
 
 export default EspreeAdapter;

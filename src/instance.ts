@@ -14,12 +14,22 @@ import {
   ConditionOptions,
 } from "./condition";
 import { indent } from "./utils";
-import NodeMutation, { STRATEGY, InsertOptions, ReplaceWithOptions, ReplaceOptions, NotSupportedError, ConflictActionError } from "@xinminlabs/node-mutation";
+import NodeMutation, {
+  STRATEGY,
+  InsertOptions,
+  ReplaceWithOptions,
+  ReplaceOptions,
+  NotSupportedError,
+  ConflictActionError,
+} from "@xinminlabs/node-mutation";
 import EspreeAdapter from "./node-mutation/espree-adapter";
 
 const espree = require("@xinminlabs/espree");
 
-NodeMutation.configure({ adapter: new EspreeAdapter(),  strategy: STRATEGY.KEEP_RUNNING });
+NodeMutation.configure({
+  adapter: new EspreeAdapter(),
+  strategy: STRATEGY.KEEP_RUNNING,
+});
 
 /**
  * Instance is an execution unit, it finds specified ast nodes,
@@ -258,7 +268,10 @@ class Instance {
    * @param {string} code - need to be prepended.
    */
   prepend(code: string): void {
-    Instance.current.currentMutation.prepend(Instance.current.currentNode, code);
+    Instance.current.currentMutation.prepend(
+      Instance.current.currentNode,
+      code
+    );
   }
 
   /**
@@ -276,7 +289,11 @@ class Instance {
    * @param {Object} options - insert position, beginning or end, end is the default
    */
   insert(code: string, options: InsertOptions): void {
-    Instance.current.currentMutation.insert(Instance.current.currentNode, code, options);
+    Instance.current.currentMutation.insert(
+      Instance.current.currentNode,
+      code,
+      options
+    );
   }
 
   /**
@@ -293,7 +310,10 @@ class Instance {
    * @param {string} selectors - name of child nodes
    */
   delete(selectors: string | string[]): void {
-    Instance.current.currentMutation.delete(Instance.current.currentNode, selectors);
+    Instance.current.currentMutation.delete(
+      Instance.current.currentNode,
+      selectors
+    );
   }
 
   /**
@@ -332,7 +352,11 @@ class Instance {
    * @param {Object} options - code need to be replaced with.
    */
   replace(selectors: string | string[], options: ReplaceOptions): void {
-    Instance.current.currentMutation.replace(Instance.current.currentNode, selectors, options);
+    Instance.current.currentMutation.replace(
+      Instance.current.currentNode,
+      selectors,
+      options
+    );
   }
 
   /**
@@ -350,7 +374,11 @@ class Instance {
    * @param {Object} options - { autoIndent: true } if auto fix indent
    */
   replaceWith(code: string, options: ReplaceWithOptions): void {
-    Instance.current.currentMutation.replaceWith(Instance.current.currentNode, code, options);
+    Instance.current.currentMutation.replaceWith(
+      Instance.current.currentNode,
+      code,
+      options
+    );
   }
 
   /**
@@ -449,10 +477,7 @@ declare global {
   var insert: (code: string, options: InsertOptions) => void;
   var deleteNode: (selectors: string | string[]) => void;
   var remove: () => void;
-  var replace: (
-    selectors: string | string[],
-    options: ReplaceOptions
-  ) => void;
+  var replace: (selectors: string | string[], options: ReplaceOptions) => void;
   var replaceWith: (code: string, options: ReplaceWithOptions) => void;
   var indent: (str: string, count: number) => string;
 }
