@@ -1,8 +1,8 @@
 import fs from "fs";
 import { KEYS } from "eslint-visitor-keys";
-import Adapter from "@xinminlabs/node-query/lib/adapter";
+import { Adapter } from "@xinminlabs/node-query";
 
-import { NodeExt } from "./types/node-ext";
+import type { NodeExt } from "../types/node-ext";
 
 /**
  * Implement node-query-typescript adapter
