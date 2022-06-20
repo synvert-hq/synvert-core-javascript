@@ -1,6 +1,9 @@
 import { t } from "typy";
 import { Node } from "acorn";
+import { handleRecursiveChild } from "@xinminlabs/node-query";
+
 import Instance from "./instance";
+import { matchRules, arrayBody } from "./utils";
 
 interface ConditionOptions {
   in?: string;
@@ -74,9 +77,9 @@ class IfExistCondition extends Condition {
    */
   protected match(): boolean {
     let match = false;
-    this.targetNode().recursiveChildren((childNode) => {
+    handleRecursiveChild(this.targetNode(), (childNode) => {
       if (!match) {
-        match = childNode.match(this.rules);
+        match = matchRules(childNode, this.rules);
       }
     });
     return match;
@@ -93,9 +96,9 @@ class UnlessExistCondition extends Condition {
    */
   protected match(): boolean {
     let match = false;
-    this.targetNode().recursiveChildren((childNode) => {
+    handleRecursiveChild(this.targetNode(), (childNode) => {
       if (!match) {
-        match = childNode.match(this.rules);
+        match = matchRules(childNode, this.rules);
       }
     });
     return !match;
@@ -111,10 +114,8 @@ class IfOnlyExistCondition extends Condition {
    * Check if only have one child node and the child node matches rules.
    */
   protected match(): boolean {
-    return (
-      this.targetNode().arrayBody().length === 1 &&
-      this.targetNode().arrayBody()[0].match(this.rules)
-    );
+    const body = arrayBody(this.targetNode());
+    return body.length === 1 && matchRules(body[0], this.rules);
   }
 }
 
@@ -170,7 +171,7 @@ class IfAllCondition extends Condition {
     if (typeof this.options.match === "function") {
       return this.options.match(node);
     } else {
-      return node.match(this.options.match!);
+      return matchRules(node, this.options.match!);
     }
   }
 
@@ -181,8 +182,8 @@ class IfAllCondition extends Condition {
    */
   _matchingNodes(): Node[] {
     const nodes: Node[] = [];
-    this.targetNode().recursiveChildren((childNode) => {
-      if (childNode.match(this.rules)) {
+    handleRecursiveChild(this.targetNode(), (childNode) => {
+      if (matchRules(childNode, this.rules)) {
         nodes.push(childNode);
       }
     });

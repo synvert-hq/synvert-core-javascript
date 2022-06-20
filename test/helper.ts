@@ -1,6 +1,5 @@
 const espree = require("@xinminlabs/espree");
 
-import "../src/ast-node-ext";
 import "../src/array-ext";
 
 export const parse = (

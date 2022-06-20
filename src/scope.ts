@@ -1,12 +1,10 @@
-import NodeQuery from "@xinminlabs/node-query";
-import Instance from "./instance";
-
+import NodeQuery, { handleRecursiveChild, getTargetNode } from "@xinminlabs/node-query";
 import { Node } from "acorn";
-import "./ast-node-ext";
-import EspreeAdapter from "./node-query/espree-adapter";
-import { NodeExt } from "./types/node-ext";
 
-NodeQuery.configure(new EspreeAdapter());
+import type { NodeExt } from "./types/node-ext";
+import Instance from "./instance";
+import { matchRules } from "./utils";
+import "./array-ext";
 
 /**
  * Scope just likes its name, different scope points to different current node.
@@ -115,11 +113,11 @@ class WithinScope extends Scope {
    */
   _findMatchingNodes(currentNode: Node): Node[] {
     const matchingNodes = [];
-    if (currentNode.match(this.rules)) {
+    if (matchRules(currentNode, this.rules)) {
       matchingNodes.push(currentNode);
     }
-    currentNode.recursiveChildren((childNode) => {
-      if (childNode.match(this.rules)) {
+    handleRecursiveChild(currentNode, (childNode) => {
+      if (matchRules(childNode, this.rules)) {
         matchingNodes.push(childNode);
       }
     });
@@ -153,7 +151,7 @@ class GotoScope extends Scope {
     const currentNode = this.instance.currentNode;
     if (!currentNode) return;
 
-    const childNode = currentNode.actualValue(this.childNodeName.split("."));
+    const childNode = getTargetNode(currentNode, this.childNodeName) as Node;
     if (!childNode) return;
 
     this.instance.processWithOtherNode(childNode, () => {

@@ -14,6 +14,7 @@ import {
   ConditionOptions,
 } from "./condition";
 import { indent } from "./utils";
+import NodeQuery from "@xinminlabs/node-query";
 import NodeMutation, {
   STRATEGY,
   InsertOptions,
@@ -22,12 +23,15 @@ import NodeMutation, {
   NotSupportedError,
   ConflictActionError,
 } from "@xinminlabs/node-mutation";
-import EspreeAdapter from "./node-mutation/espree-adapter";
+import MutationAdapter from "./node-mutation/espree-adapter";
+import QueryAdapter from "./node-query/espree-adapter";
 
 const espree = require("@xinminlabs/espree");
 
+NodeQuery.configure({ adapter: new QueryAdapter() });
+
 NodeMutation.configure({
-  adapter: new EspreeAdapter(),
+  adapter: new MutationAdapter(),
   strategy: STRATEGY.KEEP_RUNNING,
 });
 

@@ -1,4 +1,5 @@
 import fs from "fs";
+import { getTargetNode } from "@xinminlabs/node-query";
 import { Adapter } from "@xinminlabs/node-mutation";
 
 import type { NodeArrayExt, NodeExt } from "../types/node-ext";
@@ -29,17 +30,17 @@ class EspreeAdapter implements Adapter<NodeExt> {
       (_string, match, _offset) => {
         if (!match) return null;
 
-        const obj = this.actualValue(node, match.split("."));
+        const obj = getTargetNode(node, match);
         if (obj) {
           if (Array.isArray(obj)) {
             return this.fileContent(node).slice(
-              obj[0].start,
-              obj[obj.length - 1].end
+              (obj[0] as NodeExt).start,
+              (obj[obj.length - 1] as NodeExt).end
             );
           }
-          const result = obj.hasOwnProperty("name") ? obj.name : obj;
+          const result = obj.hasOwnProperty("name") ? (obj as any).name : obj;
           if (result.hasOwnProperty("type")) {
-            return result.toSource();
+            return this.getSource(result);
           } else {
             return result;
           }
@@ -109,8 +110,8 @@ class EspreeAdapter implements Adapter<NodeExt> {
       childName === "specifiers"
     ) {
       return {
-        start: node.start + node.toSource().indexOf("{"),
-        end: node.start + node.toSource().indexOf("}") + 1,
+        start: node.start + this.getSource(node).indexOf("{"),
+        end: node.start + this.getSource(node).indexOf("}") + 1,
       };
     } else if (node.type === "Property" && childName === "semicolon") {
       return {
@@ -127,7 +128,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
             nestedChildName;
 
           if (childNestedChildName.length > 0) {
-            return (childNode[childDirectChildName] as NodeExt).childNodeRange(
+            return this.childNodeRange((childNode[childDirectChildName] as NodeExt),
               childNestedChildName.join(".")
             );
           }
@@ -152,13 +153,13 @@ class EspreeAdapter implements Adapter<NodeExt> {
             }
           } else {
             throw new NotSupportedError(
-              `childNodeRange is not handled for ${node.toSource()}, child name: ${childName}`
+              `childNodeRange is not handled for ${this.getSource(node)}, child name: ${childName}`
             );
           }
         }
 
         if (nestedChildName.length > 0) {
-          return childNode.childNodeRange(nestedChildName.join("."));
+          return this.childNodeRange(childNode, nestedChildName.join("."));
         }
 
         if (childNode) {
@@ -167,7 +168,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
       }
 
       throw new NotSupportedError(
-        `childNodeRange is not handled for ${node.toSource()}, child name: ${childName}`
+        `childNodeRange is not handled for ${this.getSource(node)}, child name: ${childName}`
       );
     }
   }
@@ -194,32 +195,6 @@ class EspreeAdapter implements Adapter<NodeExt> {
     return this.fileContent(node)
       .split("\n")
       [this.getStartLoc(node).line - 1].search(/\S|$/);
-  }
-
-  /**
-   * Get actual value from the node.
-   * @example
-   * // source code of node is foo.slice(1, 2)
-   * // foo
-   * node.actualValue(['expression', 'callee', 'object'])
-   * @param {string[]} multiKeys - multiiple keys to find value.
-   * @returns {*} actual value.
-   */
-  private actualValue(node: NodeExt, multiKeys: string[]): any {
-    let childNode: any = node;
-    multiKeys.forEach((key) => {
-      if (!childNode) return;
-
-      const child: any = childNode;
-      if (childNode.hasOwnProperty(key)) {
-        childNode = childNode[key];
-      } else if (typeof childNode[key] === "function") {
-        childNode = childNode[key].call(childNode);
-      } else {
-        childNode = null;
-      }
-    });
-    return childNode;
   }
 }
 
