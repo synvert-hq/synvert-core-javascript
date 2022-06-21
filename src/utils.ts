@@ -58,7 +58,7 @@ export const matchRules = (node: Node, rules: object): boolean => {
         return matchValue(actual, expected);
     }
   });
-}
+};
 
 export const arrayBody = (node: any): Node[] => {
   switch (node.type) {

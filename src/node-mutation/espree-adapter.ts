@@ -128,7 +128,8 @@ class EspreeAdapter implements Adapter<NodeExt> {
             nestedChildName;
 
           if (childNestedChildName.length > 0) {
-            return this.childNodeRange((childNode[childDirectChildName] as NodeExt),
+            return this.childNodeRange(
+              childNode[childDirectChildName] as NodeExt,
               childNestedChildName.join(".")
             );
           }
@@ -153,7 +154,9 @@ class EspreeAdapter implements Adapter<NodeExt> {
             }
           } else {
             throw new NotSupportedError(
-              `childNodeRange is not handled for ${this.getSource(node)}, child name: ${childName}`
+              `childNodeRange is not handled for ${this.getSource(
+                node
+              )}, child name: ${childName}`
             );
           }
         }
@@ -168,7 +171,9 @@ class EspreeAdapter implements Adapter<NodeExt> {
       }
 
       throw new NotSupportedError(
-        `childNodeRange is not handled for ${this.getSource(node)}, child name: ${childName}`
+        `childNodeRange is not handled for ${this.getSource(
+          node
+        )}, child name: ${childName}`
       );
     }
   }
