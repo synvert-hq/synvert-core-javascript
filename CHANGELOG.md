@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.0 (2022-06-21)
+
+* Configure `sourceType`
+* Add `@xinminlabs/node-mutation` and remove action
+* Simplify `ast-node-ext`
+
 ## 1.0.1 (2022-06-01)
 
 * Fix `Rewriter#description` signature
