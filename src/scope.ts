@@ -5,6 +5,7 @@ import type { NodeExt } from "./types/node-ext";
 import Instance from "./instance";
 import { matchRules } from "./utils";
 import "./array-ext";
+import "./ast-node-ext";
 
 /**
  * Scope just likes its name, different scope points to different current node.

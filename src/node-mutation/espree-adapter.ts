@@ -183,12 +183,12 @@ class EspreeAdapter implements Adapter<NodeExt> {
 
   getStartLoc(node: NodeExt): { line: number; column: number } {
     const { line, column } = node.loc!.start;
-    return { line: line, column: column + 1 };
+    return { line, column };
   }
 
   getEndLoc(node: NodeExt): { line: number; column: number } {
     const { line, column } = node.loc!.end;
-    return { line: line, column: column + 1 };
+    return { line, column };
   }
 
   getIndent(node: NodeExt): number {
