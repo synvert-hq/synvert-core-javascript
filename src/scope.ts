@@ -1,4 +1,7 @@
-import NodeQuery, { handleRecursiveChild, getTargetNode } from "@xinminlabs/node-query";
+import NodeQuery, {
+  handleRecursiveChild,
+  getTargetNode,
+} from "@xinminlabs/node-query";
 import { Node } from "acorn";
 
 import type { NodeExt } from "./types/node-ext";
