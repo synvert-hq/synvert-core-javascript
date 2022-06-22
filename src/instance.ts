@@ -1,3 +1,4 @@
+import ts from "typescript";
 import fs from "fs";
 import path from "path";
 import glob from "glob";
@@ -25,6 +26,7 @@ import NodeMutation, {
 } from "@xinminlabs/node-mutation";
 import MutationAdapter from "./node-mutation/espree-adapter";
 import QueryAdapter from "./node-query/espree-adapter";
+import { Parser } from "./types/options";
 
 const espree = require("@xinminlabs/espree");
 
@@ -400,7 +402,7 @@ class Instance {
       let source = fs.readFileSync(filePath, "utf-8");
       this.currentFileSource = source;
       try {
-        const node = espree.parse(source, this.parseOptions(filePath));
+        const node = this.parseCode(filePath, source);
 
         this.processWithNode(node, this.func);
 
@@ -418,13 +420,20 @@ class Instance {
     }
   }
 
+  private parseCode(filePath: string, source: string) {
+    if (this.rewriter.parser === Parser.Typescript) {
+      return ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true);
+    }
+    return espree.parse(source, this.espreeParserOptions(filePath));
+  }
+
   /**
-   * Get parser options.
+   * Get espree parser options.
    * @private
    * @param {string} filePath
    * @returns {Object} parser options
    */
-  private parseOptions(filePath: string) {
+  private espreeParserOptions(filePath: string) {
     const options = {
       ecmaVersion: "latest",
       loc: true,

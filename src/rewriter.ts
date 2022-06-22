@@ -1,4 +1,4 @@
-import { RewriterOptions, SourceType } from "./types/options";
+import { RewriterOptions, Parser, SourceType } from "./types/options";
 import { RewriterNotFoundError } from "./error";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
@@ -16,6 +16,7 @@ class Rewriter {
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
   public sourceType: SourceType = SourceType.Module;
+  public parser: Parser = Parser.Espree;
   public options: object = {};
   private sandbox: boolean = false;
   private desc?: string;
@@ -130,6 +131,9 @@ class Rewriter {
   configure(options: RewriterOptions) {
     if (options.sourceType) {
       Rewriter.current.sourceType = options.sourceType;
+    }
+    if (options.parser) {
+      Rewriter.current.parser = options.parser;
     }
   }
 
