@@ -415,7 +415,12 @@ class Instance {
 
   private parseCode(filePath: string, source: string) {
     if (this.rewriter.parser === Parser.Typescript) {
-      return ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true);
+      return ts.createSourceFile(
+        filePath,
+        source,
+        ts.ScriptTarget.Latest,
+        true
+      );
     }
 
     NodeQuery.configure({ adapter: new QueryAdapter() });
