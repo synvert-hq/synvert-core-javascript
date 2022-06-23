@@ -30,6 +30,8 @@ import { Parser } from "./types/options";
 
 const espree = require("@xinminlabs/espree");
 
+NodeMutation.configure({ strategy: STRATEGY.KEEP_RUNNING });
+
 /**
  * Instance is an execution unit, it finds specified ast nodes,
  * checks if the nodes match some conditions, then insert, replace or delete code.
@@ -424,11 +426,7 @@ class Instance {
     }
 
     NodeQuery.configure({ adapter: new QueryAdapter() });
-
-    NodeMutation.configure({
-      adapter: new MutationAdapter(),
-      strategy: STRATEGY.KEEP_RUNNING,
-    });
+    NodeMutation.configure({ adapter: new MutationAdapter() });
     return espree.parse(source, this.espreeParserOptions(filePath));
   }
 
