@@ -46,6 +46,7 @@ Want to use the CLI, check out [synvert-javascript](https://github.com/xinminlab
 
 DSL are as follows
 
+* [configure](./Rewriter.html#configure) - configure the rewriter, set sourceTyep and parser
 * [description](./Rewriter.html#description) - set description of the rewriter
 * [ifNode](./Rewriter.html#ifNode) - check if node version is greater than or equal to the specified node version
 * [ifNpm](./Rewriter.html#ifNpm) - check the version of the specifid npm package
