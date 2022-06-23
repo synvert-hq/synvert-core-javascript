@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.2.0 (2022-06-23)
+
+* Configure `parser`
+* Rename `ALL_FILES` to `ALL_JS_FILES`
+* Add `ALL_TS_FILES`
+* Support both `espree` and `typescript` parsers
+
 ## 1.1.0 (2022-06-21)
 
 * Configure `sourceType`
