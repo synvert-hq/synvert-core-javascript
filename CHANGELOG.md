@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.2.1 (2022-06-24)
+
+* Configure NodeMutation `strategy`
+* Update `@xinminlabs/node-query` to 1.8.5
+
 ## 1.2.0 (2022-06-23)
 
 * Configure `parser`
