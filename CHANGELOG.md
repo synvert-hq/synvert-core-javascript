@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.0 (2022-07-02)
+
+* Use `NodeMutation` new api
+
 ## 1.2.1 (2022-06-24)
 
 * Configure NodeMutation `strategy`
