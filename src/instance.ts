@@ -392,17 +392,20 @@ class Instance {
     if (Configuration.showRunProcess) {
       console.log(filePath);
     }
-    this.currentMutation = new NodeMutation<Node>(filePath);
     while (true) {
       let source = fs.readFileSync(filePath, "utf-8");
       this.currentFileSource = source;
+      this.currentMutation = new NodeMutation<Node>(source);
       try {
         const node = this.parseCode(filePath, source);
 
         this.processWithNode(node, this.func);
 
-        const { conflict } = this.currentMutation.process();
-        if (!conflict) {
+        const result = this.currentMutation.process();
+        if (result.affected) {
+          fs.writeFileSync(filePath, result.newSource!);
+        }
+        if (!result.conflicted) {
           break;
         }
       } catch (e) {
@@ -415,6 +418,13 @@ class Instance {
     }
   }
 
+  /**
+   * Parse code ast node.
+   * @private
+   * @param filePath {string} file path
+   * @param source {string} file source
+   * @returns {Node} ast node
+   */
   private parseCode(filePath: string, source: string) {
     if (this.rewriter.parser === Parser.Typescript) {
       return ts.createSourceFile(
