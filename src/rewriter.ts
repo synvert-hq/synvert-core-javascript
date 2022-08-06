@@ -95,7 +95,7 @@ class Rewriter {
    * @returns {Rewriter} the registered rewriter.
    */
   static execute(func: (rewriter: Rewriter) => void): Rewriter {
-    const rewriter = new Rewriter('', '', func);
+    const rewriter = new Rewriter("", "", func);
     rewriter.process();
     return rewriter;
   }
