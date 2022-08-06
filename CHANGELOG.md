@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4.0 (2022-08-05)
+
+* Add `Rewrter.execute` method.
+
 ## 1.3.0 (2022-07-02)
 
 * Use `NodeMutation` new api
