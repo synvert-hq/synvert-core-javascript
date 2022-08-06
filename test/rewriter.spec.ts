@@ -31,6 +31,14 @@ describe("static register", () => {
     expect(run).toBe(true);
   });
 
+  it("executes", () => {
+    let run = false;
+    Rewriter.execute(() => {
+      run = true;
+    });
+    expect(run).toBe(true);
+  });
+
   describe("configure", () => {
     const rewriter = new Rewriter("snippet group", "snippet name", () => {
       configure({ sourceType: SourceType.Script });

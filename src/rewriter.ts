@@ -89,6 +89,18 @@ class Rewriter {
   }
 
   /**
+   * Execute the temorary rewriter without group and name.
+   * @static
+   * @param {Function} func - a function defines the behaviors of the rewriter
+   * @returns {Rewriter} the registered rewriter.
+   */
+  static execute(func: (rewriter: Rewriter) => void): Rewriter {
+    const rewriter = new Rewriter('', '', func);
+    rewriter.process();
+    return rewriter;
+  }
+
+  /**
    * Create a Rewriter
    * @param {string} group - group name
    * @param {string} name - snippet name
