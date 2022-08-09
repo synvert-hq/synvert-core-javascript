@@ -26,7 +26,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
   rewrittenSource(node: NodeExt, code: string): string {
     return code.replace(
       /{{([a-zA-z0-9\.]+?)}}/gm,
-      (_string, match, _offset) => {
+      (string, match, _offset) => {
         if (!match) return null;
 
         const obj = this.actualValue(node, match.split("."));
@@ -37,14 +37,13 @@ class EspreeAdapter implements Adapter<NodeExt> {
               (obj[obj.length - 1] as NodeExt).end
             );
           }
-          const result = obj.hasOwnProperty("name") ? (obj as any).name : obj;
-          if (result.hasOwnProperty("type")) {
-            return this.getSource(result);
+          if (obj.hasOwnProperty("type")) {
+            return this.getSource(obj);
           } else {
-            return result;
+            return obj;
           }
         } else {
-          return code;
+          return string;
         }
       }
     );
@@ -206,11 +205,10 @@ class EspreeAdapter implements Adapter<NodeExt> {
     multiKeys.forEach((key) => {
       if (!childNode) return;
 
-      const child: any = childNode;
       if (childNode.hasOwnProperty(key)) {
-        childNode = child[key];
-      } else if (typeof child[key] === "function") {
-        childNode = child[key].call(childNode);
+        childNode = childNode[key];
+      } else if (typeof childNode[key] === "function") {
+        childNode = childNode[key].call(childNode);
       } else {
         childNode = null;
       }
