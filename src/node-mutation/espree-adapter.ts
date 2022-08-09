@@ -216,7 +216,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
       }
     });
     return childNode;
-  };
+  }
 }
 
 export default EspreeAdapter;
