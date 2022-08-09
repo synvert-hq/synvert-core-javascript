@@ -1,5 +1,4 @@
 import fs from "fs";
-import { getTargetNode } from "@xinminlabs/node-query";
 import { Adapter } from "@xinminlabs/node-mutation";
 
 import type { NodeArrayExt, NodeExt } from "../types/node-ext";
@@ -30,7 +29,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
       (_string, match, _offset) => {
         if (!match) return null;
 
-        const obj = getTargetNode(node, match);
+        const obj = this.actualValue(node, match.split("."));
         if (obj) {
           if (Array.isArray(obj)) {
             return this.fileContent(node).slice(
@@ -201,6 +200,23 @@ class EspreeAdapter implements Adapter<NodeExt> {
       .split("\n")
       [this.getStartLoc(node).line - 1].search(/\S|$/);
   }
+
+  private actualValue(node: NodeExt, multiKeys: string[]): any {
+    let childNode: any = node;
+    multiKeys.forEach((key) => {
+      if (!childNode) return;
+
+      const child: any = childNode;
+      if (childNode.hasOwnProperty(key)) {
+        childNode = child[key];
+      } else if (typeof child[key] === "function") {
+        childNode = child[key].call(childNode);
+      } else {
+        childNode = null;
+      }
+    });
+    return childNode;
+  };
 }
 
 export default EspreeAdapter;
