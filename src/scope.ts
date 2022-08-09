@@ -1,12 +1,9 @@
-import NodeQuery, {
-  handleRecursiveChild,
-  getTargetNode,
-} from "@xinminlabs/node-query";
 import { Node } from "acorn";
+import NodeQuery from "@xinminlabs/node-query";
+import { getTargetNode } from "@xinminlabs/node-query/lib/compiler/helpers";
 
 import type { NodeExt } from "./types/node-ext";
 import Instance from "./instance";
-import { matchRules } from "./utils";
 import "./array-ext";
 import "./ast-node-ext";
 
@@ -59,7 +56,7 @@ class QueryScope extends Scope {
     }
 
     instance.processWithNode(currentNode, () => {
-      this.nodeQuery.parse(currentNode as NodeExt).forEach((matchingNode) => {
+      this.nodeQuery.queryNodes(currentNode as NodeExt).forEach((matchingNode) => {
         instance.processWithNode(matchingNode, () => {
           this.func.call(this.instance, this.instance);
         });
@@ -73,6 +70,8 @@ class QueryScope extends Scope {
  * @extends Scope
  */
 class WithinScope extends Scope {
+  private nodeQuery: NodeQuery<NodeExt>;
+
   /**
    * Create a WithinScope
    * @param {Instance} instance
@@ -81,10 +80,11 @@ class WithinScope extends Scope {
    */
   constructor(
     instance: Instance,
-    private rules: any,
+    rules: any,
     private func: (instance: Instance) => void
   ) {
     super(instance);
+    this.nodeQuery = new NodeQuery(rules);
   }
 
   /**
@@ -99,33 +99,13 @@ class WithinScope extends Scope {
       return;
     }
 
-    const matchingNodes = this._findMatchingNodes(currentNode);
     instance.processWithNode(currentNode, () => {
-      matchingNodes.forEach((matchingNode) => {
+      this.nodeQuery.queryNodes(currentNode as NodeExt).forEach((matchingNode) => {
         instance.processWithNode(matchingNode, () => {
           this.func.call(this.instance, this.instance);
         });
       });
     });
-  }
-
-  /**
-   * Find matching nodes from current node and its child nodes.
-   * @private
-   * @param {Node} currentNode
-   * @returns {Node[]} matching nodes
-   */
-  _findMatchingNodes(currentNode: Node): Node[] {
-    const matchingNodes = [];
-    if (matchRules(currentNode, this.rules)) {
-      matchingNodes.push(currentNode);
-    }
-    handleRecursiveChild(currentNode, (childNode) => {
-      if (matchRules(childNode, this.rules)) {
-        matchingNodes.push(childNode);
-      }
-    });
-    return matchingNodes;
   }
 }
 

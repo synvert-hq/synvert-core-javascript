@@ -1,9 +1,9 @@
 import { t } from "typy";
 import { Node } from "acorn";
-import { handleRecursiveChild } from "@xinminlabs/node-query";
+import NodeQuery from "@xinminlabs/node-query";
 
 import Instance from "./instance";
-import { matchRules, arrayBody } from "./utils";
+import { arrayBody } from "./utils";
 
 interface ConditionOptions {
   in?: string;
@@ -14,6 +14,7 @@ interface ConditionOptions {
  * Condition is used to check if the node matches the rules, condition won’t change the node scope.
  */
 abstract class Condition {
+  protected nodeQuery: NodeQuery<Node>;
   protected options: ConditionOptions;
   protected func: (instance: Instance) => void;
 
@@ -26,10 +27,11 @@ abstract class Condition {
    */
   constructor(
     protected instance: Instance,
-    protected rules: any,
+    rules: object,
     options: ConditionOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void
   ) {
+    this.nodeQuery = new NodeQuery(rules);
     if (typeof options === "object") {
       this.options = options;
       this.func = func!;
@@ -76,13 +78,8 @@ class IfExistCondition extends Condition {
    * Check if any child node matches the rules.
    */
   protected match(): boolean {
-    let match = false;
-    handleRecursiveChild(this.targetNode(), (childNode) => {
-      if (!match) {
-        match = matchRules(childNode, this.rules);
-      }
-    });
-    return match;
+    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), false);
+    return matchingNodes.length > 0;
   }
 }
 
@@ -95,13 +92,8 @@ class UnlessExistCondition extends Condition {
    * Check if none of child node matches the rules.
    */
   protected match(): boolean {
-    let match = false;
-    handleRecursiveChild(this.targetNode(), (childNode) => {
-      if (!match) {
-        match = matchRules(childNode, this.rules);
-      }
-    });
-    return !match;
+    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), false);
+    return matchingNodes.length === 0;
   }
 }
 
@@ -115,8 +107,9 @@ class IfOnlyExistCondition extends Condition {
    */
   protected match(): boolean {
     const body = arrayBody(this.targetNode());
-    return body.length === 1 && matchRules(body[0], this.rules);
+    return body.length === 1 && this.nodeQuery.matchNode(body[0]);
   }
+
 }
 
 /**
@@ -146,7 +139,7 @@ class IfAllCondition extends Condition {
    * Find all matching nodes, if all match options.match rules, run the func, else run the elseFunc.
    */
   process() {
-    const nodes = this._matchingNodes();
+    const nodes = this.nodeQuery.queryNodes(this.targetNode(), false);
     if (nodes.length === 0) {
       return;
     }
@@ -171,23 +164,8 @@ class IfAllCondition extends Condition {
     if (typeof this.options.match === "function") {
       return this.options.match(node);
     } else {
-      return matchRules(node, this.options.match!);
+      return new NodeQuery(this.options.match).matchNode(node);
     }
-  }
-
-  /**
-   * Get the matching nodes.
-   * @private
-   * @returns {Node[]} matching nodes
-   */
-  _matchingNodes(): Node[] {
-    const nodes: Node[] = [];
-    handleRecursiveChild(this.targetNode(), (childNode) => {
-      if (matchRules(childNode, this.rules)) {
-        nodes.push(childNode);
-      }
-    });
-    return nodes;
   }
 }
 
