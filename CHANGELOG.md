@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.1 (2022-08-09)
+
+* Fix ``EspreeAdapter#rewrittenSource`` if regex does not match
+
 ## 1.5.0 (2022-08-09)
 
 * Rename `type` to `nodeType`
