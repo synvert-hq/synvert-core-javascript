@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.5.0 (2022-08-09)
+
+* Rename `type` to `nodeType`
+* Use `NodeQuery` to read node rules
+* Read target node in EspreeAdapter itself
+
 ## 1.4.0 (2022-08-05)
 
 * Add `Rewrter.execute` method.
