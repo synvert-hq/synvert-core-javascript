@@ -378,7 +378,7 @@ It creates a AppendAction to append the code to the bottom of current node body.
 // foo() => {}
 // bar() => {}
 // after executing
-withNode({ type: "MethodDefinition", key: "foo" }, () => {
+withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
   append("bar() => {}")
 })</code></pre>
 
@@ -527,7 +527,7 @@ It creates a DeleteAction to delete child nodes.
 // will be converted to
 // const someObject = { cat, dog, bird }
 // after executing
-withNode({ type: "Property", key: { type: "Identifier" }, value: { type: "Identifier" } }, () => {
+withNode({ nodeType: "Property", key: { nodeType: "Identifier" }, value: { nodeType: "Identifier" } }, () => {
   deleteNode(["semicolon", "value"]);
 });</code></pre>
 
@@ -1094,7 +1094,7 @@ if so, then call the func, else call the elseFunc.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// `class Foobar { foo() {}; bar() {}; }` matches and call foobar
-IfAllNode({ type: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });</code></pre>
+IfAllNode({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });</code></pre>
 
 </div>
 
@@ -1291,7 +1291,7 @@ if so, then continue operating on each matching ast node.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// `class Foobar extends React.Component` matches and call `foobar`.
-ifExistNode({ type: "ClassDeclaration", superClass: { type: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })</code></pre>
+ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })</code></pre>
 
 </div>
 
@@ -1488,7 +1488,7 @@ if so, then continue operating on each matching ast node.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
-ifOnlyExistNode({ type: "MethodDefinition", key: "foo" }, () => { foobar })</code></pre>
+ifOnlyExistNode({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })</code></pre>
 
 </div>
 
@@ -1661,7 +1661,7 @@ It creates a InsertAction to replace child nodes with code.
 // will be converted to
 // import React, { Component, useState } from 'react'
 // after executing
-withNode({ type: "ImportSpecifier", local: "Component" }, () => {
+withNode({ nodeType: "ImportSpecifier", local: "Component" }, () => {
   insert(", useState", { at: "end" });
 });</code></pre>
 
@@ -2318,7 +2318,7 @@ It creates a RemoveAction to remove current node.
 // class A {
 // }
 // after executing
-withNode({ type: "MethodDefinition", kind: "constructor" }, () => {
+withNode({ nodeType: "MethodDefinition", kind: "constructor" }, () => {
   remove();
 });</code></pre>
 
@@ -2496,7 +2496,7 @@ It creates a ReplaceAction to replace child nodes with code.
 // will be converted to
 // $form.trigger('submit');
 // after executing
-withNode({ type: "CallExpression", callee: { type: "MemberExpression", object: /^\$/, property: 'submit' }, arguments: { length: 0 } }, () => {
+withNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' }, arguments: { length: 0 } }, () => {
   replace(["callee.property", "arguments"], { with: "trigger('submit')" });
 });</code></pre>
 
@@ -2671,7 +2671,7 @@ It creates a ReplaceWithAction to replace current node with code.
 // will be converted to
 // export default Rewriter
 // after executing
-withNode({ type: "ExpressionStatement", expression: { type: "AssignmentExpression", left: { type: "MemberExpression", object: "module", property: "exports" }, right: { type: "Identifier" } } }, () => {
+withNode({ nodeType: "ExpressionStatement", expression: { nodeType: "AssignmentExpression", left: { nodeType: "MemberExpression", object: "module", property: "exports" }, right: { nodeType: "Identifier" } } }, () => {
   replaceWith("export default {{expression.right}}");
 });</code></pre>
 
@@ -2870,7 +2870,7 @@ if so, then continue operating on each matching ast node.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// `class Foobar extends Component` matches and call `foobar`.
-unlessExistNode({ type: "ClassDeclaration", superClass: { type: "MemberExpression", object: "React", property: "Component" } }, () => {})</code></pre>
+unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})</code></pre>
 
 </div>
 
@@ -3041,7 +3041,7 @@ then continue operating on each matching ast node.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// `$.ajax({ ... })` matches and call `foobar`
-withinNode({ type: "CallExpression", callee: { type: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })</code></pre>
+withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })</code></pre>
 
 </div>
 
@@ -3212,7 +3212,7 @@ then continue operating on each matching ast node.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// `$.ajax({ ... })` matches and call `foobar`
-withinNode({ type: "CallExpression", callee: { type: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })</code></pre>
+withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })</code></pre>
 
 </div>
 
@@ -3383,7 +3383,7 @@ then continue operating on each matching ast node.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// `$.ajax({ ... })` matches and call `foobar`
-withinNode({ type: "CallExpression", callee: { type: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })</code></pre>
+withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })</code></pre>
 
 </div>
 
@@ -3406,7 +3406,7 @@ withinNode({ type: "CallExpression", callee: { type: "MemberExpression", object:
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sat Aug 06 2022 00:32:19 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Tue Aug 09 2022 08:31:47 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
