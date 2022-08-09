@@ -22,7 +22,6 @@ export const indent = (str: string, count: number): string => {
     .join("\n");
 };
 
-
 export const arrayBody = (node: any): Node[] => {
   switch (node.type) {
     case "ClassDefinition":

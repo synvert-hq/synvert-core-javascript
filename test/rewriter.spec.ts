@@ -52,9 +52,12 @@ describe("static register", () => {
     test("writes new code to file", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
         withinFiles("*.js", function () {
-          withNode({ nodeType: "ClassDeclaration", id: { name: "FooBar" } }, () => {
-            replace("id", { with: "Synvert" });
-          });
+          withNode(
+            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            () => {
+              replace("id", { with: "Synvert" });
+            }
+          );
         });
       });
       const input = `class FooBar {}`;

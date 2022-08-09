@@ -56,11 +56,13 @@ class QueryScope extends Scope {
     }
 
     instance.processWithNode(currentNode, () => {
-      this.nodeQuery.queryNodes(currentNode as NodeExt).forEach((matchingNode) => {
-        instance.processWithNode(matchingNode, () => {
-          this.func.call(this.instance, this.instance);
+      this.nodeQuery
+        .queryNodes(currentNode as NodeExt)
+        .forEach((matchingNode) => {
+          instance.processWithNode(matchingNode, () => {
+            this.func.call(this.instance, this.instance);
+          });
         });
-      });
     });
   }
 }
@@ -100,11 +102,13 @@ class WithinScope extends Scope {
     }
 
     instance.processWithNode(currentNode, () => {
-      this.nodeQuery.queryNodes(currentNode as NodeExt).forEach((matchingNode) => {
-        instance.processWithNode(matchingNode, () => {
-          this.func.call(this.instance, this.instance);
+      this.nodeQuery
+        .queryNodes(currentNode as NodeExt)
+        .forEach((matchingNode) => {
+          instance.processWithNode(matchingNode, () => {
+            this.func.call(this.instance, this.instance);
+          });
         });
-      });
     });
   }
 }

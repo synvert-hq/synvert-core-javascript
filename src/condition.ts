@@ -109,7 +109,6 @@ class IfOnlyExistCondition extends Condition {
     const body = arrayBody(this.targetNode());
     return body.length === 1 && this.nodeQuery.matchNode(body[0]);
   }
-
 }
 
 /**
