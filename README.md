@@ -28,8 +28,8 @@ new Synvert.Rewriter("jquery", "deprecate-event-shorthand", () => {
     // $form.trigger('submit');
     withNode(
       {
-        type: "CallExpression",
-        callee: { type: "MemberExpression", object: /^\$/, property: 'submit' },
+        nodeType: "CallExpression",
+        callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' },
         arguments: { length: 0 },
       },
       () => {

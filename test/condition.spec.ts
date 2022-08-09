@@ -7,6 +7,7 @@ import {
   IfAllCondition,
 } from "../src/condition";
 import { parse } from "./helper";
+import mock from "mock-fs";
 
 describe("Condition", () => {
   const rewriter = new Rewriter("snippet group", "snippet name", () => {});
@@ -19,15 +20,20 @@ describe("Condition", () => {
     const node = parse(source);
 
     describe("process", () => {
-      beforeAll(() => {
+      beforeEach(() => {
         instance.currentNode = node;
+        mock({ "code.js": source });
+      });
+
+      afterEach(() => {
+        mock.restore();
       });
 
       test("does not call function if no matching node", () => {
         let run = false;
         new IfExistCondition(
           instance,
-          { type: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
           function () {
             run = true;
           }
@@ -39,7 +45,7 @@ describe("Condition", () => {
         let run = false;
         new IfExistCondition(
           instance,
-          { type: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "MemberExpression", object: "$", property: "ajax" },
           function () {
             run = true;
           }
@@ -51,7 +57,7 @@ describe("Condition", () => {
         let run = false;
         new IfExistCondition(
           instance,
-          { type: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "MemberExpression", object: "$", property: "ajax" },
           { in: "expression" },
           function () {
             run = true;
@@ -69,15 +75,20 @@ describe("Condition", () => {
     const node = parse(source);
 
     describe("process", () => {
-      beforeAll(() => {
+      beforeEach(() => {
         instance.currentNode = node;
+        mock({ "code.js": source });
+      });
+
+      afterEach(() => {
+        mock.restore();
       });
 
       test("calls function if no matching node", () => {
         let run = false;
         new UnlessExistCondition(
           instance,
-          { type: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
           function () {
             run = true;
           }
@@ -89,7 +100,7 @@ describe("Condition", () => {
         let run = false;
         new UnlessExistCondition(
           instance,
-          { type: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "MemberExpression", object: "$", property: "ajax" },
           function () {
             run = true;
           }
@@ -101,7 +112,7 @@ describe("Condition", () => {
         let run = false;
         new UnlessExistCondition(
           instance,
-          { type: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "MemberExpression", object: "$", property: "ajax" },
           { in: "expression.callee" },
           function () {
             run = true;
@@ -121,8 +132,13 @@ describe("Condition", () => {
       `;
       const node = parse(source, { firstStatement: false });
 
-      beforeAll(() => {
+      beforeEach(() => {
         instance.currentNode = node;
+        mock({ "code.js": source });
+      });
+
+      afterEach(() => {
+        mock.restore();
       });
 
       test("does not call function if no matching node", () => {
@@ -130,8 +146,8 @@ describe("Condition", () => {
         new IfOnlyExistCondition(
           instance,
           {
-            type: "ExpressionStatement",
-            expression: { type: "Literal", value: "strict" },
+            nodeType: "ExpressionStatement",
+            expression: { nodeType: "Literal", value: "strict" },
           },
           function () {
             run = true;
@@ -147,8 +163,13 @@ describe("Condition", () => {
       `;
       const node = parse(source, { firstStatement: false });
 
-      beforeAll(() => {
+      beforeEach(() => {
         instance.currentNode = node;
+        mock({ "code.js": source });
+      });
+
+      afterEach(() => {
+        mock.restore();
       });
 
       test("calls function if there is a matching node", () => {
@@ -156,8 +177,8 @@ describe("Condition", () => {
         new IfOnlyExistCondition(
           instance,
           {
-            type: "ExpressionStatement",
-            expression: { type: "Literal", value: "use strict" },
+            nodeType: "ExpressionStatement",
+            expression: { nodeType: "Literal", value: "use strict" },
           },
           function () {
             run = true;
@@ -177,13 +198,18 @@ describe("Condition", () => {
     describe("process", () => {
       beforeAll(() => {
         instance.currentNode = node;
+        mock({ "code.js": source });
+      });
+
+      afterEach(() => {
+        mock.restore();
       });
 
       test("does not call function if no matching node", () => {
         let run = false;
         new IfAllCondition(
           instance,
-          { type: "ImportDefaultSpecifier" },
+          { nodeType: "ImportDefaultSpecifier" },
           { match: { local: { name: { in: ["a", "b"] } } } },
           function () {
             run = true;
@@ -199,7 +225,7 @@ describe("Condition", () => {
         let run = false;
         new IfAllCondition(
           instance,
-          { type: "ImportSpecifier" },
+          { nodeType: "ImportSpecifier" },
           { match: { local: { name: { in: ["a", "b"] } } } },
           function () {
             run = true;
@@ -215,7 +241,7 @@ describe("Condition", () => {
         let run = false;
         new IfAllCondition(
           instance,
-          { type: "ImportSpecifier" },
+          { nodeType: "ImportSpecifier" },
           { match: { local: { name: { in: ["c", "d"] } } } },
           function () {
             run = false;

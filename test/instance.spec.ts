@@ -18,8 +18,8 @@ describe("Instance", () => {
         );
         withNode(
           {
-            type: "CallExpression",
-            callee: { type: "MemberExpression", property: "trimRight" },
+            nodeType: "CallExpression",
+            callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
             replace("callee.property", { with: "trimEnd" });

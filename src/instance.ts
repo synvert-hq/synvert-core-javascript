@@ -132,7 +132,7 @@ class Instance {
    * then continue operating on each matching ast node.
    * @example
    * // `$.ajax({ ... })` matches and call `foobar`
-   * withinNode({ type: "CallExpression", callee: { type: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })
+   * withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })
    * @param {Object} rules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
@@ -160,7 +160,7 @@ class Instance {
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar extends React.Component` matches and call `foobar`.
-   * ifExistNode({ type: "ClassDeclaration", superClass: { type: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
+   * ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
    * @param {Object} rules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - to continue operating on the matching nodes.
@@ -179,7 +179,7 @@ class Instance {
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar extends Component` matches and call `foobar`.
-   * unlessExistNode({ type: "ClassDeclaration", superClass: { type: "MemberExpression", object: "React", property: "Component" } }, () => {})
+   * unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})
    * @param {Object} rules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - to continue operating on the matching nodes.
@@ -198,7 +198,7 @@ class Instance {
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
-   * ifOnlyExistNode({ type: "MethodDefinition", key: "foo" }, () => { foobar })
+   * ifOnlyExistNode({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })
    * @param {Object} rules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - to continue operating on the matching nodes.
@@ -217,7 +217,7 @@ class Instance {
    * if so, then call the func, else call the elseFunc.
    * @example
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
-   * IfAllNode({ type: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
+   * IfAllNode({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
    * @param {Object} rules - to check mathing ast nodes.
    * @param {Object} options - { match: rules, in: 'callee' }
    * @param {Function} func - to continue if all the matching nodes match options.match.
@@ -247,7 +247,7 @@ class Instance {
    * // foo() => {}
    * // bar() => {}
    * // after executing
-   * withNode({ type: "MethodDefinition", key: "foo" }, () => {
+   * withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
    *   append("bar() => {}")
    * })
    * @param {string} code - need to be appended.
@@ -283,7 +283,7 @@ class Instance {
    * // will be converted to
    * // import React, { Component, useState } from 'react'
    * // after executing
-   * withNode({ type: "ImportSpecifier", local: "Component" }, () => {
+   * withNode({ nodeType: "ImportSpecifier", local: "Component" }, () => {
    *   insert(", useState", { at: "end" });
    * });
    * @param {string} code - code need to be inserted
@@ -305,7 +305,7 @@ class Instance {
    * // will be converted to
    * // const someObject = { cat, dog, bird }
    * // after executing
-   * withNode({ type: "Property", key: { type: "Identifier" }, value: { type: "Identifier" } }, () => {
+   * withNode({ nodeType: "Property", key: { nodeType: "Identifier" }, value: { nodeType: "Identifier" } }, () => {
    *   deleteNode(["semicolon", "value"]);
    * });
    * @param {string} selectors - name of child nodes
@@ -330,7 +330,7 @@ class Instance {
    * // class A {
    * // }
    * // after executing
-   * withNode({ type: "MethodDefinition", kind: "constructor" }, () => {
+   * withNode({ nodeType: "MethodDefinition", kind: "constructor" }, () => {
    *   remove();
    * });
    */
@@ -346,7 +346,7 @@ class Instance {
    * // will be converted to
    * // $form.trigger('submit');
    * // after executing
-   * withNode({ type: "CallExpression", callee: { type: "MemberExpression", object: /^\$/, property: 'submit' }, arguments: { length: 0 } }, () => {
+   * withNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' }, arguments: { length: 0 } }, () => {
    *   replace(["callee.property", "arguments"], { with: "trigger('submit')" });
    * });
    * @param {string|array} selectors - name of child nodes.
@@ -368,7 +368,7 @@ class Instance {
    * // will be converted to
    * // export default Rewriter
    * // after executing
-   * withNode({ type: "ExpressionStatement", expression: { type: "AssignmentExpression", left: { type: "MemberExpression", object: "module", property: "exports" }, right: { type: "Identifier" } } }, () => {
+   * withNode({ nodeType: "ExpressionStatement", expression: { nodeType: "AssignmentExpression", left: { nodeType: "MemberExpression", object: "module", property: "exports" }, right: { nodeType: "Identifier" } } }, () => {
    *   replaceWith("export default {{expression.right}}");
    * });
    * @param {string} code - code need to be replaced.

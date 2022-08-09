@@ -20,7 +20,7 @@ abstract class Condition {
   /**
    * Create a Condition
    * @param {Instance} instance
-   * @param {Object} rules - rules to find nodes, e.g. `{ type: "MemberExpression", object: { in: ["$", "jQuery"] }, property: "ajax" }`
+   * @param {Object} rules - rules to find nodes, e.g. `{ nodeType: "MemberExpression", object: { in: ["$", "jQuery"] }, property: "ajax" }`
    * @param {Object} options - to do find in specific child node, e.g. `{ in: 'callee' }`
    * @param {Function} func - a function to be called if rules are matched.
    */
@@ -127,7 +127,7 @@ class IfAllCondition extends Condition {
   /**
    * Create an IfAllCondition
    * @param {Instance} instance
-   * @param {Object} rules - rules to find nodes, e.g. `{ type: "MemberExpression", object: { in: ["$", "jQuery"] }, property: "ajax" }`
+   * @param {Object} rules - rules to find nodes, e.g. `{ nodeType: "MemberExpression", object: { in: ["$", "jQuery"] }, property: "ajax" }`
    * @param {Object} options - { match: rules|function }
    * @param {Function} func - a function to be called if all matching nodes match options.match.
    * @param {Function} elseFunc - a function to be called if not all matching nodes match options.match.

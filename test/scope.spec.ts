@@ -55,7 +55,7 @@ describe("Scope", () => {
         let run = false;
         new WithinScope(
           instance,
-          { type: "ClassDeclaration", id: { name: "Synvert" } },
+          { nodeType: "ClassDeclaration", id: { name: "Synvert" } },
           function () {
             run = true;
           }
@@ -67,7 +67,7 @@ describe("Scope", () => {
         let run = false;
         new WithinScope(
           instance,
-          { type: "ClassDeclaration", id: { name: "FooBar" } },
+          { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
           function () {
             run = true;
           }
