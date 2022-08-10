@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.2 (2022-08-10)
+
+* Explicitly set typescript adapter
+
 ## 1.5.1 (2022-08-09)
 
 * Fix ``EspreeAdapter#rewrittenSource`` if regex does not match
