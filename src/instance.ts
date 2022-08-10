@@ -15,17 +15,18 @@ import {
   ConditionOptions,
 } from "./condition";
 import { indent } from "./utils";
-import NodeQuery from "@xinminlabs/node-query";
+import NodeQuery, { TypescriptAdapter as TypescriptQueryAdapter } from "@xinminlabs/node-query";
 import NodeMutation, {
   STRATEGY,
+  TypescriptAdapter as TypescriptMutationAdapter,
   InsertOptions,
   ReplaceWithOptions,
   ReplaceOptions,
   NotSupportedError,
   ConflictActionError,
 } from "@xinminlabs/node-mutation";
-import MutationAdapter from "./node-mutation/espree-adapter";
-import QueryAdapter from "./node-query/espree-adapter";
+import EspreeMutationAdapter from "./node-mutation/espree-adapter";
+import EspreeQueryAdapter from "./node-query/espree-adapter";
 import { Parser } from "./types/options";
 
 const espree = require("@xinminlabs/espree");
@@ -427,6 +428,8 @@ class Instance {
    */
   private parseCode(filePath: string, source: string) {
     if (this.rewriter.parser === Parser.Typescript) {
+      NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
+      NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
       return ts.createSourceFile(
         filePath,
         source,
@@ -435,8 +438,8 @@ class Instance {
       );
     }
 
-    NodeQuery.configure({ adapter: new QueryAdapter() });
-    NodeMutation.configure({ adapter: new MutationAdapter() });
+    NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
+    NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
     return espree.parse(source, this.espreeParserOptions(filePath));
   }
 
