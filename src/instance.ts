@@ -15,7 +15,9 @@ import {
   ConditionOptions,
 } from "./condition";
 import { indent } from "./utils";
-import NodeQuery, { TypescriptAdapter as TypescriptQueryAdapter } from "@xinminlabs/node-query";
+import NodeQuery, {
+  TypescriptAdapter as TypescriptQueryAdapter,
+} from "@xinminlabs/node-query";
 import NodeMutation, {
   STRATEGY,
   TypescriptAdapter as TypescriptMutationAdapter,
