@@ -24,10 +24,12 @@ import NodeMutation, {
   ReplaceOptions,
   NotSupportedError,
   ConflictActionError,
+  ProcessResult,
 } from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
 import { Parser } from "./types/options";
+import { TestResult } from "./types/result";
 
 const espree = require("@xinminlabs/espree");
 
@@ -84,6 +86,28 @@ class Instance {
         absolute: true,
       })
       .forEach((filePath) => this.processFile(filePath));
+  }
+
+  /**
+   * Test the instance.
+   * It finds all files, for each file, it runs the func, and gets the process results.
+   * @returns {TestResult[]} test results
+   */
+  test(): TestResult[] {
+    if (
+      fs.existsSync(Configuration.path) &&
+      minimatch(Configuration.path, this.filePattern)
+    ) {
+      return [{ filePath: Configuration.path, ...this.testFile(Configuration.path) }];
+    }
+
+    return glob.sync(this.filePattern, {
+      ignore: Configuration.skipFiles,
+      cwd: Configuration.path,
+      nodir: true,
+      realpath: true,
+      absolute: true,
+    }).map((filePath) => ({ filePath, ...this.testFile(filePath) }));
   }
 
   /**
@@ -417,6 +441,24 @@ class Instance {
         break;
       }
     }
+  }
+
+  /**
+   * Test one file.
+   * @private
+   * @param {string} filePath - file path
+   * @returns {ProcessResult}
+   */
+  private testFile(filePath: string): ProcessResult {
+    this.currentFilePath = filePath;
+    let source = fs.readFileSync(filePath, "utf-8");
+    this.currentFileSource = source;
+    this.currentMutation = new NodeMutation<Node>(source);
+    const node = this.parseCode(filePath, source);
+
+    this.processWithNode(node, this.func);
+
+    return this.currentMutation.process();
   }
 
   /**

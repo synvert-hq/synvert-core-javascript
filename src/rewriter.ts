@@ -3,6 +3,7 @@ import { RewriterNotFoundError } from "./error";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
 import NpmVersion from "./npm-version";
+import { TestResult } from "./types/result";
 
 /**
  * Rewriter is the top level namespace in a synvert snippet.
@@ -19,8 +20,10 @@ class Rewriter {
     sourceType: SourceType.Module,
     parser: Parser.Espree,
     runInstance: true,
-  };
+    writeToFile: true
+   };
   private desc?: string;
+  private testResults: TestResult[] = [];
 
   /**
    * Store all rewriters grouped by group name, e.g.  `{ jquery: { 'deprecate-event-shorthand': <Rewriter> } }`
@@ -117,6 +120,22 @@ class Rewriter {
     try {
       Rewriter.current = this;
       this.func.call(this, this);
+    } finally {
+      Rewriter.current = originalRewriter;
+    }
+  }
+
+  /**
+   * Test the rewriter.
+   * @returns {TestResult[]} test results
+   */
+  test(): TestResult[] {
+    const originalRewriter = Rewriter.current;
+    try {
+      Rewriter.current = this;
+      Rewriter.current.options.writeToFile = false;
+      this.func.call(this, this);
+      return Rewriter.current.testResults;
     } finally {
       Rewriter.current = originalRewriter;
     }
@@ -219,7 +238,12 @@ class Rewriter {
     ) {
       const instance = new Instance(Rewriter.current, filePattern, func);
       Instance.current = instance;
-      instance.process();
+      if (Rewriter.current.options.writeToFile) {
+        instance.process();
+      } else {
+        const results = instance.test();
+        Rewriter.current.testResults = [...Rewriter.current.testResults, ...results];
+      }
     }
   }
 }

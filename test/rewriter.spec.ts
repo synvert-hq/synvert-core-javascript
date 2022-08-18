@@ -1,5 +1,6 @@
 import fs from "fs";
 import mock from "mock-fs";
+import { resolve } from "path";
 import { RewriterNotFoundError } from "../src/error";
 
 import Rewriter from "../src/rewriter";
@@ -87,6 +88,32 @@ describe("static register", () => {
       mock({ "code.js": input });
       rewriter.process();
       expect(fs.readFileSync("code.js", "utf8")).toBe(output);
+      mock.restore();
+    });
+  });
+
+  describe("test", () => {
+    test("test", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        withinFiles("*.js", function () {
+          withNode(
+            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            () => {
+              replace("id", { with: "Synvert" });
+            }
+          );
+        });
+      });
+      const input = `class FooBar {}`;
+      const output = `class Synvert {}`;
+      mock({ "code.js": input });
+      const results = rewriter.test();
+      expect(results.length).toEqual(1);
+      expect(results[0].filePath).toEqual(resolve("code.js"));
+      expect(results[0].affected).toBeTruthy();
+      expect(results[0].conflicted).toBeFalsy();
+      expect(results[0].actions).toEqual([{ start: 6, end: 12, newCode: "Synvert" }]);
+      expect(results[0].newSource).toEqual("class Synvert {}");
       mock.restore();
     });
   });
