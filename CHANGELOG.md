@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.6.0 (2022-08-18)
+
+* Rename `sandbox` to `runInstance` option
+* Add `writeToFile` option
+* Add `Rewriter#test` method
+
 ## 1.5.2 (2022-08-10)
 
 * Explicitly set typescript adapter
