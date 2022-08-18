@@ -112,7 +112,9 @@ describe("static register", () => {
       expect(results[0].filePath).toEqual(resolve("code.js"));
       expect(results[0].affected).toBeTruthy();
       expect(results[0].conflicted).toBeFalsy();
-      expect(results[0].actions).toEqual([{ start: 6, end: 12, newCode: "Synvert" }]);
+      expect(results[0].actions).toEqual([
+        { start: 6, end: 12, newCode: "Synvert" },
+      ]);
       expect(results[0].newSource).toEqual("class Synvert {}");
       mock.restore();
     });

@@ -20,8 +20,8 @@ class Rewriter {
     sourceType: SourceType.Module,
     parser: Parser.Espree,
     runInstance: true,
-    writeToFile: true
-   };
+    writeToFile: true,
+  };
   private desc?: string;
   private testResults: TestResult[] = [];
 
@@ -208,11 +208,7 @@ class Rewriter {
    */
   addSnippet(group: string, name: string, options: object = {}): void {
     const currentRewriter = Rewriter.current;
-    const rewriter = Rewriter.call(
-      group,
-      name,
-      options
-    );
+    const rewriter = Rewriter.call(group, name, options);
     if (rewriter) {
       currentRewriter.subSnippets.push(rewriter);
     }
@@ -242,7 +238,10 @@ class Rewriter {
         instance.process();
       } else {
         const results = instance.test();
-        Rewriter.current.testResults = [...Rewriter.current.testResults, ...results];
+        Rewriter.current.testResults = [
+          ...Rewriter.current.testResults,
+          ...results,
+        ];
       }
     }
   }

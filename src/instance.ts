@@ -15,7 +15,9 @@ import {
   ConditionOptions,
 } from "./condition";
 import { indent } from "./utils";
-import NodeQuery, { TypescriptAdapter as TypescriptQueryAdapter } from "@xinminlabs/node-query";
+import NodeQuery, {
+  TypescriptAdapter as TypescriptQueryAdapter,
+} from "@xinminlabs/node-query";
 import NodeMutation, {
   STRATEGY,
   TypescriptAdapter as TypescriptMutationAdapter,
@@ -98,16 +100,20 @@ class Instance {
       fs.existsSync(Configuration.path) &&
       minimatch(Configuration.path, this.filePattern)
     ) {
-      return [{ filePath: Configuration.path, ...this.testFile(Configuration.path) }];
+      return [
+        { filePath: Configuration.path, ...this.testFile(Configuration.path) },
+      ];
     }
 
-    return glob.sync(this.filePattern, {
-      ignore: Configuration.skipFiles,
-      cwd: Configuration.path,
-      nodir: true,
-      realpath: true,
-      absolute: true,
-    }).map((filePath) => ({ filePath, ...this.testFile(filePath) }));
+    return glob
+      .sync(this.filePattern, {
+        ignore: Configuration.skipFiles,
+        cwd: Configuration.path,
+        nodir: true,
+        realpath: true,
+        absolute: true,
+      })
+      .map((filePath) => ({ filePath, ...this.testFile(filePath) }));
   }
 
   /**
