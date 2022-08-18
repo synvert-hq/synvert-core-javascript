@@ -427,7 +427,7 @@ class Instance {
    * @returns {Node} ast node
    */
   private parseCode(filePath: string, source: string) {
-    if (this.rewriter.parser === Parser.Typescript) {
+    if (this.rewriter.options.parser === Parser.Typescript) {
       NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
       NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
       return ts.createSourceFile(
@@ -453,7 +453,7 @@ class Instance {
     const options = {
       ecmaVersion: "latest",
       loc: true,
-      sourceType: this.rewriter.sourceType,
+      sourceType: this.rewriter.options.sourceType,
       sourceFile: filePath,
       ecmaFeatures: {},
     };

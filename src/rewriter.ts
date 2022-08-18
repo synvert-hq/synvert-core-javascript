@@ -15,10 +15,11 @@ class Rewriter {
   public subSnippets: Rewriter[] = [];
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
-  public sourceType: SourceType = SourceType.Module;
-  public parser: Parser = Parser.Espree;
-  public options: object = {};
-  private runInstance: boolean = true;
+  public options: RewriterOptions = {
+    sourceType: SourceType.Module,
+    parser: Parser.Espree,
+    runInstance: true,
+  };
   private desc?: string;
 
   /**
@@ -66,25 +67,19 @@ class Rewriter {
    * @static
    * @param {string} group - the rewriter group.
    * @param {string} name - the rewriter name.
-   * @param {boolean} runInstance - if run instance, default is true.
    * @param {Object} options - the rewriter options.
    * @returns {Rewriter} the registered rewriter.
    */
   static call(
     group: string,
     name: string,
-    runInstance?: boolean,
-    options = {}
+    options: RewriterOptions = {}
   ): Rewriter | undefined {
     const rewriter = this.fetch(group, name);
     if (!rewriter) return;
 
     rewriter.options = options;
-    if (runInstance) {
-      rewriter.process();
-    } else {
-      rewriter.processWithoutInstance();
-    }
+    rewriter.process();
     return rewriter;
   }
 
@@ -127,25 +122,16 @@ class Rewriter {
     }
   }
 
-  /**
-   * Process rewriter without runing instance.
-   * It will call the function but doesn't change any file.
-   */
-  processWithoutInstance(): void {
-    this.runInstance = false;
-    this.process();
-  }
-
   /*******
    * DSL *
    *******/
 
   configure(options: RewriterOptions) {
     if (options.sourceType) {
-      Rewriter.current.sourceType = options.sourceType;
+      Rewriter.current.options.sourceType = options.sourceType;
     }
     if (options.parser) {
-      Rewriter.current.parser = options.parser;
+      Rewriter.current.options.parser = options.parser;
     }
   }
 
@@ -206,7 +192,6 @@ class Rewriter {
     const rewriter = Rewriter.call(
       group,
       name,
-      currentRewriter.runInstance,
       options
     );
     if (rewriter) {
@@ -226,7 +211,7 @@ class Rewriter {
    * @param {Functioin} func - a function rewrites code in the matching files.
    */
   withinFiles(filePattern: string, func: (instance: Instance) => void): void {
-    if (!Rewriter.current.runInstance) return;
+    if (!Rewriter.current.options.runInstance) return;
 
     if (
       (!Rewriter.current.nodeVersion || Rewriter.current.nodeVersion.match()) &&

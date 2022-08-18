@@ -38,7 +38,7 @@ describe("static register", () => {
         run = true;
       });
     });
-    Rewriter.call("group", "name", true);
+    Rewriter.call("group", "name", { runInstance: true });
     expect(run).toBe(true);
   });
 
@@ -49,7 +49,7 @@ describe("static register", () => {
         run = true;
       });
     });
-    Rewriter.call("group", "name", false);
+    Rewriter.call("group", "name", { runInstance: false });
     expect(run).toBe(false);
   });
 
@@ -65,9 +65,9 @@ describe("static register", () => {
     const rewriter = new Rewriter("snippet group", "snippet name", () => {
       configure({ sourceType: SourceType.Script });
     });
-    expect(rewriter.sourceType).toBe(SourceType.Module);
+    expect(rewriter.options.sourceType).toBe(SourceType.Module);
     rewriter.process();
-    expect(rewriter.sourceType).toBe(SourceType.Script);
+    expect(rewriter.options.sourceType).toBe(SourceType.Script);
   });
 
   describe("process", () => {
