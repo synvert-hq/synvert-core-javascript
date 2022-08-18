@@ -18,7 +18,7 @@ class Rewriter {
   public sourceType: SourceType = SourceType.Module;
   public parser: Parser = Parser.Espree;
   public options: object = {};
-  private sandbox: boolean = false;
+  private runInstance: boolean = true;
   private desc?: string;
 
   /**
@@ -66,24 +66,24 @@ class Rewriter {
    * @static
    * @param {string} group - the rewriter group.
    * @param {string} name - the rewriter name.
-   * @param {boolean} sandbox - if run in sandbox mode, default is false.
+   * @param {boolean} runInstance - if run instance, default is true.
    * @param {Object} options - the rewriter options.
    * @returns {Rewriter} the registered rewriter.
    */
   static call(
     group: string,
     name: string,
-    sandbox?: boolean,
+    runInstance?: boolean,
     options = {}
   ): Rewriter | undefined {
     const rewriter = this.fetch(group, name);
     if (!rewriter) return;
 
     rewriter.options = options;
-    if (sandbox) {
-      rewriter.processWithSandbox();
-    } else {
+    if (runInstance) {
       rewriter.process();
+    } else {
+      rewriter.processWithoutInstance();
     }
     return rewriter;
   }
@@ -128,11 +128,11 @@ class Rewriter {
   }
 
   /**
-   * Process rewriter with sandbox mode.
+   * Process rewriter without runing instance.
    * It will call the function but doesn't change any file.
    */
-  processWithSandbox(): void {
-    this.sandbox = true;
+  processWithoutInstance(): void {
+    this.runInstance = false;
     this.process();
   }
 
@@ -206,7 +206,7 @@ class Rewriter {
     const rewriter = Rewriter.call(
       group,
       name,
-      currentRewriter.sandbox,
+      currentRewriter.runInstance,
       options
     );
     if (rewriter) {
@@ -226,7 +226,7 @@ class Rewriter {
    * @param {Functioin} func - a function rewrites code in the matching files.
    */
   withinFiles(filePattern: string, func: (instance: Instance) => void): void {
-    if (Rewriter.current.sandbox) return;
+    if (!Rewriter.current.runInstance) return;
 
     if (
       (!Rewriter.current.nodeVersion || Rewriter.current.nodeVersion.match()) &&

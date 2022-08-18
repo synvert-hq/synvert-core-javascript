@@ -31,6 +31,28 @@ describe("static register", () => {
     expect(run).toBe(true);
   });
 
+  it("calls runInstance true", () => {
+    let run = false;
+    new Rewriter("group", "name", () => {
+      withinFiles("**/*.js", () => {
+        run = true;
+      });
+    });
+    Rewriter.call("group", "name", true);
+    expect(run).toBe(true);
+  });
+
+  it("calls runInstance false", () => {
+    let run = false;
+    new Rewriter("group", "name", () => {
+      withinFiles("**/*.js", () => {
+        run = true;
+      });
+    });
+    Rewriter.call("group", "name", false);
+    expect(run).toBe(false);
+  });
+
   it("executes", () => {
     let run = false;
     Rewriter.execute(() => {
@@ -109,8 +131,6 @@ describe("static register", () => {
     test("set and get nodeVersion", () => {
       const rewriter = new Rewriter("group", "name", () => {
         ifNode("10.14.0");
-
-        withinFiles("*.js", function () {});
       });
       expect(rewriter.nodeVersion).toBe(undefined);
       rewriter.process();
@@ -122,8 +142,6 @@ describe("static register", () => {
     test("set and get npmVersion", () => {
       const rewriter = new Rewriter("group", "name", () => {
         ifNpm("compare-versions", ">= 1.0.0");
-
-        withinFiles("*.js", function () {});
       });
       expect(rewriter.npmVersion).toBe(undefined);
       rewriter.process();
