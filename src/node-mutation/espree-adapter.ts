@@ -24,29 +24,26 @@ class EspreeAdapter implements Adapter<NodeExt> {
    * @returns {string} rewritten code.
    */
   rewrittenSource(node: NodeExt, code: string): string {
-    return code.replace(
-      /{{([a-zA-z0-9\.]+?)}}/gm,
-      (string, match, _offset) => {
-        if (!match) return null;
+    return code.replace(/{{([a-zA-z0-9\.]+?)}}/gm, (string, match, _offset) => {
+      if (!match) return null;
 
-        const obj = this.actualValue(node, match.split("."));
-        if (obj) {
-          if (Array.isArray(obj)) {
-            return this.fileContent(node).slice(
-              (obj[0] as NodeExt).start,
-              (obj[obj.length - 1] as NodeExt).end
-            );
-          }
-          if (obj.hasOwnProperty("type")) {
-            return this.getSource(obj);
-          } else {
-            return obj;
-          }
-        } else {
-          return string;
+      const obj = this.actualValue(node, match.split("."));
+      if (obj) {
+        if (Array.isArray(obj)) {
+          return this.fileContent(node).slice(
+            (obj[0] as NodeExt).start,
+            (obj[obj.length - 1] as NodeExt).end
+          );
         }
+        if (obj.hasOwnProperty("type")) {
+          return this.getSource(obj);
+        } else {
+          return obj;
+        }
+      } else {
+        return string;
       }
-    );
+    });
   }
 
   /**
