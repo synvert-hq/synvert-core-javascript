@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.1 (2022-08-20)
+
+* `testResults` only contain affected results
+
 ## 1.6.0 (2022-08-18)
 
 * Rename `sandbox` to `runInstance` option
