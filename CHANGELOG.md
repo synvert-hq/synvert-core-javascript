@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.2 (2022-08-20)
+
+* Add `ALL_FILES` constant
+
 ## 1.6.1 (2022-08-20)
 
 * `testResults` only contain affected results
