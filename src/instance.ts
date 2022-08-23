@@ -434,7 +434,7 @@ class Instance {
         this.processWithNode(node, this.func);
 
         const result = this.currentMutation.process();
-        debug("synvert-core:process")(result)
+        debug("synvert-core:process")(result);
         if (result.affected) {
           fs.writeFileSync(filePath, result.newSource!);
         }
@@ -467,7 +467,7 @@ class Instance {
     this.processWithNode(node, this.func);
 
     const result = this.currentMutation.process();
-    debug("synvert-core:test")(result)
+    debug("synvert-core:test")(result);
     return result;
   }
 
