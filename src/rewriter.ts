@@ -81,7 +81,7 @@ class Rewriter {
     const rewriter = this.fetch(group, name);
     if (!rewriter) return;
 
-    rewriter.options = options;
+    rewriter.options = { ...rewriter.options, ...options };
     rewriter.process();
     return rewriter;
   }
