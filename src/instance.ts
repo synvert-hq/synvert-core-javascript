@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import glob from "glob";
 import minimatch from "minimatch";
+import debug from "debug";
 import { Node } from "acorn";
 import Configuration from "./configuration";
 import Rewriter from "./rewriter";
@@ -433,6 +434,7 @@ class Instance {
         this.processWithNode(node, this.func);
 
         const result = this.currentMutation.process();
+        debug("synvert-core:process")(result)
         if (result.affected) {
           fs.writeFileSync(filePath, result.newSource!);
         }
@@ -464,7 +466,9 @@ class Instance {
 
     this.processWithNode(node, this.func);
 
-    return this.currentMutation.process();
+    const result = this.currentMutation.process();
+    debug("synvert-core:test")(result)
+    return result;
   }
 
   /**
