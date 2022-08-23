@@ -240,7 +240,7 @@ class Rewriter {
         const results = instance.test();
         Rewriter.current.testResults = [
           ...Rewriter.current.testResults,
-          ...results.filter(result => result.affected),
+          ...results.filter((result) => result.affected),
         ];
       }
     }
