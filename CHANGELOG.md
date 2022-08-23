@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.4 (2022-08-24)
+
+* Do not override default rewriter `options`
+
 ## 1.6.3 (2022-08-23)
 
 * Debug process and test result
