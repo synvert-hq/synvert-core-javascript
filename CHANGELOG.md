@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.3 (2022-08-23)
+
+* Debug process and test result
+
 ## 1.6.2 (2022-08-20)
 
 * Add `ALL_FILES` constant
