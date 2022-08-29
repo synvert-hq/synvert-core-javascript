@@ -4,7 +4,7 @@
 class Configuration {
   static onlyPaths: string[] = [];
   static skipPaths: string[] = ["**/node_modules/**"];
-  static path: string = ".";
+  static rootPath: string = ".";
   static showRunProcess: boolean = false;
   static enableEcmaFeaturesJsx: boolean = false;
 }

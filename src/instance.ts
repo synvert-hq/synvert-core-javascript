@@ -74,10 +74,10 @@ class Instance {
    */
   process(): void {
     if (
-      fs.existsSync(Configuration.path) &&
-      minimatch(Configuration.path, this.filePattern)
+      fs.existsSync(Configuration.rootPath) &&
+      minimatch(Configuration.rootPath, this.filePattern)
     ) {
-      return this.processFile(Configuration.path);
+      return this.processFile(Configuration.rootPath);
     }
 
     this.matchFilesInPaths().forEach((filePath) => this.processFile(filePath));
@@ -90,11 +90,11 @@ class Instance {
    */
   test(): TestResultExt[] {
     if (
-      fs.existsSync(Configuration.path) &&
-      minimatch(Configuration.path, this.filePattern)
+      fs.existsSync(Configuration.rootPath) &&
+      minimatch(Configuration.rootPath, this.filePattern)
     ) {
       return [
-        { filePath: Configuration.path, ...this.testFile(Configuration.path) },
+        { filePath: Configuration.rootPath, ...this.testFile(Configuration.rootPath) },
       ];
     }
 
@@ -466,11 +466,11 @@ class Instance {
     if (Configuration.onlyPaths.length > 0) {
       return Configuration.onlyPaths
         .map((onlyPaths) =>
-          this.matchFiles(path.join(Configuration.path, onlyPaths))
+          this.matchFiles(path.join(Configuration.rootPath, onlyPaths))
         )
         .flat();
     }
-    return this.matchFiles(Configuration.path);
+    return this.matchFiles(Configuration.rootPath);
   }
 
   private matchFiles(cwd: string): string[] {

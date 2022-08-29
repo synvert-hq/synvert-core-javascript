@@ -1,10 +1,10 @@
 import Configuration from "../src/configuration";
 
 describe("Configuration", () => {
-  it("path", () => {
-    expect(Configuration.path).toBe(".");
-    Configuration.path = "test";
-    expect(Configuration.path).toBe("test");
+  it("rootPath", () => {
+    expect(Configuration.rootPath).toBe(".");
+    Configuration.rootPath = "test";
+    expect(Configuration.rootPath).toBe("test");
   });
 
   it("onlyPaths", () => {

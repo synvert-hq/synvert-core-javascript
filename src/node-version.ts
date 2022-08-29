@@ -20,16 +20,16 @@ class NodeVersion {
    */
   match(): boolean {
     let versionFile;
-    if (fs.existsSync(path.join(Configuration.path, ".node-version"))) {
+    if (fs.existsSync(path.join(Configuration.rootPath, ".node-version"))) {
       versionFile = ".node-version";
-    } else if (fs.existsSync(path.join(Configuration.path, ".nvmrc"))) {
+    } else if (fs.existsSync(path.join(Configuration.rootPath, ".nvmrc"))) {
       versionFile = ".nvmrc";
     }
     if (!versionFile) {
       return true;
     }
     const version = fs.readFileSync(
-      path.join(Configuration.path, versionFile),
+      path.join(Configuration.rootPath, versionFile),
       "utf-8"
     );
     return compareVersions.compare(version, this.version, ">=");

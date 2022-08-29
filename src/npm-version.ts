@@ -93,7 +93,7 @@ class NpmVersion {
    * @returns {string}
    */
   private packagePath(): string {
-    return path.join(Configuration.path, "package.json");
+    return path.join(Configuration.rootPath, "package.json");
   }
 
   /**
@@ -119,7 +119,7 @@ class NpmVersion {
    * @returns {string}
    */
   private packageLockPath(): string {
-    return path.join(Configuration.path, "package-lock.json");
+    return path.join(Configuration.rootPath, "package-lock.json");
   }
 
   /**
@@ -145,7 +145,7 @@ class NpmVersion {
    * @returns {string}
    */
   private yarnLockPath(): string {
-    return path.join(Configuration.path, "yarn.lock");
+    return path.join(Configuration.rootPath, "yarn.lock");
   }
 }
 
