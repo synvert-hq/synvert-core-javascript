@@ -98,7 +98,10 @@ class Instance {
       ];
     }
 
-    return this.matchFilesInPaths().map((filePath) => ({ filePath, ...this.testFile(filePath) }));
+    return this.matchFilesInPaths().map((filePath) => ({
+      filePath,
+      ...this.testFile(filePath),
+    }));
   }
 
   /**
@@ -461,22 +464,23 @@ class Instance {
    */
   private matchFilesInPaths(): string[] {
     if (Configuration.onlyPaths.length > 0) {
-      return Configuration.onlyPaths.map(onlyPaths =>
-        this.matchFiles(path.join(Configuration.path, onlyPaths))
-      ).flat();
+      return Configuration.onlyPaths
+        .map((onlyPaths) =>
+          this.matchFiles(path.join(Configuration.path, onlyPaths))
+        )
+        .flat();
     }
     return this.matchFiles(Configuration.path);
   }
 
   private matchFiles(cwd: string): string[] {
-    return glob
-      .sync(this.filePattern, {
-        ignore: Configuration.skipPaths,
-        cwd,
-        nodir: true,
-        realpath: true,
-        absolute: true,
-      });
+    return glob.sync(this.filePattern, {
+      ignore: Configuration.skipPaths,
+      cwd,
+      nodir: true,
+      realpath: true,
+      absolute: true,
+    });
   }
 
   /**
