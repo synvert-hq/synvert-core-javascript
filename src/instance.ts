@@ -94,7 +94,10 @@ class Instance {
       minimatch(Configuration.rootPath, this.filePattern)
     ) {
       return [
-        { filePath: Configuration.rootPath, ...this.testFile(Configuration.rootPath) },
+        {
+          filePath: Configuration.rootPath,
+          ...this.testFile(Configuration.rootPath),
+        },
       ];
     }
 
