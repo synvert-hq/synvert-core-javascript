@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.8.0 (2022-08-30)
+
+* Add `Configuration.onlyPaths`
+* Rename `Configuration.skipFiles` to `Configuration.skipPaths`
+* Set `Configuration.skipPaths` to `["**/node_modules/**"]` by default
+* Rename `Configuration.path` to `Configuration.rootPath`
+
 ## 1.7.0 (2022-08-29)
 
 * Use `NodeMutation#test` method
