@@ -27,12 +27,12 @@ import NodeMutation, {
   ReplaceOptions,
   NotSupportedError,
   ConflictActionError,
-  ProcessResult,
+  TestResult,
 } from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
 import { Parser } from "./types/options";
-import { TestResult } from "./types/result";
+import { TestResultExt } from "./types/result";
 
 const espree = require("@xinminlabs/espree");
 
@@ -94,9 +94,9 @@ class Instance {
   /**
    * Test the instance.
    * It finds all files, for each file, it runs the func, and gets the process results.
-   * @returns {TestResult[]} test results
+   * @returns {TestResultExt[]} test results
    */
-  test(): TestResult[] {
+  test(): TestResultExt[] {
     if (
       fs.existsSync(Configuration.path) &&
       minimatch(Configuration.path, this.filePattern)
@@ -455,9 +455,9 @@ class Instance {
    * Test one file.
    * @private
    * @param {string} filePath - file path
-   * @returns {ProcessResult}
+   * @returns {TestResult}
    */
-  private testFile(filePath: string): ProcessResult {
+  private testFile(filePath: string): TestResult {
     this.currentFilePath = filePath;
     let source = fs.readFileSync(filePath, "utf-8");
     this.currentFileSource = source;
@@ -466,7 +466,7 @@ class Instance {
 
     this.processWithNode(node, this.func);
 
-    const result = this.currentMutation.process();
+    const result = this.currentMutation.test();
     debug("synvert-core:test")(result);
     return result;
   }

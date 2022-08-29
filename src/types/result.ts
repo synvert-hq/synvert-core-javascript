@@ -1,3 +1,3 @@
-import { ProcessResult } from "@xinminlabs/node-mutation";
+import { ProcessResult, TestResult } from "@xinminlabs/node-mutation";
 
-export type TestResult = ProcessResult & { filePath: string };
+export type TestResultExt = TestResult & { filePath: string };

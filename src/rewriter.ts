@@ -3,7 +3,7 @@ import { RewriterNotFoundError } from "./error";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
 import NpmVersion from "./npm-version";
-import { TestResult } from "./types/result";
+import { TestResultExt } from "./types/result";
 
 /**
  * Rewriter is the top level namespace in a synvert snippet.
@@ -23,7 +23,7 @@ class Rewriter {
     writeToFile: true,
   };
   private desc?: string;
-  private testResults: TestResult[] = [];
+  private testResults: TestResultExt[] = [];
 
   /**
    * Store all rewriters grouped by group name, e.g.  `{ jquery: { 'deprecate-event-shorthand': <Rewriter> } }`
@@ -127,9 +127,9 @@ class Rewriter {
 
   /**
    * Test the rewriter.
-   * @returns {TestResult[]} test results
+   * @returns {TestResultExt[]} test results
    */
-  test(): TestResult[] {
+  test(): TestResultExt[] {
     const originalRewriter = Rewriter.current;
     try {
       Rewriter.current = this;
