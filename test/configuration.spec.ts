@@ -7,10 +7,16 @@ describe("Configuration", () => {
     expect(Configuration.path).toBe("test");
   });
 
-  it("skipFiles", () => {
-    expect(Configuration.skipFiles).toEqual(["node_modules/**"]);
-    Configuration.skipFiles = ["foo", "bar"];
-    expect(Configuration.skipFiles).toEqual(["foo", "bar"]);
+  it("onlyPaths", () => {
+    expect(Configuration.onlyPaths).toEqual([]);
+    Configuration.onlyPaths = ["foo", "bar"];
+    expect(Configuration.onlyPaths).toEqual(["foo", "bar"]);
+  });
+
+  it("skipPaths", () => {
+    expect(Configuration.skipPaths).toEqual(["**/node_modules/**"]);
+    Configuration.skipPaths = ["foo", "bar"];
+    expect(Configuration.skipPaths).toEqual(["foo", "bar"]);
   });
 
   it("showRunProcess", () => {

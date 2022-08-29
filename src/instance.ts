@@ -460,12 +460,12 @@ class Instance {
    * @returns {string[]} matching files
    */
   private matchFiles(): string[] {
-    if (Configuration.onlyFiles.length > 0) {
-      return Configuration.onlyFiles.map(onlyFiles =>
+    if (Configuration.onlyPaths.length > 0) {
+      return Configuration.onlyPaths.map(onlyPaths =>
         glob
           .sync(this.filePattern, {
-            ignore: Configuration.skipFiles,
-            cwd: path.join(Configuration.path, onlyFiles),
+            ignore: Configuration.skipPaths,
+            cwd: path.join(Configuration.path, onlyPaths),
             nodir: true,
             realpath: true,
             absolute: true,
@@ -474,7 +474,7 @@ class Instance {
     }
     return glob
       .sync(this.filePattern, {
-        ignore: Configuration.skipFiles,
+        ignore: Configuration.skipPaths,
         cwd: Configuration.path,
         nodir: true,
         realpath: true,
