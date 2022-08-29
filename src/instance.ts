@@ -80,15 +80,7 @@ class Instance {
       return this.processFile(Configuration.path);
     }
 
-    glob
-      .sync(this.filePattern, {
-        ignore: Configuration.skipFiles,
-        cwd: Configuration.path,
-        nodir: true,
-        realpath: true,
-        absolute: true,
-      })
-      .forEach((filePath) => this.processFile(filePath));
+    this.matchFiles().forEach((filePath) => this.processFile(filePath));
   }
 
   /**
@@ -106,15 +98,7 @@ class Instance {
       ];
     }
 
-    return glob
-      .sync(this.filePattern, {
-        ignore: Configuration.skipFiles,
-        cwd: Configuration.path,
-        nodir: true,
-        realpath: true,
-        absolute: true,
-      })
-      .map((filePath) => ({ filePath, ...this.testFile(filePath) }));
+    return this.matchFiles().map((filePath) => ({ filePath, ...this.testFile(filePath) }));
   }
 
   /**
@@ -469,6 +453,33 @@ class Instance {
     const result = this.currentMutation.test();
     debug("synvert-core:test")(result);
     return result;
+  }
+
+  /**
+   * Return matching files.
+   * @returns {string[]} matching files
+   */
+  private matchFiles(): string[] {
+    if (Configuration.onlyFiles.length > 0) {
+      return Configuration.onlyFiles.map(onlyFiles =>
+        glob
+          .sync(this.filePattern, {
+            ignore: Configuration.skipFiles,
+            cwd: path.join(Configuration.path, onlyFiles),
+            nodir: true,
+            realpath: true,
+            absolute: true,
+          })
+      ).flat();
+    }
+    return glob
+      .sync(this.filePattern, {
+        ignore: Configuration.skipFiles,
+        cwd: Configuration.path,
+        nodir: true,
+        realpath: true,
+        absolute: true,
+      });
   }
 
   /**
