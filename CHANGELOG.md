@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.9.0 (2022-08-31)
+
+* Return relative path instea of absolute path
+* Use `fast-glob` instead of `node-glob`
+
 ## 1.8.0 (2022-08-30)
 
 * Add `Configuration.onlyPaths`
