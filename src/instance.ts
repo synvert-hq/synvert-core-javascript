@@ -1,7 +1,7 @@
 import ts from "typescript";
 import fs from "fs";
 import path from "path";
-import glob from "glob";
+import fg from "fast-glob";
 import minimatch from "minimatch";
 import debug from "debug";
 import { Node } from "acorn";
@@ -477,12 +477,11 @@ class Instance {
   }
 
   private matchFiles(cwd: string): string[] {
-    return glob.sync(this.filePattern, {
+    return fg.sync(this.filePattern, {
       ignore: Configuration.skipPaths,
       cwd,
-      nodir: true,
-      // realpath: true,
-      // absolute: true,
+      onlyFiles: true,
+      unique: true,
     });
   }
 
