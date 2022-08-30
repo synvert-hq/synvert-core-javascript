@@ -3,6 +3,7 @@ import mock from "mock-fs";
 import { resolve } from "path";
 import { RewriterNotFoundError } from "../src/error";
 
+import Configuration from "../src/configuration";
 import Rewriter from "../src/rewriter";
 import { SourceType } from "../src/types/options";
 
@@ -107,9 +108,10 @@ describe("static register", () => {
       const input = `class FooBar {}`;
       const output = `class Synvert {}`;
       mock({ "code.js": input });
+      Configuration.rootPath = resolve(".");
       const results = rewriter.test();
       expect(results.length).toEqual(1);
-      expect(results[0].filePath).toEqual(resolve("code.js"));
+      expect(results[0].filePath).toEqual("code.js");
       expect(results[0].affected).toBeTruthy();
       expect(results[0].conflicted).toBeFalsy();
       expect(results[0].actions).toEqual([

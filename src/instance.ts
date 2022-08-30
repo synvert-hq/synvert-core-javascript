@@ -481,8 +481,8 @@ class Instance {
       ignore: Configuration.skipPaths,
       cwd,
       nodir: true,
-      realpath: true,
-      absolute: true,
+      // realpath: true,
+      // absolute: true,
     });
   }
 
