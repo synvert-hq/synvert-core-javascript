@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.9.1 (2022-09-01)
+
+* Read absolute path
+
 ## 1.9.0 (2022-08-31)
 
 * Return relative path instea of absolute path
