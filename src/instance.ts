@@ -468,12 +468,10 @@ class Instance {
   private matchFilesInPaths(): string[] {
     if (Configuration.onlyPaths.length > 0) {
       return Configuration.onlyPaths
-        .map((onlyPaths) =>
-          this.matchFiles(path.join(onlyPaths))
-        )
+        .map((onlyPaths) => this.matchFiles(path.join(onlyPaths)))
         .flat();
     }
-    return this.matchFiles('');
+    return this.matchFiles("");
   }
 
   private matchFiles(onlyPath: string): string[] {
