@@ -1,5 +1,6 @@
 import Rewriter from "./rewriter";
 import Configuration from "./configuration";
+import type { TestResultExt } from "./types/result";
 
 const ALL_FILES = "**/*.{js,jsx,ts,tsx}";
 const ALL_JS_FILES = "**/*.{js,jsx}";
@@ -15,4 +16,5 @@ export {
   ALL_JS_FILES,
   ALL_TS_FILES,
   version,
+  TestResultExt,
 };
