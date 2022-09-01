@@ -410,16 +410,16 @@ class Instance {
    * @param {string} filePath - file path
    */
   private processFile(filePath: string): void {
-    this.currentFilePath = filePath;
+    this.currentFilePath = path.join(Configuration.rootPath, filePath);
     if (Configuration.showRunProcess) {
       console.log(filePath);
     }
     while (true) {
-      let source = fs.readFileSync(filePath, "utf-8");
+      let source = fs.readFileSync(this.currentFilePath, "utf-8");
       this.currentFileSource = source;
       this.currentMutation = new NodeMutation<Node>(source);
       try {
-        const node = this.parseCode(filePath, source);
+        const node = this.parseCode(this.currentFilePath, source);
 
         this.processWithNode(node, this.func);
 
@@ -448,11 +448,11 @@ class Instance {
    * @returns {TestResult}
    */
   private testFile(filePath: string): TestResult {
-    this.currentFilePath = filePath;
-    let source = fs.readFileSync(filePath, "utf-8");
+    this.currentFilePath = path.join(Configuration.rootPath, filePath);
+    let source = fs.readFileSync(this.currentFilePath, "utf-8");
     this.currentFileSource = source;
     this.currentMutation = new NodeMutation<Node>(source);
-    const node = this.parseCode(filePath, source);
+    const node = this.parseCode(this.currentFilePath, source);
 
     this.processWithNode(node, this.func);
 
@@ -469,17 +469,17 @@ class Instance {
     if (Configuration.onlyPaths.length > 0) {
       return Configuration.onlyPaths
         .map((onlyPaths) =>
-          this.matchFiles(path.join(Configuration.rootPath, onlyPaths))
+          this.matchFiles(path.join(onlyPaths))
         )
         .flat();
     }
-    return this.matchFiles(Configuration.rootPath);
+    return this.matchFiles('');
   }
 
-  private matchFiles(cwd: string): string[] {
-    return fg.sync(this.filePattern, {
+  private matchFiles(onlyPath: string): string[] {
+    return fg.sync(path.join(onlyPath, this.filePattern), {
       ignore: Configuration.skipPaths,
-      cwd,
+      cwd: Configuration.rootPath,
       onlyFiles: true,
       unique: true,
     });
