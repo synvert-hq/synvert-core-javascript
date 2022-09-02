@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.9.3 (2022-09-02)
+
+* Write absolute path
+
 ## 1.9.2 (2022-09-01)
 
 * Export `TestResultExt`
