@@ -508,13 +508,15 @@ class Instance {
   private parseByTypescript(filePath: string, source: string) {
     NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
     NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
-    const scriptKind = ["js", "jsx"].includes(path.extname(filePath)) ? ts.ScriptKind.JSX : ts.ScriptKind.TSX;
+    const scriptKind = ["js", "jsx"].includes(path.extname(filePath))
+      ? ts.ScriptKind.JSX
+      : ts.ScriptKind.TSX;
     return ts.createSourceFile(
       filePath,
       source,
       ts.ScriptTarget.Latest,
       true,
-      scriptKind,
+      scriptKind
     );
   }
 
