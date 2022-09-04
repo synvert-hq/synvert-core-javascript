@@ -492,42 +492,51 @@ class Instance {
    */
   private parseCode(filePath: string, source: string) {
     if (this.rewriter.options.parser === Parser.Typescript) {
-      NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-      NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
-      return ts.createSourceFile(
-        filePath,
-        source,
-        ts.ScriptTarget.Latest,
-        true
-      );
+      return this.parseByTypescript(filePath, source);
     }
 
-    NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
-    NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
-    return espree.parse(source, this.espreeParserOptions(filePath));
+    return this.parseByEspree(filePath, source);
   }
 
   /**
-   * Get espree parser options.
+   * Parse by typescript.
    * @private
-   * @param {string} filePath
-   * @returns {Object} parser options
+   * @param filePath {string} file path
+   * @param source {string} file source
+   * @returns {Node} ast node
    */
-  private espreeParserOptions(filePath: string) {
-    const options = {
+  private parseByTypescript(filePath: string, source: string) {
+    NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
+    NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
+    const scriptKind = ["js", "jsx"].includes(path.extname(filePath))
+      ? ts.ScriptKind.JSX
+      : ts.ScriptKind.TSX;
+    return ts.createSourceFile(
+      filePath,
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      scriptKind
+    );
+  }
+
+  /**
+   * Parse by espree.
+   * @private
+   * @param filePath {string} file path
+   * @param source {string} file source
+   * @returns {Node} ast node
+   */
+  private parseByEspree(filePath: string, source: string) {
+    NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
+    NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
+    return espree.parse(source, {
       ecmaVersion: "latest",
       loc: true,
       sourceType: this.rewriter.options.sourceType,
       sourceFile: filePath,
-      ecmaFeatures: {},
-    };
-    if (
-      Configuration.enableEcmaFeaturesJsx ||
-      path.extname(filePath) === ".jsx"
-    ) {
-      options["ecmaFeatures"] = { jsx: true };
-    }
-    return options;
+      ecmaFeatures: { jsx: true },
+    });
   }
 }
 
