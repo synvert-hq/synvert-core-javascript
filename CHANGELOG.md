@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.9.4 (2022-09-04)
+
+* Always enable jsx
+
 ## 1.9.3 (2022-09-02)
 
 * Write absolute path
