@@ -45,7 +45,10 @@ class QueryScope extends Scope {
   ) {
     super(instance);
     this.nodeQuery = new NodeQuery(nql);
-    this.options = Object.assign({ includingSelf: true, stopAtFirstMatch: false, recursive: true }, options);
+    this.options = Object.assign(
+      { includingSelf: true, stopAtFirstMatch: false, recursive: true },
+      options
+    );
   }
 
   /**
@@ -95,7 +98,10 @@ class WithinScope extends Scope {
   ) {
     super(instance);
     this.nodeQuery = new NodeQuery(rules);
-    this.options = Object.assign({ includingSelf: true, stopAtFirstMatch: false, recursive: true }, options);
+    this.options = Object.assign(
+      { includingSelf: true, stopAtFirstMatch: false, recursive: true },
+      options
+    );
   }
 
   /**

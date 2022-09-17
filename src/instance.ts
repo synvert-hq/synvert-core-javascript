@@ -146,9 +146,17 @@ class Instance {
    * @param {QueryOptions} options - options to match nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  findNode(nql: string, func: (instance: Instance) => void): void
-  findNode(nql: string, options: QueryOptions, func: (instance: Instance) => void): void
-  findNode(nql: string, options: QueryOptions | ((instance: Instance) => void), func?: (instance: Instance) => void): void {
+  findNode(nql: string, func: (instance: Instance) => void): void;
+  findNode(
+    nql: string,
+    options: QueryOptions,
+    func: (instance: Instance) => void
+  ): void;
+  findNode(
+    nql: string,
+    options: QueryOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void
+  ): void {
     if (typeof options === "function") {
       new QueryScope(Instance.current, nql, {}, options).process();
     } else {
@@ -166,9 +174,17 @@ class Instance {
    * @param {Object} rules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  withinNode(rules: any, func: (instance: Instance) => void): void
-  withinNode(rules: any, options: QueryOptions, func: (instance: Instance) => void): void
-  withinNode(rules: any, options: QueryOptions | ((instance: Instance) => void), func?: (instance: Instance) => void) {
+  withinNode(rules: any, func: (instance: Instance) => void): void;
+  withinNode(
+    rules: any,
+    options: QueryOptions,
+    func: (instance: Instance) => void
+  ): void;
+  withinNode(
+    rules: any,
+    options: QueryOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void
+  ) {
     if (typeof options === "function") {
       new WithinScope(Instance.current, rules, {}, options).process();
     } else {
@@ -480,8 +496,9 @@ class Instance {
    * @returns {string[]} matching files
    */
   private matchFilesInPaths(): string[] {
-    const onlyPaths = Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""]
-    return onlyPaths.flatMap(onlyPath => this.matchFiles(onlyPath));
+    const onlyPaths =
+      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
+    return onlyPaths.flatMap((onlyPath) => this.matchFiles(onlyPath));
   }
 
   private matchFiles(onlyPath: string): string[] {
@@ -553,15 +570,36 @@ class Instance {
 export default Instance;
 
 declare global {
-  var findNode:
-    (nql: string, func: (instance: Instance) => void) => void |
-    ((nql: string, options: QueryOptions, func: (instance: Instance) => void) => void);
-  var withinNode:
-    (rules: any, func: (instance: Instance) => void) => void |
-    ((rules: any, options: QueryOptions, func: (instance: Instance) => void) => void);
-  var withNode:
-    (rules: any, func: (instance: Instance) => void) => void |
-    ((rules: any, options: QueryOptions, func: (instance: Instance) => void) => void);
+  var findNode: (
+    nql: string,
+    func: (instance: Instance) => void
+  ) =>
+    | void
+    | ((
+        nql: string,
+        options: QueryOptions,
+        func: (instance: Instance) => void
+      ) => void);
+  var withinNode: (
+    rules: any,
+    func: (instance: Instance) => void
+  ) =>
+    | void
+    | ((
+        rules: any,
+        options: QueryOptions,
+        func: (instance: Instance) => void
+      ) => void);
+  var withNode: (
+    rules: any,
+    func: (instance: Instance) => void
+  ) =>
+    | void
+    | ((
+        rules: any,
+        options: QueryOptions,
+        func: (instance: Instance) => void
+      ) => void);
   var gotoNode: (
     childNodeName: string,
     func: (instance: Instance) => void
