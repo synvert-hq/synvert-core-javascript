@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.10.0 (2022-09-17)
+
+* `QueryScope` and `WithinScope` accept a `QueryOptions`
+
 ## 1.9.5 (2022-09-05)
 
 * Always enable jsx
