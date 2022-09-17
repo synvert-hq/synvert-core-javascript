@@ -78,7 +78,7 @@ class IfExistCondition extends Condition {
    * Check if any child node matches the rules.
    */
   protected match(): boolean {
-    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), false);
+    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), { includingSelf: false, stopAtFirstMatch: true });
     return matchingNodes.length > 0;
   }
 }
@@ -92,7 +92,7 @@ class UnlessExistCondition extends Condition {
    * Check if none of child node matches the rules.
    */
   protected match(): boolean {
-    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), false);
+    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), { includingSelf: false, stopAtFirstMatch: true });
     return matchingNodes.length === 0;
   }
 }
@@ -138,7 +138,7 @@ class IfAllCondition extends Condition {
    * Find all matching nodes, if all match options.match rules, run the func, else run the elseFunc.
    */
   process() {
-    const nodes = this.nodeQuery.queryNodes(this.targetNode(), false);
+    const nodes = this.nodeQuery.queryNodes(this.targetNode(), { includingSelf: false });
     if (nodes.length === 0) {
       return;
     }

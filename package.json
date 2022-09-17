@@ -22,7 +22,7 @@
   "dependencies": {
     "@xinminlabs/espree": "^9.3.2",
     "@xinminlabs/node-mutation": "^1.2.1",
-    "@xinminlabs/node-query": "^1.11.0",
+    "@xinminlabs/node-query": "^1.11.1",
     "@yarnpkg/lockfile": "^1.1.0",
     "acorn": "^8.4.1",
     "compare-versions": "^3.6.0",

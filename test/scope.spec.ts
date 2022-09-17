@@ -21,6 +21,7 @@ describe("Scope", () => {
         new QueryScope(
           instance,
           ".ClassDeclaration[id.name=Synvert]",
+          {},
           function () {
             run = true;
           }
@@ -33,6 +34,7 @@ describe("Scope", () => {
         new QueryScope(
           instance,
           ".ClassDeclaration[id.name=FooBar]",
+          {},
           function () {
             run = true;
           }
@@ -56,6 +58,7 @@ describe("Scope", () => {
         new WithinScope(
           instance,
           { nodeType: "ClassDeclaration", id: { name: "Synvert" } },
+          {},
           function () {
             run = true;
           }
@@ -68,6 +71,7 @@ describe("Scope", () => {
         new WithinScope(
           instance,
           { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+          {},
           function () {
             run = true;
           }

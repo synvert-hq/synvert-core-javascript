@@ -17,6 +17,7 @@ import {
 } from "./condition";
 import { indent } from "./utils";
 import NodeQuery, {
+  QueryOptions,
   TypescriptAdapter as TypescriptQueryAdapter,
 } from "@xinminlabs/node-query";
 import NodeMutation, {
@@ -141,11 +142,18 @@ class Instance {
    * @example
    * // `$.ajax({ ... })` matches and call `foobar`
    * findNode(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", () => { foobar });
-   * @param {string} queryString - query string to find matching ast nodes.
+   * @param {string} nql - query string to find matching ast nodes.
+   * @param {QueryOptions} options - options to match nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  findNode(queryString: string, func: (instance: Instance) => void) {
-    new QueryScope(Instance.current, queryString, func).process();
+  findNode(nql: string, func: (instance: Instance) => void): void
+  findNode(nql: string, options: QueryOptions, func: (instance: Instance) => void): void
+  findNode(nql: string, options: QueryOptions | ((instance: Instance) => void), func?: (instance: Instance) => void): void {
+    if (typeof options === "function") {
+      new QueryScope(Instance.current, nql, {}, options).process();
+    } else {
+      new QueryScope(Instance.current, nql, options, func!).process();
+    }
   }
 
   /**
@@ -158,8 +166,14 @@ class Instance {
    * @param {Object} rules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  withinNode(rules: any, func: (instance: Instance) => void) {
-    new WithinScope(Instance.current, rules, func).process();
+  withinNode(rules: any, func: (instance: Instance) => void): void
+  withinNode(rules: any, options: QueryOptions, func: (instance: Instance) => void): void
+  withinNode(rules: any, options: QueryOptions | ((instance: Instance) => void), func?: (instance: Instance) => void) {
+    if (typeof options === "function") {
+      new WithinScope(Instance.current, rules, {}, options).process();
+    } else {
+      new WithinScope(Instance.current, rules, options, func!).process();
+    }
   }
 
   /**
@@ -466,12 +480,8 @@ class Instance {
    * @returns {string[]} matching files
    */
   private matchFilesInPaths(): string[] {
-    if (Configuration.onlyPaths.length > 0) {
-      return Configuration.onlyPaths
-        .map((onlyPaths) => this.matchFiles(path.join(onlyPaths)))
-        .flat();
-    }
-    return this.matchFiles("");
+    const onlyPaths = Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""]
+    return onlyPaths.flatMap(onlyPath => this.matchFiles(onlyPath));
   }
 
   private matchFiles(onlyPath: string): string[] {
@@ -543,12 +553,15 @@ class Instance {
 export default Instance;
 
 declare global {
-  var findNode: (
-    queryString: string,
-    func: (instance: Instance) => void
-  ) => void;
-  var withinNode: (rules: any, func: (instance: Instance) => void) => void;
-  var withNode: (rules: any, func: (instance: Instance) => void) => void;
+  var findNode:
+    (nql: string, func: (instance: Instance) => void) => void |
+    ((nql: string, options: QueryOptions, func: (instance: Instance) => void) => void);
+  var withinNode:
+    (rules: any, func: (instance: Instance) => void) => void |
+    ((rules: any, options: QueryOptions, func: (instance: Instance) => void) => void);
+  var withNode:
+    (rules: any, func: (instance: Instance) => void) => void |
+    ((rules: any, options: QueryOptions, func: (instance: Instance) => void) => void);
   var gotoNode: (
     childNodeName: string,
     func: (instance: Instance) => void

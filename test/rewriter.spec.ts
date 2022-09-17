@@ -106,7 +106,6 @@ describe("static register", () => {
         });
       });
       const input = `class FooBar {}`;
-      const output = `class Synvert {}`;
       mock({ "code.js": input });
       Configuration.rootPath = resolve(".");
       const results = rewriter.test();

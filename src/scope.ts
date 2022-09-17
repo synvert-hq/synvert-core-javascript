@@ -3,6 +3,7 @@ import NodeQuery from "@xinminlabs/node-query";
 import { getTargetNode } from "@xinminlabs/node-query/lib/compiler/helpers";
 
 import type { NodeExt } from "./types/node-ext";
+import type { QueryOptions } from "@xinminlabs/node-query";
 import Instance from "./instance";
 import "./array-ext";
 import "./ast-node-ext";
@@ -27,20 +28,24 @@ abstract class Scope {
  */
 class QueryScope extends Scope {
   private nodeQuery: NodeQuery<NodeExt>;
+  private options: QueryOptions;
 
   /**
    * Create a QueryScope
    * @param {Instance} instance
-   * @param {String} queryString
+   * @param {String} nql
+   * @param {QueryOptions} options
    * @param {Function} func - a function to be called on all matching nodes.
    */
   constructor(
     instance: Instance,
-    queryString: string,
+    nql: string,
+    options: QueryOptions,
     private func: (instance: Instance) => void
   ) {
     super(instance);
-    this.nodeQuery = new NodeQuery(queryString);
+    this.nodeQuery = new NodeQuery(nql);
+    this.options = Object.assign({ includingSelf: true, stopAtFirstMatch: false, recursive: true }, options);
   }
 
   /**
@@ -57,7 +62,7 @@ class QueryScope extends Scope {
 
     instance.processWithNode(currentNode, () => {
       this.nodeQuery
-        .queryNodes(currentNode as NodeExt)
+        .queryNodes(currentNode as NodeExt, this.options)
         .forEach((matchingNode) => {
           instance.processWithNode(matchingNode, () => {
             this.func.call(this.instance, this.instance);
@@ -73,20 +78,24 @@ class QueryScope extends Scope {
  */
 class WithinScope extends Scope {
   private nodeQuery: NodeQuery<NodeExt>;
+  private options: QueryOptions;
 
   /**
    * Create a WithinScope
    * @param {Instance} instance
    * @param {Object} rules
+   * @param {QueryOptions} options
    * @param {Function} func - a function to be called if rules are matched.
    */
   constructor(
     instance: Instance,
     rules: any,
+    options: QueryOptions,
     private func: (instance: Instance) => void
   ) {
     super(instance);
     this.nodeQuery = new NodeQuery(rules);
+    this.options = Object.assign({ includingSelf: true, stopAtFirstMatch: false, recursive: true }, options);
   }
 
   /**
@@ -103,7 +112,7 @@ class WithinScope extends Scope {
 
     instance.processWithNode(currentNode, () => {
       this.nodeQuery
-        .queryNodes(currentNode as NodeExt)
+        .queryNodes(currentNode as NodeExt, this.options)
         .forEach((matchingNode) => {
           instance.processWithNode(matchingNode, () => {
             this.func.call(this.instance, this.instance);
