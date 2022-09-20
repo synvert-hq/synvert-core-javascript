@@ -435,6 +435,13 @@ class Instance {
   }
 
   /**
+   * Parse noop dsl.
+   */
+  noop(): void {
+    Instance.current.currentMutation.noop(Instance.current.currentNode);
+  }
+
+  /**
    * Process one file.
    * @private
    * @param {string} filePath - file path
@@ -632,6 +639,7 @@ declare global {
   var remove: () => void;
   var replace: (selectors: string | string[], options: ReplaceOptions) => void;
   var replaceWith: (code: string, options: ReplaceWithOptions) => void;
+  var noop: () => void;
   var indent: (str: string, count: number) => string;
 }
 
@@ -650,4 +658,5 @@ global.deleteNode = Instance.prototype.delete;
 global.remove = Instance.prototype.remove;
 global.replace = Instance.prototype.replace;
 global.replaceWith = Instance.prototype.replaceWith;
+global.noop = Instance.prototype.noop;
 global.indent = indent;

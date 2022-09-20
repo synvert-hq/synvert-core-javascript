@@ -77,3 +77,4 @@ Actions:
 * [deleteNode](./Instance#deleteNode) - delete code the code of specified child nodes
 * [remove](./Instance.html#remove) - remove the whole code of current node
 * [replaceWith](./Instance.html#replaceWith) - replace the whole code of current node
+* [noop](./Instance.html#noop) - no operation
