@@ -73,6 +73,10 @@ describe("static register", () => {
   });
 
   describe("process", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
     test("writes new code to file", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
         withinFiles("*.js", function () {
@@ -89,11 +93,14 @@ describe("static register", () => {
       mock({ "code.js": input });
       rewriter.process();
       expect(fs.readFileSync("code.js", "utf8")).toBe(output);
-      mock.restore();
     });
   });
 
   describe("test", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
     test("test", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
         withinFiles("*.js", function () {
@@ -116,7 +123,6 @@ describe("static register", () => {
       expect(results[0].actions).toEqual([
         { start: 6, end: 12, newCode: "Synvert" },
       ]);
-      mock.restore();
     });
   });
 

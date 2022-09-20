@@ -16,6 +16,10 @@ describe("array", () => {
   });
 
   describe("toSource", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
     test("gets source code", () => {
       const code = `
         class Foobar {
@@ -27,7 +31,6 @@ describe("array", () => {
       const node = parse(code);
       const array = node.body.body;
       expect(array.toSource()).toBe(`async foobar(foo, bar) {\n          }`);
-      mock.restore();
     });
 
     test("gets source code with fixIndent", () => {
@@ -41,7 +44,6 @@ describe("array", () => {
       const node = parse(code);
       const array = node.body.body;
       expect(array.toSource({ fixIndent: true })).toBe(`foo() {}\nbar() {}`);
-      mock.restore();
     });
   });
 });

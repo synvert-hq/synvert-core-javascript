@@ -8,6 +8,10 @@ describe("Instance", () => {
   const rewriter = new Rewriter("snippet group", "snippet name", () => {});
 
   describe("process", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
     test("writes new code to file", () => {
       const instance = new Instance(rewriter, "*.js", () => {
         findNode(
@@ -38,11 +42,14 @@ describe("Instance", () => {
       mock({ "code.js": input });
       instance.process();
       expect(fs.readFileSync("code.js", "utf8")).toEqual(output);
-      mock.restore();
     });
   });
 
   describe("#test", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
     test("gets actions", () => {
       const instance = new Instance(rewriter, "*.js", () => {
         withNode(

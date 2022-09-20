@@ -4,13 +4,16 @@ import "../src/ast-node-ext";
 import { parse } from "./helper";
 
 describe("ast node", () => {
+  afterEach(() => {
+    mock.restore();
+  });
+
   describe("toSource", () => {
     test("gets source code", () => {
       const code = "class FooBar {}";
       mock({ "code.js": code });
       const node = parse(code);
       expect(node.toSource()).toBe(code);
-      mock.restore();
     });
 
     test("gets source code with fixIndent", () => {
@@ -25,7 +28,6 @@ describe("ast node", () => {
       expect(node.toSource({ fixIndent: true })).toBe(
         "constructor(props) {\n}"
       );
-      mock.restore();
     });
   });
 
@@ -38,7 +40,6 @@ describe("ast node", () => {
       mock({ "code.js": code });
       const node = parse(code).id;
       expect(node.indent()).toBe(8);
-      mock.restore();
     });
   });
 });
