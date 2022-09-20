@@ -51,7 +51,7 @@ describe("Instance", () => {
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            noop()
+            noop();
           }
         );
       });
@@ -62,16 +62,20 @@ describe("Instance", () => {
       `;
       mock({ "code.js": input });
       const results = instance.test();
-      expect(results).toEqual([{
-        actions: [{
-          end: 74,
-          newCode: undefined,
-          start: 59,
-        }],
-        affected: true,
-        conflicted: false,
-        filePath: "code.js",
-      }]);
+      expect(results).toEqual([
+        {
+          actions: [
+            {
+              end: 74,
+              newCode: undefined,
+              start: 59,
+            },
+          ],
+          affected: true,
+          conflicted: false,
+          filePath: "code.js",
+        },
+      ]);
     });
   });
 });
