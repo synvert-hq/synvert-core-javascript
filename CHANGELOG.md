@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.11.0 (2022-09-20)
+
+* Add `noop` dsl
+
 ## 1.10.0 (2022-09-17)
 
 * `QueryScope` and `WithinScope` accept a `QueryOptions`
