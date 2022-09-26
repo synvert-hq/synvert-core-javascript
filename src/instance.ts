@@ -94,18 +94,10 @@ class Instance {
       fs.existsSync(Configuration.rootPath) &&
       minimatch(Configuration.rootPath, this.filePattern)
     ) {
-      return [
-        {
-          filePath: Configuration.rootPath,
-          ...this.testFile(Configuration.rootPath),
-        },
-      ];
+      return [this.testFile(Configuration.rootPath)];
     }
 
-    return this.matchFilesInPaths().map((filePath) => ({
-      filePath,
-      ...this.testFile(filePath),
-    }));
+    return this.matchFilesInPaths().map((filePath) => this.testFile(filePath));
   }
 
   /**
@@ -484,7 +476,7 @@ class Instance {
    * @param {string} filePath - file path
    * @returns {TestResult}
    */
-  private testFile(filePath: string): TestResult {
+  private testFile(filePath: string): TestResultExt {
     this.currentFilePath = path.join(Configuration.rootPath, filePath);
     let source = fs.readFileSync(this.currentFilePath, "utf-8");
     this.currentFileSource = source;
@@ -493,7 +485,8 @@ class Instance {
 
     this.processWithNode(node, this.func);
 
-    const result = this.currentMutation.test();
+    const result = this.currentMutation.test() as TestResultExt;
+    result.filePath = filePath;
     debug("synvert-core:test")(result);
     return result;
   }
