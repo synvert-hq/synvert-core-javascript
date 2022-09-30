@@ -32,9 +32,7 @@ describe("static register", () => {
 
     expect(() => {
       Rewriter.fetch("group", "name");
-    }).toThrowError(
-      new RewriterNotFoundError("Rewriter group name not found")
-    );
+    }).toThrowError(new RewriterNotFoundError("Rewriter group name not found"));
   });
 
   it("calls", () => {
