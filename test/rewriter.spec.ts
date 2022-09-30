@@ -24,6 +24,19 @@ describe("static register", () => {
     );
   });
 
+  it("clears all rewriters", () => {
+    const rewriter = new Rewriter("group", "name", () => {});
+    expect(Rewriter.fetch("group", "name")).toBe(rewriter);
+
+    Rewriter.clear();
+
+    expect(() => {
+      Rewriter.fetch("group", "name");
+    }).toThrowError(
+      new RewriterNotFoundError("Rewriter group name not found")
+    );
+  });
+
   it("calls", () => {
     let run = false;
     const rewriter = new Rewriter("group", "name", () => {

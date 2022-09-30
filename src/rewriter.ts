@@ -99,6 +99,13 @@ class Rewriter {
   }
 
   /**
+   * Clear all registered rewriters.
+   */
+  static clear(): void {
+    this.rewriters = {};
+  }
+
+  /**
    * Create a Rewriter
    * @param {string} group - group name
    * @param {string} name - snippet name
