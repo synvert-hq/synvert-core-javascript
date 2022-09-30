@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.12.0 (2022-09-30)
+
+* Add method `Rewriter.clear`
+
 ## 1.11.0 (2022-09-20)
 
 * Add `noop` dsl
