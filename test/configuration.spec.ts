@@ -24,10 +24,4 @@ describe("Configuration", () => {
     Configuration.showRunProcess = true;
     expect(Configuration.showRunProcess).toEqual(true);
   });
-
-  it("enableEcmaFeaturesJsx", () => {
-    expect(Configuration.enableEcmaFeaturesJsx).toEqual(false);
-    Configuration.enableEcmaFeaturesJsx = true;
-    expect(Configuration.enableEcmaFeaturesJsx).toEqual(true);
-  });
 });

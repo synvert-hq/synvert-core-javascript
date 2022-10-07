@@ -6,7 +6,6 @@ class Configuration {
   static skipPaths: string[] = ["**/node_modules/**"];
   static rootPath: string = ".";
   static showRunProcess: boolean = false;
-  static enableEcmaFeaturesJsx: boolean = false;
 }
 
 export default Configuration;
