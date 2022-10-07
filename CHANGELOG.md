@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.12.1 (2022-10-07)
+
+* Remove `Configuration.enableEcmaFeaturesJsx`
+
 ## 1.12.0 (2022-09-30)
 
 * Add method `Rewriter.clear`
