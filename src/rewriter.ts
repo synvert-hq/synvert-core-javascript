@@ -1,4 +1,4 @@
-import { RewriterOptions, Parser, SourceType, ExecuteCommand } from "./types/options";
+import { RewriterOptions, Parser, SourceType } from "./types/options";
 import { RewriterNotFoundError } from "./error";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
@@ -20,7 +20,6 @@ class Rewriter {
     sourceType: SourceType.Module,
     parser: Parser.Espree,
     runInstance: true,
-    executeCommand: ExecuteCommand.Process,
     writeToFile: true,
   };
   private desc?: string;
@@ -71,7 +70,7 @@ class Rewriter {
    * @static
    * @param {string} group - the rewriter group.
    * @param {string} name - the rewriter name.
-   * @param {RewriterOptions} options - the rewriter options.
+   * @param {Object} options - the rewriter options.
    * @returns {Rewriter} the registered rewriter.
    */
   static call(
@@ -83,11 +82,7 @@ class Rewriter {
     if (!rewriter) return;
 
     rewriter.options = { ...rewriter.options, ...options };
-    if (rewriter.options.executeCommand === ExecuteCommand.Test) {
-      rewriter.test();
-    } else {
-      rewriter.process();
-    }
+    rewriter.process();
     return rewriter;
   }
 
