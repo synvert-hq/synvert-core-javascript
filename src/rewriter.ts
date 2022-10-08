@@ -4,6 +4,7 @@ import Instance from "./instance";
 import NodeVersion from "./node-version";
 import NpmVersion from "./npm-version";
 import { TestResultExt } from "./types/result";
+import { evalSnippet } from "./utils";
 
 /**
  * Rewriter is the top level namespace in a synvert snippet.
@@ -179,11 +180,25 @@ class Rewriter {
    * @param {string} name - name of another rewriter.
    * @param {Object} options - options of another rewriter.
    */
-  addSnippet(group: string, name: string, options: object = {}): void {
+  addSnippet(group: string, name?: string): void {
     const currentRewriter = Rewriter.current;
-    const rewriter = Rewriter.call(group, name, options);
-    if (rewriter) {
-      currentRewriter.subSnippets.push(rewriter);
+    let rewriter = null;
+    if (typeof name === "string") {
+      rewriter = Rewriter.fetch(group, name);
+    } else {
+      rewriter = evalSnippet(group);
+    }
+    if (!rewriter) return;
+
+    currentRewriter.subSnippets.push(rewriter);
+    if (currentRewriter.options.writeToFile) {
+      rewriter.process();
+    } else {
+      const results = rewriter.test();
+      Rewriter.current.testResults = [
+        ...Rewriter.current.testResults,
+        ...results.filter((result) => result.affected),
+      ];
     }
   }
 
@@ -225,7 +240,7 @@ declare global {
   var description: (description: string | null) => void | string;
   var ifNode: (version: string) => void;
   var ifNpm: (name: string, version: string) => void;
-  var addSnippet: (group: string, name: string, options?: object) => void;
+  var addSnippet: (group: string, name?: string) => void;
   var withinFiles: (
     filePattern: string,
     func: (instance: Instance) => void
