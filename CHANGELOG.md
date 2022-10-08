@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.13.0 (2022-10-08)
+
+* `addSnippet` supports http url and file path
+* Remove `Rewriter.execute`
+* Remove `Rewriter.call`
+* Remove `runInstance` option
+
 ## 1.12.1 (2022-10-07)
 
 * Remove `Configuration.enableEcmaFeaturesJsx`
