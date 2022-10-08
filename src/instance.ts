@@ -28,7 +28,6 @@ import NodeMutation, {
   ReplaceOptions,
   NotSupportedError,
   ConflictActionError,
-  TestResult,
 } from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
@@ -474,7 +473,7 @@ class Instance {
    * Test one file.
    * @private
    * @param {string} filePath - file path
-   * @returns {TestResult}
+   * @returns {TestResultExt}
    */
   private testFile(filePath: string): TestResultExt {
     this.currentFilePath = path.join(Configuration.rootPath, filePath);
