@@ -11,6 +11,5 @@ export enum Parser {
 export type RewriterOptions = {
   sourceType?: SourceType;
   parser?: Parser;
-  runInstance?: boolean;
   writeToFile?: boolean;
 };

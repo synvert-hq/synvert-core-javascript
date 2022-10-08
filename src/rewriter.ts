@@ -19,7 +19,6 @@ class Rewriter {
   public options: RewriterOptions = {
     sourceType: SourceType.Module,
     parser: Parser.Espree,
-    runInstance: true,
     writeToFile: true,
   };
   private desc?: string;
@@ -200,8 +199,6 @@ class Rewriter {
    * @param {Functioin} func - a function rewrites code in the matching files.
    */
   withinFiles(filePattern: string, func: (instance: Instance) => void): void {
-    if (!Rewriter.current.options.runInstance) return;
-
     if (
       (!Rewriter.current.nodeVersion || Rewriter.current.nodeVersion.match()) &&
       (!Rewriter.current.npmVersion || Rewriter.current.npmVersion.match())
