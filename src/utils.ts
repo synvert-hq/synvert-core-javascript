@@ -46,7 +46,7 @@ export const evalSnippet = (snippetName: string): Rewriter => {
   } else {
     return eval(path.join(snippetsHome(), "lib", `${snippetName}.js`));
   }
-}
+};
 
 const isValidUrl = (urlString: string): boolean => {
   try {
@@ -75,7 +75,7 @@ const snippetsHome = (): string => {
     process.env.SYNVERT_SNIPPETS_HOME ||
     path.join(process.env.HOME!, ".synvert-javascript")
   );
-}
+};
 
 const convertToGithubRawUrl = (url: string): string => {
   if (!url.includes("//github.com/")) {
