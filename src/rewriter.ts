@@ -175,10 +175,12 @@ class Rewriter {
    * new Synvert.Rewriter("jquery", "migrate", () => {
    *   addSnippet("jquery", "deprecate-event-shorthand");
    *   addSnippet("jquery", "deprecate-ready-event");
+   *   addSnippet("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
+   *   addSnippet("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
+   *   addSnippet("javascript/no-useless-constructor")
    * });
-   * @param {string} group - group of another rewriter.
+   * @param {string} group - group of another rewriter, if there's no name parameter, the group can be http url, file path or snippet name.
    * @param {string} name - name of another rewriter.
-   * @param {Object} options - options of another rewriter.
    */
   addSnippet(group: string, name?: string): void {
     const currentRewriter = Rewriter.current;
