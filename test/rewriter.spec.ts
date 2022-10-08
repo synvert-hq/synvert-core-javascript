@@ -35,37 +35,6 @@ describe("static register", () => {
     }).toThrowError(new RewriterNotFoundError("Rewriter group name not found"));
   });
 
-  it("calls", () => {
-    let run = false;
-    const rewriter = new Rewriter("group", "name", () => {
-      run = true;
-    });
-    Rewriter.call("group", "name");
-    expect(run).toBe(true);
-  });
-
-  it("calls runInstance true", () => {
-    let run = false;
-    new Rewriter("group", "name", () => {
-      withinFiles("**/*.js", () => {
-        run = true;
-      });
-    });
-    Rewriter.call("group", "name", { runInstance: true });
-    expect(run).toBe(true);
-  });
-
-  it("calls runInstance false", () => {
-    let run = false;
-    new Rewriter("group", "name", () => {
-      withinFiles("**/*.js", () => {
-        run = true;
-      });
-    });
-    Rewriter.call("group", "name", { runInstance: false });
-    expect(run).toBe(false);
-  });
-
   describe("configure", () => {
     const rewriter = new Rewriter("snippet group", "snippet name", () => {
       configure({ sourceType: SourceType.Script });

@@ -66,27 +66,6 @@ class Rewriter {
   }
 
   /**
-   * Get a registered rewriter by group and name, then process that rewriter.
-   * @static
-   * @param {string} group - the rewriter group.
-   * @param {string} name - the rewriter name.
-   * @param {Object} options - the rewriter options.
-   * @returns {Rewriter} the registered rewriter.
-   */
-  static call(
-    group: string,
-    name: string,
-    options: RewriterOptions = {}
-  ): Rewriter | undefined {
-    const rewriter = this.fetch(group, name);
-    if (!rewriter) return;
-
-    rewriter.options = { ...rewriter.options, ...options };
-    rewriter.process();
-    return rewriter;
-  }
-
-  /**
    * Clear all registered rewriters.
    */
   static clear(): void {
