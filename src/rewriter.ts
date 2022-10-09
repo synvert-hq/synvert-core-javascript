@@ -97,6 +97,21 @@ class Rewriter {
   }
 
   /**
+   * Process rwriter with sandbox mode.
+   * It will run the func but doesn't change any file.
+   */
+  processWithSandbox(): void {
+    const originalRewriter = Rewriter.current;
+    try {
+      Rewriter.current = this;
+      Rewriter.current.options.runInstance = false;
+      this.func.call(this, this);
+    } finally {
+      Rewriter.current = originalRewriter;
+    }
+  }
+
+  /**
    * Test the rewriter.
    * @returns {TestResultExt[]} test results
    */
@@ -183,19 +198,22 @@ class Rewriter {
     const currentRewriter = Rewriter.current;
     let rewriter = null;
     if (typeof name === "string") {
-      rewriter = Rewriter.fetch(group, name);
+      rewriter = Rewriter.fetch(group, name) || evalSnippet([group, name].join("/"));
     } else {
       rewriter = evalSnippet(group);
     }
-    if (!rewriter) return;
+    if (!rewriter || !(rewriter instanceof Rewriter)) return;
 
-    currentRewriter.subSnippets.push(rewriter);
-    if (currentRewriter.options.writeToFile) {
+    rewriter.options = currentRewriter.options;
+    if (!rewriter.options.writeToFile) {
+      const results = rewriter.test();
+      currentRewriter.mergeTestResults(results);
+    } else if (rewriter.options.runInstance) {
       rewriter.process();
     } else {
-      const results = rewriter.test();
-      this.mergeTestResults(results);
+      rewriter.processWithSandbox();
     }
+    currentRewriter.subSnippets.push(rewriter);
   }
 
   /**
@@ -222,7 +240,7 @@ class Rewriter {
         instance.process();
       } else {
         const results = instance.test();
-        this.mergeTestResults(results);
+        Rewriter.current.mergeTestResults(results);
       }
     }
   }

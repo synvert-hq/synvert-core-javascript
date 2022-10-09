@@ -11,12 +11,8 @@ describe("static register", () => {
     const rewriter = new Rewriter("group", "name", () => {});
     expect(Rewriter.fetch("group", "name")).toBe(rewriter);
 
-    expect(() => {
-      Rewriter.fetch("new group", "name");
-    }).toBeUndefined();
-    expect(() => {
-      Rewriter.fetch("group", "new name");
-    }).toBeUndefined();
+    expect(Rewriter.fetch("new group", "name")).toBeUndefined();
+    expect(Rewriter.fetch("group", "new name")).toBeUndefined();
   });
 
   it("clears all rewriters", () => {
@@ -25,9 +21,7 @@ describe("static register", () => {
 
     Rewriter.clear();
 
-    expect(() => {
-      Rewriter.fetch("group", "name");
-    }).toBeUndefined();
+    expect(Rewriter.fetch("group", "name")).toBeUndefined();
   });
 
   describe("configure", () => {
@@ -60,6 +54,29 @@ describe("static register", () => {
       mock({ "code.js": input });
       rewriter.process();
       expect(fs.readFileSync("code.js", "utf8")).toBe(output);
+    });
+  });
+
+  describe("processWithSandbox", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
+    test("writes new code to file", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        withinFiles("*.js", function () {
+          withNode(
+            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            () => {
+              replace("id", { with: "Synvert" });
+            }
+          );
+        });
+      });
+      const input = `class FooBar {}`;
+      mock({ "code.js": input });
+      rewriter.processWithSandbox();
+      expect(fs.readFileSync("code.js", "utf8")).toBe(input);
     });
   });
 
