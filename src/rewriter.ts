@@ -197,10 +197,7 @@ class Rewriter {
       rewriter.process();
     } else {
       const results = rewriter.test();
-      Rewriter.current.testResults = [
-        ...Rewriter.current.testResults,
-        ...results.filter((result) => result.affected),
-      ];
+      this.mergeTestResults(results);
     }
   }
 
@@ -226,12 +223,16 @@ class Rewriter {
         instance.process();
       } else {
         const results = instance.test();
-        Rewriter.current.testResults = [
-          ...Rewriter.current.testResults,
-          ...results.filter((result) => result.affected),
-        ];
+        this.mergeTestResults(results);
       }
     }
+  }
+
+  private mergeTestResults(results: TestResultExt[]): void {
+    Rewriter.current.testResults = [
+      ...Rewriter.current.testResults,
+      ...results.filter((result) => result.affected),
+    ];
   }
 }
 
