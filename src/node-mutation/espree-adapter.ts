@@ -2,7 +2,7 @@ import fs from "fs";
 import { Adapter } from "@xinminlabs/node-mutation";
 
 import type { NodeArrayExt, NodeExt } from "../types/node-ext";
-import { NotSupportedError } from "../error";
+import { NotSupportedError } from "@xinminlabs/node-mutation";
 
 /**
  * Implement node-query-typescript adapter

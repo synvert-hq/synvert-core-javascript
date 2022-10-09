@@ -26,8 +26,6 @@ import NodeMutation, {
   InsertOptions,
   ReplaceWithOptions,
   ReplaceOptions,
-  NotSupportedError,
-  ConflictActionError,
 } from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
