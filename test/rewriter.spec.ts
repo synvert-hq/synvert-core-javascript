@@ -1,7 +1,6 @@
 import fs from "fs";
 import mock from "mock-fs";
 import { resolve } from "path";
-import { RewriterNotFoundError } from "../src/error";
 
 import Configuration from "../src/configuration";
 import Rewriter from "../src/rewriter";
@@ -14,14 +13,10 @@ describe("static register", () => {
 
     expect(() => {
       Rewriter.fetch("new group", "name");
-    }).toThrowError(
-      new RewriterNotFoundError("Rewriter new group name not found")
-    );
+    }).toBeUndefined();
     expect(() => {
       Rewriter.fetch("group", "new name");
-    }).toThrowError(
-      new RewriterNotFoundError("Rewriter group new name not found")
-    );
+    }).toBeUndefined();
   });
 
   it("clears all rewriters", () => {
@@ -32,7 +27,7 @@ describe("static register", () => {
 
     expect(() => {
       Rewriter.fetch("group", "name");
-    }).toThrowError(new RewriterNotFoundError("Rewriter group name not found"));
+    }).toBeUndefined();
   });
 
   describe("configure", () => {

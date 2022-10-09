@@ -1,5 +1,4 @@
 import { RewriterOptions, Parser, SourceType } from "./types/options";
-import { RewriterNotFoundError } from "./error";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
 import NpmVersion from "./npm-version";
@@ -55,13 +54,10 @@ class Rewriter {
    * @param {string} group rewrtier group.
    * @param {string} name rewrtier name.
    * @returns {Rewriter} the matching rewriter.
-   * @throws {RewriterNotFoundError} if rewriter not found.
    */
-  static fetch(group: string, name: string): Rewriter {
+  static fetch(group: string, name: string): Rewriter | undefined {
     if (this.rewriters[group] && this.rewriters[group][name]) {
       return this.rewriters[group][name];
-    } else {
-      throw new RewriterNotFoundError(`Rewriter ${group} ${name} not found`);
     }
   }
 
