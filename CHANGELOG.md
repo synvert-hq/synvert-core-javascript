@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.14.0 (2022-10-10)
+
+* Add `processWithSandbox`
+* Revert "remove runInstance option"
+* Remove error.ts
+* `Rewriter.fetch` does not raise error if rewriter not found
+
 ## 1.13.0 (2022-10-08)
 
 * `addSnippet` supports http url and file path
