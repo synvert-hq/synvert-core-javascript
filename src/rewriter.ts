@@ -198,7 +198,8 @@ class Rewriter {
     const currentRewriter = Rewriter.current;
     let rewriter = null;
     if (typeof name === "string") {
-      rewriter = Rewriter.fetch(group, name) || evalSnippet([group, name].join("/"));
+      rewriter =
+        Rewriter.fetch(group, name) || evalSnippet([group, name].join("/"));
     } else {
       rewriter = evalSnippet(group);
     }
