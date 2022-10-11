@@ -1,5 +1,6 @@
 import Rewriter from "./rewriter";
 import Configuration from "./configuration";
+import { evalSnippet } from "./utils";
 import type { TestResultExt } from "./types/result";
 
 const ALL_FILES = "**/*.{js,jsx,ts,tsx}";
@@ -16,5 +17,6 @@ export {
   ALL_JS_FILES,
   ALL_TS_FILES,
   version,
+  evalSnippet,
   TestResultExt,
 };
