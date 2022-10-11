@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.15.0 (2022-10-11)
+
+* Fix eval a snippet
+* Export `evalSnippet` function
+
 ## 1.14.0 (2022-10-10)
 
 * Add `processWithSandbox`
