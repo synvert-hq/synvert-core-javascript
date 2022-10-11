@@ -44,7 +44,12 @@ export const evalSnippet = (snippetName: string): Rewriter => {
   } else if (isValidFile(snippetName)) {
     return eval(fs.readFileSync(snippetName, "utf-8"));
   } else {
-    return eval(fs.readFileSync(path.join(snippetsHome(), "lib", `${snippetName}.js`), "utf-8"));
+    return eval(
+      fs.readFileSync(
+        path.join(snippetsHome(), "lib", `${snippetName}.js`),
+        "utf-8"
+      )
+    );
   }
 };
 
