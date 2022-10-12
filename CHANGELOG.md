@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.16.0 (2022-10-12)
+
+* Add `addFile` dsl
+* Add `removeFile` dsl
+
 ## 1.15.0 (2022-10-11)
 
 * Fix eval a snippet
