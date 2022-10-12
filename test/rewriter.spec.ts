@@ -129,6 +129,35 @@ describe("static register", () => {
     });
   });
 
+  describe("removeFile", () => {
+    it("removes a file", () => {
+      fs.writeFileSync("foobar.js", "foobar");
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        removeFile("foobar.js");
+      });
+      rewriter.process();
+      expect(fs.existsSync("foobar.js")).toBeFalsy();
+    });
+
+    test("does nothing if file not exist", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        removeFile("foobar.js");
+      });
+      rewriter.process();
+      expect(fs.existsSync("foobar.js")).toBeFalsy();
+    });
+
+    test("does nothing in sandbox mode", () => {
+      fs.writeFileSync("foobar.js", "foobar");
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        removeFile("foobar.js");
+      });
+      rewriter.processWithSandbox();
+      expect(fs.existsSync("foobar.js")).toBeTruthy();
+      fs.rmSync("foobar.js");
+    });
+  });
+
   describe("group and name", () => {
     test("get group and name", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {});

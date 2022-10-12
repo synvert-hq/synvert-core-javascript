@@ -259,10 +259,24 @@ class Rewriter {
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (fs.existsSync(filePath)) {
-
+      console.log(`File ${filePath} already exists.`);
+      return;
     }
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, content);
+  }
+
+  /**
+   * Parse `removeFile`, it removes a file.
+   * @param {string} fileName - file name
+   */
+  removeFile(fileName: string): void {
+    if (!Rewriter.current.options.runInstance) return;
+
+    const filePath = path.join(Configuration.rootPath, fileName);
+    if (fs.existsSync(filePath)) {
+      fs.rmSync(filePath);
+    }
   }
 
   private mergeTestResults(results: TestResultExt[]): void {
@@ -290,6 +304,7 @@ declare global {
     func: (instance: Instance) => void
   ) => void;
   var addFile: (fileName: string, content: string) => void;
+  var removeFile: (fileName: string) => void;
 }
 
 global.configure = Rewriter.prototype.configure;
@@ -300,3 +315,4 @@ global.addSnippet = Rewriter.prototype.addSnippet;
 global.withinFiles = Rewriter.prototype.withinFiles;
 global.withinFile = Rewriter.prototype.withinFiles;
 global.addFile = Rewriter.prototype.addFile;
+global.removeFile = Rewriter.prototype.removeFile;
