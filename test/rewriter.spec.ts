@@ -117,7 +117,7 @@ describe("static register", () => {
       });
       rewriter.process();
       expect(fs.existsSync("foobar.js")).toBeTruthy();
-      fs.rmSync("foobar.js")
+      fs.rmSync("foobar.js");
     });
 
     test("does nothing in sandbox mode", () => {
