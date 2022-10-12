@@ -1,9 +1,12 @@
+import fs from "fs";
+import path, { dirname } from "path";
 import { RewriterOptions, Parser, SourceType } from "./types/options";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
 import NpmVersion from "./npm-version";
 import { TestResultExt } from "./types/result";
 import { evalSnippet } from "./utils";
+import Configuration from "./configuration";
 
 /**
  * Rewriter is the top level namespace in a synvert snippet.
@@ -246,6 +249,22 @@ class Rewriter {
     }
   }
 
+  /**
+   * Parse `addFile` dsl, it adds a new file.
+   * @param {string} fileName - file name
+   * @param {string} content - file body
+   */
+  addFile(fileName: string, content: string): void {
+    if (!Rewriter.current.options.runInstance) return;
+
+    const filePath = path.join(Configuration.rootPath, fileName);
+    if (fs.existsSync(filePath)) {
+
+    }
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, content);
+  }
+
   private mergeTestResults(results: TestResultExt[]): void {
     Rewriter.current.testResults = [
       ...Rewriter.current.testResults,
@@ -270,6 +289,7 @@ declare global {
     filePattern: string,
     func: (instance: Instance) => void
   ) => void;
+  var addFile: (fileName: string, content: string) => void;
 }
 
 global.configure = Rewriter.prototype.configure;
@@ -279,3 +299,4 @@ global.ifNpm = Rewriter.prototype.ifNpm;
 global.addSnippet = Rewriter.prototype.addSnippet;
 global.withinFiles = Rewriter.prototype.withinFiles;
 global.withinFile = Rewriter.prototype.withinFiles;
+global.addFile = Rewriter.prototype.addFile;

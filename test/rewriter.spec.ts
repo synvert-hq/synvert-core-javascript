@@ -110,6 +110,25 @@ describe("static register", () => {
     });
   });
 
+  describe("addFile", () => {
+    test("adds a file", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        addFile("foobar.js", "foobar");
+      });
+      rewriter.process();
+      expect(fs.existsSync("foobar.js")).toBeTruthy();
+      fs.rmSync("foobar.js")
+    });
+
+    test("does nothing in sandbox mode", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        addFile("foobar.js", "foobar");
+      });
+      rewriter.processWithSandbox();
+      expect(fs.existsSync("foobar.js")).toBeFalsy();
+    });
+  });
+
   describe("group and name", () => {
     test("get group and name", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {});
