@@ -50,6 +50,8 @@ DSL are as follows
 * [description](./Rewriter.html#description) - set description of the rewriter
 * [ifNode](./Rewriter.html#ifNode) - check if node version is greater than or equal to the specified node version
 * [ifNpm](./Rewriter.html#ifNpm) - check the version of the specifid npm package
+* [addFile](./Rewriter.html#addFile) - add a new file
+* [removeFile](./Rewriter.html#removeFile) - remove a file
 * [withinFiles](./Rewriter.html#withinFiles) - find specified files
 * [withinFile](./Rewriter.html#withinFile) - alias to withinFiles
 * [addSnippet](./Rewriter.html#addSnippet) - call another rewriter
