@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.16.1 (2022-10-13)
+
+* Ignore if parse is espree and extname is ts or tsx
+
 ## 1.16.0 (2022-10-12)
 
 * Add `addFile` dsl
