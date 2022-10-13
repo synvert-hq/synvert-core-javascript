@@ -436,7 +436,10 @@ class Instance {
    * @param {string} filePath - file path
    */
   private processFile(filePath: string): void {
-    if (this.rewriter.options.parser === Parser.Espree && [".ts", ".tsx"].includes(path.extname(filePath))) {
+    if (
+      this.rewriter.options.parser === Parser.Espree &&
+      [".ts", ".tsx"].includes(path.extname(filePath))
+    ) {
       return;
     }
     this.currentFilePath = path.join(Configuration.rootPath, filePath);
@@ -477,7 +480,10 @@ class Instance {
    * @returns {TestResultExt}
    */
   private testFile(filePath: string): TestResultExt {
-    if (this.rewriter.options.parser === Parser.Espree && [".ts", ".tsx"].includes(path.extname(filePath))) {
+    if (
+      this.rewriter.options.parser === Parser.Espree &&
+      [".ts", ".tsx"].includes(path.extname(filePath))
+    ) {
       return { conflicted: false, affected: false, actions: [], filePath };
     }
     this.currentFilePath = path.join(Configuration.rootPath, filePath);
