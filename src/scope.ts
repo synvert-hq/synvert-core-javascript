@@ -21,61 +21,6 @@ abstract class Scope {
 }
 
 /**
- * QueryScope finds out nodes by using node query language, then changes its scope to matching node.
- * @extends Scope
- *
- * @see {@link https://github.com/xinminlabs/node-query-javascript} for node query language
- */
-class QueryScope extends Scope {
-  private nodeQuery: NodeQuery<NodeExt>;
-  private options: QueryOptions;
-
-  /**
-   * Create a QueryScope
-   * @param {Instance} instance
-   * @param {String} nql
-   * @param {QueryOptions} options
-   * @param {Function} func - a function to be called on all matching nodes.
-   */
-  constructor(
-    instance: Instance,
-    nql: string,
-    options: QueryOptions,
-    private func: (instance: Instance) => void
-  ) {
-    super(instance);
-    this.nodeQuery = new NodeQuery(nql);
-    this.options = Object.assign(
-      { includingSelf: true, stopAtFirstMatch: false, recursive: true },
-      options
-    );
-  }
-
-  /**
-   * Find out the matching nodes.
-   * It checks the current node and iterates all child nodes,
-   * then run the function code on each matching node.
-   */
-  process(): void {
-    const instance = this.instance;
-    const currentNode = instance.currentNode;
-    if (!currentNode) {
-      return;
-    }
-
-    instance.processWithNode(currentNode, () => {
-      this.nodeQuery
-        .queryNodes(currentNode as NodeExt, this.options)
-        .forEach((matchingNode) => {
-          instance.processWithNode(matchingNode, () => {
-            this.func.call(this.instance, this.instance);
-          });
-        });
-    });
-  }
-}
-
-/**
  * WithinScope finds out nodes which match rules, then changes its scope to matching node.
  * @extends Scope
  */
@@ -86,18 +31,18 @@ class WithinScope extends Scope {
   /**
    * Create a WithinScope
    * @param {Instance} instance
-   * @param {Object} rules
+   * @param {string|Object} nqlOrRules
    * @param {QueryOptions} options
    * @param {Function} func - a function to be called if rules are matched.
    */
   constructor(
     instance: Instance,
-    rules: any,
+    nqlOrRules: string|object,
     options: QueryOptions,
     private func: (instance: Instance) => void
   ) {
     super(instance);
-    this.nodeQuery = new NodeQuery(rules);
+    this.nodeQuery = new NodeQuery(nqlOrRules);
     this.options = Object.assign(
       { includingSelf: true, stopAtFirstMatch: false, recursive: true },
       options
@@ -163,4 +108,4 @@ class GotoScope extends Scope {
   }
 }
 
-export { QueryScope, WithinScope, GotoScope };
+export { WithinScope, GotoScope };

@@ -7,7 +7,7 @@ import debug from "debug";
 import { Node } from "acorn";
 import Configuration from "./configuration";
 import Rewriter from "./rewriter";
-import { QueryScope, WithinScope, GotoScope } from "./scope";
+import { WithinScope, GotoScope } from "./scope";
 import {
   IfExistCondition,
   UnlessExistCondition,
@@ -125,59 +125,31 @@ class Instance {
    *******/
 
   /**
-   * Parse findNode dsl.
-   * It creates a {@link QueryScope} to recursively find matching ast nodes,
-   * then continue oeprating on each matching ast node.
-   * @example
-   * // `$.ajax({ ... })` matches and call `foobar`
-   * findNode(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", () => { foobar });
-   * @param {string} nql - query string to find matching ast nodes.
-   * @param {QueryOptions} options - options to match nodes.
-   * @param {Function} func - to be called on the matching nodes.
-   */
-  findNode(nql: string, func: (instance: Instance) => void): void;
-  findNode(
-    nql: string,
-    options: QueryOptions,
-    func: (instance: Instance) => void
-  ): void;
-  findNode(
-    nql: string,
-    options: QueryOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void
-  ): void {
-    if (typeof options === "function") {
-      new QueryScope(Instance.current, nql, {}, options).process();
-    } else {
-      new QueryScope(Instance.current, nql, options, func!).process();
-    }
-  }
-
-  /**
    * Parse withinNode dsl.
    * It creates a {@link WithinScope} to recursively find matching ast nodes,
    * then continue operating on each matching ast node.
    * @example
    * // `$.ajax({ ... })` matches and call `foobar`
    * withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })
-   * @param {Object} rules - to find mathing ast nodes.
+   * withinNode(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", () => { foobar });
+   * @param {string|Object} nqlOrRules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  withinNode(rules: any, func: (instance: Instance) => void): void;
+  withinNode(nqlOrRules: string|object, func: (instance: Instance) => void): void;
   withinNode(
-    rules: any,
+    nqlOrRules: string|object,
     options: QueryOptions,
     func: (instance: Instance) => void
   ): void;
   withinNode(
-    rules: any,
+    nqlOrRules: string|object,
     options: QueryOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void
   ) {
     if (typeof options === "function") {
-      new WithinScope(Instance.current, rules, {}, options).process();
+      new WithinScope(Instance.current, nqlOrRules, {}, options).process();
     } else {
-      new WithinScope(Instance.current, rules, options, func!).process();
+      new WithinScope(Instance.current, nqlOrRules, options, func!).process();
     }
   }
 
@@ -639,9 +611,9 @@ declare global {
   var indent: (str: string, count: number) => string;
 }
 
-global.findNode = Instance.prototype.findNode;
 global.withinNode = Instance.prototype.withinNode;
 global.withNode = Instance.prototype.withinNode;
+global.findNode = Instance.prototype.withinNode;
 global.gotoNode = Instance.prototype.gotoNode;
 global.ifExistNode = Instance.prototype.ifExistNode;
 global.unlessExistNode = Instance.prototype.unlessExistNode;

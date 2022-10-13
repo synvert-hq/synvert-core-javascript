@@ -58,9 +58,9 @@ DSL are as follows
 
 Scopes:
 
-* [findNode](./Instance.html#findNode) - recursively find matching ast nodes by node query language
 * [withNodes](./Instance.html#withNodes) - recursively find matching ast nodes
 * [withNode](./Instance.html#withNode) - alias to withNode
+* [findNode](./Instance.html#findNode) - alias to withNode
 * [gotoNode](./Instance.html#gotoNode) - go to a child node
 
 Conditions:
