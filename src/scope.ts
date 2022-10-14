@@ -37,7 +37,7 @@ class WithinScope extends Scope {
    */
   constructor(
     instance: Instance,
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: QueryOptions,
     private func: (instance: Instance) => void
   ) {
