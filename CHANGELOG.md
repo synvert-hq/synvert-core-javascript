@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.17.0 (2022-10-14)
+
+* Condition accepts both nql and rules
+* Make `findNode` as an alias to `withinNode`
+
 ## 1.16.1 (2022-10-13)
 
 * Ignore if parse is espree and extname is ts or tsx
