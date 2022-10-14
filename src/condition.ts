@@ -7,11 +7,11 @@ import { arrayBody } from "./utils";
 
 interface ConditionOptions {
   in?: string;
-  match?: ((node: Node) => boolean) | any;
+  match?: ((node: Node) => boolean) | string | object;
 }
 
 /**
- * Condition is used to check if the node matches the rules, condition won’t change the node scope.
+ * Condition is used to check if the node matches, condition won’t change the node scope.
  */
 abstract class Condition {
   protected nodeQuery: NodeQuery<Node>;
@@ -21,17 +21,17 @@ abstract class Condition {
   /**
    * Create a Condition
    * @param {Instance} instance
-   * @param {Object} rules - rules to find nodes, e.g. `{ nodeType: "MemberExpression", object: { in: ["$", "jQuery"] }, property: "ajax" }`
+   * @param {string|Object} nqlOrRules - nql or rules to find nodes
    * @param {Object} options - to do find in specific child node, e.g. `{ in: 'callee' }`
-   * @param {Function} func - a function to be called if rules are matched.
+   * @param {Function} func - a function to be called if nql or rules are matched.
    */
   constructor(
     protected instance: Instance,
-    rules: object,
+    nqlOrRules: string|object,
     options: ConditionOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void
   ) {
-    this.nodeQuery = new NodeQuery(rules);
+    this.nodeQuery = new NodeQuery(nqlOrRules);
     if (typeof options === "object") {
       this.options = options;
       this.func = func!;
@@ -75,7 +75,7 @@ abstract class Condition {
  */
 class IfExistCondition extends Condition {
   /**
-   * Check if any child node matches the rules.
+   * Check if any child node matches.
    */
   protected match(): boolean {
     const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), {
@@ -92,7 +92,7 @@ class IfExistCondition extends Condition {
  */
 class UnlessExistCondition extends Condition {
   /**
-   * Check if none of child node matches the rules.
+   * Check if none of child node matches.
    */
   protected match(): boolean {
     const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), {
@@ -104,12 +104,12 @@ class UnlessExistCondition extends Condition {
 }
 
 /**
- * IfOnlyExistCondition checks if node has only one child node and the child node matches rules.
+ * IfOnlyExistCondition checks if node has only one child node and the child node matches.
  * @extends Condition
  */
 class IfOnlyExistCondition extends Condition {
   /**
-   * Check if only have one child node and the child node matches rules.
+   * Check if only have one child node and the child node matches.
    */
   protected match(): boolean {
     const body = arrayBody(this.targetNode());
@@ -125,23 +125,23 @@ class IfAllCondition extends Condition {
   /**
    * Create an IfAllCondition
    * @param {Instance} instance
-   * @param {Object} rules - rules to find nodes, e.g. `{ nodeType: "MemberExpression", object: { in: ["$", "jQuery"] }, property: "ajax" }`
-   * @param {Object} options - { match: rules|function }
+   * @param {string|Object} nqlOrRules - nql or rules to find nodes
+   * @param {Object} options - { match: nqlOrRules|function }
    * @param {Function} func - a function to be called if all matching nodes match options.match.
    * @param {Function} elseFunc - a function to be called if not all matching nodes match options.match.
    */
   constructor(
     instance: Instance,
-    rules: any,
+    nqlOrRules: string|object,
     options: ConditionOptions | ((instance: Instance) => void),
     func: (instance: Instance) => void,
     private elseFunc: (instance: Instance) => void
   ) {
-    super(instance, rules, options, func);
+    super(instance, nqlOrRules, options, func);
   }
 
   /**
-   * Find all matching nodes, if all match options.match rules, run the func, else run the elseFunc.
+   * Find all matching nodes, if all match options.match, run the func, else run the elseFunc.
    */
   process() {
     const nodes = this.nodeQuery.queryNodes(this.targetNode(), {
@@ -171,7 +171,7 @@ class IfAllCondition extends Condition {
     if (typeof this.options.match === "function") {
       return this.options.match(node);
     } else {
-      return new NodeQuery(this.options.match).matchNode(node);
+      return new NodeQuery(this.options.match!).matchNode(node);
     }
   }
 }

@@ -67,7 +67,7 @@ Conditions:
 
 * [ifExistNode](./Instance.html#ifExistNode) - check if matching node exist in the child nodes
 * [unlessExistNode](./Instance.html#unlessExistNode) - check if matching node does not exist in the child nodes
-* [ifOnlyExistNode](./Instance.html#ifOnlyExistNode) - check if current node has only one child node and the child node matches rules
+* [ifOnlyExistNode](./Instance.html#ifOnlyExistNode) - check if current node has only one child node and the child node matches
 * [ifAllNodes](./Instance.html#ifAlNodes) - check if all nodes match or not
 
 Actions:

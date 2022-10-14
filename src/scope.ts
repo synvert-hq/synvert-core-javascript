@@ -31,7 +31,7 @@ class WithinScope extends Scope {
   /**
    * Create a WithinScope
    * @param {Instance} instance
-   * @param {string|Object} nqlOrRules
+   * @param {string|Object} nqlOrRules - nql or rules to find nodes.
    * @param {QueryOptions} options
    * @param {Function} func - a function to be called if rules are matched.
    */
