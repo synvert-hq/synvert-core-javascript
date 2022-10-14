@@ -135,14 +135,17 @@ class Instance {
    * @param {string|Object} nqlOrRules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  withinNode(nqlOrRules: string|object, func: (instance: Instance) => void): void;
   withinNode(
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void;
+  withinNode(
+    nqlOrRules: string | object,
     options: QueryOptions,
     func: (instance: Instance) => void
   ): void;
   withinNode(
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: QueryOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void
   ) {
@@ -179,7 +182,7 @@ class Instance {
    * @param {Function} func - to continue operating on the matching nodes.
    */
   ifExistNode(
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ) {
@@ -198,11 +201,16 @@ class Instance {
    * @param {Function} func - to continue operating on the matching nodes.
    */
   unlessExistNode(
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ) {
-    new UnlessExistCondition(Instance.current, nqlOrRules, options, func).process();
+    new UnlessExistCondition(
+      Instance.current,
+      nqlOrRules,
+      options,
+      func
+    ).process();
   }
 
   /**
@@ -217,11 +225,16 @@ class Instance {
    * @param {Function} func - to continue operating on the matching nodes.
    */
   ifOnlyExistNode(
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ) {
-    new IfOnlyExistCondition(Instance.current, nqlOrRules, options, func).process();
+    new IfOnlyExistCondition(
+      Instance.current,
+      nqlOrRules,
+      options,
+      func
+    ).process();
   }
 
   /**
@@ -237,7 +250,7 @@ class Instance {
    * @param {Function} elseFunc - to continue if not all the matching nodes match options.match.
    */
   ifAllNodes(
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
@@ -408,7 +421,10 @@ class Instance {
    * @param {string} filePath - file path
    */
   private processFile(filePath: string): void {
-    if (this.rewriter.options.parser === Parser.Espree && [".ts", ".tsx"].includes(path.extname(filePath))) {
+    if (
+      this.rewriter.options.parser === Parser.Espree &&
+      [".ts", ".tsx"].includes(path.extname(filePath))
+    ) {
       return;
     }
     this.currentFilePath = path.join(Configuration.rootPath, filePath);
@@ -449,7 +465,10 @@ class Instance {
    * @returns {TestResultExt}
    */
   private testFile(filePath: string): TestResultExt {
-    if (this.rewriter.options.parser === Parser.Espree && [".ts", ".tsx"].includes(path.extname(filePath))) {
+    if (
+      this.rewriter.options.parser === Parser.Espree &&
+      [".ts", ".tsx"].includes(path.extname(filePath))
+    ) {
       return { conflicted: false, affected: false, actions: [], filePath };
     }
     this.currentFilePath = path.join(Configuration.rootPath, filePath);
@@ -556,22 +575,22 @@ declare global {
         func: (instance: Instance) => void
       ) => void);
   var withinNode: (
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     func: (instance: Instance) => void
   ) =>
     | void
     | ((
-        nqlOrRules: string|object,
+        nqlOrRules: string | object,
         options: QueryOptions,
         func: (instance: Instance) => void
       ) => void);
   var withNode: (
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     func: (instance: Instance) => void
   ) =>
     | void
     | ((
-        nqlOrRules: string|object,
+        nqlOrRules: string | object,
         options: QueryOptions,
         func: (instance: Instance) => void
       ) => void);
@@ -580,22 +599,22 @@ declare global {
     func: (instance: Instance) => void
   ) => void;
   var ifExistNode: (
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ) => void;
   var unlessExistNode: (
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ) => void;
   var ifOnlyExistNode: (
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ) => void;
   var ifAllNodes: (
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void

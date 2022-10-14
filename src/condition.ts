@@ -27,7 +27,7 @@ abstract class Condition {
    */
   constructor(
     protected instance: Instance,
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void
   ) {
@@ -132,7 +132,7 @@ class IfAllCondition extends Condition {
    */
   constructor(
     instance: Instance,
-    nqlOrRules: string|object,
+    nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
     func: (instance: Instance) => void,
     private elseFunc: (instance: Instance) => void
