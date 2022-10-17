@@ -309,7 +309,7 @@ class Instance {
    * // will be converted to
    * // import React, { Component, useState } from 'react'
    * // after executing
-   * withNode({ nodeType: "ImportSpecifier", local: "Component" }, () => {
+   * withNode({ nodeType: "ImportSpecifier", name: "Component" }, () => {
    *   insert(", useState", { at: "end" });
    * });
    * @param {string} code - code need to be inserted
@@ -321,6 +321,29 @@ class Instance {
       code,
       options
     );
+  }
+
+  /**
+   * Parse insertAfter dsl.
+   * It inserts the code next to the current node.
+   * @example
+   * // import React from 'react'
+   * // will be converted to
+   * // import React from 'react'
+   * // import PropTypes from 'prop-types'
+   * // after executing
+   * withNode({ nodeType: "ImportClause", name: "React" }, () => {
+   *   insertAfter("import PropTypes from 'prop-types'");
+   * });
+   * @param {string} code - code need to be inserted
+   */
+  insertAfter(code: string): void {
+    const column = " ".repeat(NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column);
+    Instance.current.currentMutation.insert(
+      Instance.current.currentNode,
+      `\n${column}${code}`,
+      { at: "end" }
+    )
   }
 
   /**
@@ -622,6 +645,7 @@ declare global {
   var append: (code: string) => void;
   var prepend: (code: string) => void;
   var insert: (code: string, options: InsertOptions) => void;
+  var insertAfter: (code: string) => void;
   var deleteNode: (selectors: string | string[]) => void;
   var remove: () => void;
   var replace: (selectors: string | string[], options: ReplaceOptions) => void;
@@ -641,6 +665,7 @@ global.ifAllNodes = Instance.prototype.ifAllNodes;
 global.append = Instance.prototype.append;
 global.prepend = Instance.prototype.prepend;
 global.insert = Instance.prototype.insert;
+global.insertAfter = Instance.prototype.insertAfter;
 global.deleteNode = Instance.prototype.delete;
 global.remove = Instance.prototype.remove;
 global.replace = Instance.prototype.replace;
