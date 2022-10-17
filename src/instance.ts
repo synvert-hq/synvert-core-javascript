@@ -338,12 +338,14 @@ class Instance {
    * @param {string} code - code need to be inserted
    */
   insertAfter(code: string): void {
-    const column = " ".repeat(NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column);
+    const column = " ".repeat(
+      NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column
+    );
     Instance.current.currentMutation.insert(
       Instance.current.currentNode,
       `\n${column}${code}`,
       { at: "end" }
-    )
+    );
   }
 
   /**
@@ -361,12 +363,14 @@ class Instance {
    * @param {string} code - code need to be inserted
    */
   insertBefore(code: string): void {
-    const column = " ".repeat(NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column);
+    const column = " ".repeat(
+      NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column
+    );
     Instance.current.currentMutation.insert(
       Instance.current.currentNode,
       `${code}\n${column}`,
       { at: "beginning" }
-    )
+    );
   }
 
   /**
