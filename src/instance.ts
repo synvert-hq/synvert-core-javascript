@@ -266,7 +266,7 @@ class Instance {
 
   /**
    * Parse append dsl.
-   * It creates a {@link AppendAction} to append the code to the bottom of current node body.
+   * It appends the code to the bottom of current node body.
    * @example
    * // foo() => {}
    * // will be converted to
@@ -284,7 +284,7 @@ class Instance {
 
   /**
    * Parse prepend dsl.
-   * It creates a {@link PrependAction} to prepend the code to the top of current node body.
+   * It prepends the code to the top of current node body.
    * @example
    * // const foo = bar
    * // will be converted to
@@ -303,7 +303,7 @@ class Instance {
 
   /**
    * Parse insert dsl.
-   * It creates a {@link InsertAction} to replace child nodes with code.
+   * It inserts code.
    * @example
    * // import React, { Component } from 'react'
    * // will be converted to
@@ -325,7 +325,7 @@ class Instance {
 
   /**
    * Parse delete dsl.
-   * It creates a {@link DeleteAction} to delete child nodes.
+   * It deletes child nodes.
    * @example
    * // const someObject = { cat: cat, dog: dog, bird: bird }
    * // will be converted to
@@ -345,7 +345,7 @@ class Instance {
 
   /**
    * Parse remove dsl.
-   * It creates a {@link RemoveAction} to remove current node.
+   * It removes current node.
    * @example
    * // class A {
    * //   constructor(props) {
@@ -366,7 +366,7 @@ class Instance {
 
   /**
    * Parse replace dsl.
-   * It creates a {@link ReplaceAction} to replace child nodes with code.
+   * It replaces child nodes with code.
    * @example
    * // $form.submit();
    * // will be converted to
@@ -388,7 +388,7 @@ class Instance {
 
   /**
    * Parse replaceWith dsl.
-   * It creates a {@link ReplaceWithAction} to replace current node with code.
+   * It replaces current node with code.
    * @example
    * // module.exports = Rewriter
    * // will be converted to
