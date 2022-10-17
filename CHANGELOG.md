@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.18.0 (2022-10-17)
+
+* Add `insertAfter` dsl
+* Add `insertBefore` dsl
+
 ## 1.17.0 (2022-10-14)
 
 * Condition accepts both nql and rules
