@@ -76,6 +76,7 @@ Actions:
 * [prepend](./Instance.html#prepend) - prepend the code to the top of the current node body
 * [insert](./Instance.html#insert) - insert code
 * [insertAfter](./Instance.html#insertAfter) - insert the code next to the current node
+* [insertBefore](./Instance.html#insertBefore) - insert the code previous to the current node
 * [replace](./Instance.html#replace) - replace the code of specified child nodes
 * [deleteNode](./Instance#deleteNode) - delete code the code of specified child nodes
 * [remove](./Instance.html#remove) - remove the whole code of current node

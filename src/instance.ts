@@ -347,6 +347,29 @@ class Instance {
   }
 
   /**
+   * Parse insertBefore dsl.
+   * It inserts the code previous to the current node.
+   * @example
+   * // import React from 'react'
+   * // will be converted to
+   * // import PropTypes from 'prop-types'
+   * // import React from 'react'
+   * // after executing
+   * withNode({ nodeType: "ImportClause", name: "React" }, () => {
+   *   insertBefore("import PropTypes from 'prop-types'");
+   * });
+   * @param {string} code - code need to be inserted
+   */
+  insertBefore(code: string): void {
+    const column = " ".repeat(NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column);
+    Instance.current.currentMutation.insert(
+      Instance.current.currentNode,
+      `${code}\n${column}`,
+      { at: "beginning" }
+    )
+  }
+
+  /**
    * Parse delete dsl.
    * It deletes child nodes.
    * @example
@@ -646,6 +669,7 @@ declare global {
   var prepend: (code: string) => void;
   var insert: (code: string, options: InsertOptions) => void;
   var insertAfter: (code: string) => void;
+  var insertBefore: (code: string) => void;
   var deleteNode: (selectors: string | string[]) => void;
   var remove: () => void;
   var replace: (selectors: string | string[], options: ReplaceOptions) => void;
@@ -666,6 +690,7 @@ global.append = Instance.prototype.append;
 global.prepend = Instance.prototype.prepend;
 global.insert = Instance.prototype.insert;
 global.insertAfter = Instance.prototype.insertAfter;
+global.insertBefore = Instance.prototype.insertBefore;
 global.deleteNode = Instance.prototype.delete;
 global.remove = Instance.prototype.remove;
 global.replace = Instance.prototype.replace;
