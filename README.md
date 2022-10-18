@@ -82,3 +82,7 @@ Actions:
 * [remove](./Instance.html#remove) - remove the whole code of current node
 * [replaceWith](./Instance.html#replaceWith) - replace the whole code of current node
 * [noop](./Instance.html#noop) - no operation
+
+Others:
+
+* [callHelper](./Instance.html#callHelper) - call a helper to run shared code
