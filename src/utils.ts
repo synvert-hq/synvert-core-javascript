@@ -69,9 +69,12 @@ export const loadHelper = (snippetHelper: string): string => {
   } else if (isValidFile(snippetHelper)) {
     return fs.readFileSync(snippetHelper, "utf-8");
   } else {
-    return fs.readFileSync(path.join(snippetsHome(), "lib", `${snippetHelper}.js`), "utf-8");
+    return fs.readFileSync(
+      path.join(snippetsHome(), "lib", `${snippetHelper}.js`),
+      "utf-8"
+    );
   }
-}
+};
 
 const isValidUrl = (urlString: string): boolean => {
   try {
