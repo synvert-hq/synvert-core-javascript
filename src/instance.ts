@@ -15,7 +15,7 @@ import {
   IfAllCondition,
   ConditionOptions,
 } from "./condition";
-import { indent } from "./utils";
+import { indent, loadHelper } from "./utils";
 import NodeQuery, {
   QueryOptions,
   TypescriptAdapter as TypescriptQueryAdapter,
@@ -47,6 +47,7 @@ class Instance {
   public currentFileSource!: string;
   public currentFilePath!: string;
   private currentMutation!: NodeMutation<Node>;
+  public options: any;
 
   /**
    * Current instance.
@@ -466,6 +467,18 @@ class Instance {
   }
 
   /**
+   * Call a helper.
+   * @param {string} helperName - snippet helper name, it can be a http url, file path or a short name
+   * @param options - options can be anything it needs to be passed to the helper
+   */
+  callHelper(helperName: string, options: any): void {
+    const helperContent = loadHelper(helperName);
+    Instance.current.options = options;
+    Function(helperContent).call(Instance.current, Instance.current);
+    Instance.current.options = undefined;
+  }
+
+  /**
    * Process one file.
    * @private
    * @param {string} filePath - file path
@@ -680,6 +693,7 @@ declare global {
   var replaceWith: (code: string, options: ReplaceWithOptions) => void;
   var noop: () => void;
   var indent: (str: string, count: number) => string;
+  var callHelper: (name: string, options: any) => void;
 }
 
 global.withinNode = Instance.prototype.withinNode;
@@ -700,4 +714,5 @@ global.remove = Instance.prototype.remove;
 global.replace = Instance.prototype.replace;
 global.replaceWith = Instance.prototype.replaceWith;
 global.noop = Instance.prototype.noop;
+global.callHelper = Instance.prototype.callHelper;
 global.indent = indent;

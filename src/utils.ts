@@ -38,6 +38,11 @@ export const arrayBody = (node: any): Node[] => {
   }
 };
 
+/**
+ * Eval the snippet by name.
+ * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
+ * @returns {Rewriter} a Rewriter object
+ */
 export const evalSnippet = (snippetName: string): Rewriter => {
   if (isValidUrl(snippetName)) {
     return eval(fetch(formatUrl(snippetName)).text());
@@ -52,6 +57,21 @@ export const evalSnippet = (snippetName: string): Rewriter => {
     );
   }
 };
+
+/**
+ * Load snippet by helper name.
+ * @param {string} snippetHelper - snippet helper name, it can be a http url, file path or short snippet name.
+ * @returns {string} snippet helper content
+ */
+export const loadHelper = (snippetHelper: string): string => {
+  if (isValidUrl(snippetHelper)) {
+    return fetch(formatUrl(snippetHelper)).text();
+  } else if (isValidFile(snippetHelper)) {
+    return fs.readFileSync(snippetHelper, "utf-8");
+  } else {
+    return fs.readFileSync(path.join(snippetsHome(), "lib", `${snippetHelper}.js`), "utf-8");
+  }
+}
 
 const isValidUrl = (urlString: string): boolean => {
   try {
