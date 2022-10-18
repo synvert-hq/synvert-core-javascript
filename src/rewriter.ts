@@ -144,8 +144,7 @@ class Rewriter {
   }
 
   /**
-   * Parse `description` dsl, it sets description of the rewriter.
-   * Or get description.
+   * Set description of the rewriter or get description.
    * @example
    * new Synvert.Rewriter("react", "transform-class-components-to-functions", () => {
    *   description("transform react class components to functions")
@@ -164,7 +163,7 @@ class Rewriter {
   }
 
   /**
-   * Parse `ifNode` dsl, it checks if node version is greater than or equal to the specified node version.
+   * Check if node version is greater than or equal to the specified node version.
    * @example
    * ifNode("10.14.0");
    * @param {string} version - specified node version.
@@ -174,7 +173,7 @@ class Rewriter {
   }
 
   /**
-   * Parse `ifNpm` dsl, it compares version of the specified npm.
+   * Compare version of the specified npm.
    * @example
    * ifNpm("react", ">= 18.0");
    * @param {string} name - npm name.
@@ -185,7 +184,7 @@ class Rewriter {
   }
 
   /**
-   * Parse `addSnippet` dsl, it calls anther rewriter.
+   * Call anther rewriter.
    * @example
    * new Synvert.Rewriter("jquery", "migrate", () => {
    *   addSnippet("jquery", "deprecate-event-shorthand");
@@ -221,7 +220,7 @@ class Rewriter {
   }
 
   /**
-   * Parse `withinFiles` dsl, it finds specified files.
+   * Find specified files.
    * It creates an Instance to rewrite code.
    * @example
    * new Synvert.Rewriter("javascript", "no-unused-imports", () => {
@@ -250,7 +249,7 @@ class Rewriter {
   }
 
   /**
-   * Parse `addFile` dsl, it adds a new file.
+   * Add a new file.
    * @param {string} fileName - file name
    * @param {string} content - file body
    */
@@ -267,7 +266,7 @@ class Rewriter {
   }
 
   /**
-   * Parse `removeFile`, it removes a file.
+   * Remove a file.
    * @param {string} fileName - file name
    */
   removeFile(fileName: string): void {

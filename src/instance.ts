@@ -126,8 +126,7 @@ class Instance {
    *******/
 
   /**
-   * Parse withinNode dsl.
-   * It creates a {@link WithinScope} to recursively find matching ast nodes,
+   * Create a {@link WithinScope} to recursively find matching ast nodes,
    * then continue operating on each matching ast node.
    * @example
    * // `$.ajax({ ... })` matches and call `foobar`
@@ -158,8 +157,7 @@ class Instance {
   }
 
   /**
-   * Parse gotoNode dsl.
-   * It creates a {@link GotoScope} to go to a child node,
+   * Create a {@link GotoScope} to go to a child node,
    * then continue operating on the child node.
    * @example
    * // `$.ajax({ ... })` goes to `$.ajax`
@@ -172,8 +170,7 @@ class Instance {
   }
 
   /**
-   * Parse ifExistNode dsl
-   * It creates a {@link IfExistCondition} to check if matching nodes exist in the child nodes,
+   * Create a {@link IfExistCondition} to check if matching nodes exist in the child nodes,
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar extends React.Component` matches and call `foobar`.
@@ -191,8 +188,7 @@ class Instance {
   }
 
   /**
-   * Parse unlessExistNode dsl
-   * It creates a {@link UnlessExistCondition} to check if matching nodes does not exist in the child nodes,
+   * Create a {@link UnlessExistCondition} to check if matching nodes does not exist in the child nodes,
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar extends Component` matches and call `foobar`.
@@ -215,8 +211,7 @@ class Instance {
   }
 
   /**
-   * Parse ifOnlyExistNode dsl
-   * It creates a {@link IfOnlyExistCondition} to check if current node has only one child node and the child node matches rules,
+   * Create a {@link IfOnlyExistCondition} to check if current node has only one child node and the child node matches rules,
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
@@ -239,8 +234,7 @@ class Instance {
   }
 
   /**
-   * Parse ifAllNodes dsl
-   * It creates a {@link IfAllCondition} to check if all matching nodes match options.match,
+   * Create a {@link IfAllCondition} to check if all matching nodes match options.match,
    * if so, then call the func, else call the elseFunc.
    * @example
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
@@ -266,8 +260,7 @@ class Instance {
   }
 
   /**
-   * Parse append dsl.
-   * It appends the code to the bottom of current node body.
+   * Append the code to the bottom of current node body.
    * @example
    * // foo() => {}
    * // will be converted to
@@ -284,8 +277,7 @@ class Instance {
   }
 
   /**
-   * Parse prepend dsl.
-   * It prepends the code to the top of current node body.
+   * Prepend the code to the top of current node body.
    * @example
    * // const foo = bar
    * // will be converted to
@@ -303,8 +295,7 @@ class Instance {
   }
 
   /**
-   * Parse insert dsl.
-   * It inserts code.
+   * Insert code to the beginning or end of the current node.
    * @example
    * // import React, { Component } from 'react'
    * // will be converted to
@@ -325,8 +316,7 @@ class Instance {
   }
 
   /**
-   * Parse insertAfter dsl.
-   * It inserts the code next to the current node.
+   * Insert the code next to the current node.
    * @example
    * // import React from 'react'
    * // will be converted to
@@ -350,8 +340,7 @@ class Instance {
   }
 
   /**
-   * Parse insertBefore dsl.
-   * It inserts the code previous to the current node.
+   * Insert the code previous to the current node.
    * @example
    * // import React from 'react'
    * // will be converted to
@@ -375,8 +364,7 @@ class Instance {
   }
 
   /**
-   * Parse delete dsl.
-   * It deletes child nodes.
+   * Delete child nodes.
    * @example
    * // const someObject = { cat: cat, dog: dog, bird: bird }
    * // will be converted to
@@ -395,8 +383,7 @@ class Instance {
   }
 
   /**
-   * Parse remove dsl.
-   * It removes current node.
+   * Remove current node.
    * @example
    * // class A {
    * //   constructor(props) {
@@ -416,8 +403,7 @@ class Instance {
   }
 
   /**
-   * Parse replace dsl.
-   * It replaces child nodes with code.
+   * Replace child nodes with code.
    * @example
    * // $form.submit();
    * // will be converted to
@@ -438,8 +424,7 @@ class Instance {
   }
 
   /**
-   * Parse replaceWith dsl.
-   * It replaces current node with code.
+   * Replace current node with code.
    * @example
    * // module.exports = Rewriter
    * // will be converted to
@@ -460,14 +445,14 @@ class Instance {
   }
 
   /**
-   * Parse noop dsl.
+   * No operation.
    */
   noop(): void {
     Instance.current.currentMutation.noop(Instance.current.currentNode);
   }
 
   /**
-   * Call a helper.
+   * Call a helper to run shared code.
    * @param {string} helperName - snippet helper name, it can be a http url, file path or a short name
    * @param options - options can be anything it needs to be passed to the helper
    */
