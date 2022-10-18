@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.19.0 (2022-10-18)
+
+* Add `callHelper` dsl
+
 ## 1.18.0 (2022-10-17)
 
 * Add `insertAfter` dsl
