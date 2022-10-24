@@ -327,15 +327,16 @@ class Instance {
    *   insertAfter("import PropTypes from 'prop-types'");
    * });
    * @param {string} code - code need to be inserted
+   * @param {Object} options - insert options, default is `{ at: "end" }`
    */
-  insertAfter(code: string): void {
+  insertAfter(code: string, options: InsertOptions): void {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column
     );
     Instance.current.currentMutation.insert(
       Instance.current.currentNode,
       `\n${column}${code}`,
-      { at: "end" }
+      { ...options, ...{ at: "end" } }
     );
   }
 
@@ -351,15 +352,16 @@ class Instance {
    *   insertBefore("import PropTypes from 'prop-types'");
    * });
    * @param {string} code - code need to be inserted
+   * @param {Object} options - insert options, default is `{ at: "beginning" }`
    */
-  insertBefore(code: string): void {
+  insertBefore(code: string, options: InsertOptions): void {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column
     );
     Instance.current.currentMutation.insert(
       Instance.current.currentNode,
       `${code}\n${column}`,
-      { at: "beginning" }
+      { ...options, ...{ at: "beginning" } }
     );
   }
 
@@ -670,8 +672,8 @@ declare global {
   var append: (code: string) => void;
   var prepend: (code: string) => void;
   var insert: (code: string, options: InsertOptions) => void;
-  var insertAfter: (code: string) => void;
-  var insertBefore: (code: string) => void;
+  var insertAfter: (code: string, options: InsertOptions) => void;
+  var insertBefore: (code: string, options: InsertOptions) => void;
   var deleteNode: (selectors: string | string[]) => void;
   var remove: () => void;
   var replace: (selectors: string | string[], options: ReplaceOptions) => void;
