@@ -26,11 +26,11 @@ describe("static register", () => {
 
   describe("configure", () => {
     const rewriter = new Rewriter("snippet group", "snippet name", () => {
-      configure({ sourceType: SourceType.Script });
+      configure({ sourceType: SourceType.SCRIPT });
     });
-    expect(rewriter.options.sourceType).toBe(SourceType.Module);
+    expect(rewriter.options.sourceType).toBe(SourceType.MODULE);
     rewriter.process();
-    expect(rewriter.options.sourceType).toBe(SourceType.Script);
+    expect(rewriter.options.sourceType).toBe(SourceType.SCRIPT);
   });
 
   describe("process", () => {

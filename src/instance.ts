@@ -64,7 +64,7 @@ class Instance {
     private func: (instance: Instance) => void
   ) {
     let strategy = STRATEGY.KEEP_RUNNING;
-    if (rewriter.options.strategy === Strategy.AllowInsertAtSamePosition) {
+    if (rewriter.options.strategy === Strategy.ALLOW_INSERT_AT_SAME_POSITION) {
       strategy = strategy | STRATEGY.ALLOW_INSERT_AT_SAME_POSITION;
     }
     NodeMutation.configure({ strategy });
@@ -476,7 +476,7 @@ class Instance {
    */
   private processFile(filePath: string): void {
     if (
-      this.rewriter.options.parser === Parser.Espree &&
+      this.rewriter.options.parser === Parser.ESPREE &&
       [".ts", ".tsx"].includes(path.extname(filePath))
     ) {
       return;
@@ -520,7 +520,7 @@ class Instance {
    */
   private testFile(filePath: string): TestResultExt {
     if (
-      this.rewriter.options.parser === Parser.Espree &&
+      this.rewriter.options.parser === Parser.ESPREE &&
       [".ts", ".tsx"].includes(path.extname(filePath))
     ) {
       return { conflicted: false, affected: false, actions: [], filePath };
@@ -566,7 +566,7 @@ class Instance {
    * @returns {Node} ast node
    */
   private parseCode(filePath: string, source: string) {
-    if (this.rewriter.options.parser === Parser.Typescript) {
+    if (this.rewriter.options.parser === Parser.TYPESCRIPT) {
       return this.parseByTypescript(filePath, source);
     }
 

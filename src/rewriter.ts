@@ -20,8 +20,8 @@ class Rewriter {
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
   public options: RewriterOptions = {
-    sourceType: SourceType.Module,
-    parser: Parser.Espree,
+    sourceType: SourceType.MODULE,
+    parser: Parser.ESPREE,
     runInstance: true,
     writeToFile: true,
   };

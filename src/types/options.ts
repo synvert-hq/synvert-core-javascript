@@ -1,17 +1,15 @@
-import { STRATEGY } from "@xinminlabs/node-mutation";
-
 export enum SourceType {
-  Module = "module",
-  Script = "script",
+  MODULE = "module",
+  SCRIPT = "script",
 }
 
 export enum Parser {
-  Typescript = "typescript",
-  Espree = "espree",
+  TYPESCRIPT = "typescript",
+  ESPREE = "espree",
 }
 
 export enum Strategy {
-  AllowInsertAtSamePosition = "allow_insert_at_same_position",
+  ALLOW_INSERT_AT_SAME_POSITION = "allow_insert_at_same_position",
 }
 
 export type RewriterOptions = {
