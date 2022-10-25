@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.21.1 (2022-10-25)
+
+* Export `Parser` and `Strategy`
+
 ## 1.21.0 (2022-10-25)
 
 * Add `allow_insert_at_same_position` strategy
