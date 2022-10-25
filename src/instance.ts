@@ -21,7 +21,7 @@ import NodeQuery, {
   TypescriptAdapter as TypescriptQueryAdapter,
 } from "@xinminlabs/node-query";
 import NodeMutation, {
-  STRATEGY,
+  Strategy as NodeMutationStrategy,
   TypescriptAdapter as TypescriptMutationAdapter,
   InsertOptions,
   ReplaceWithOptions,
@@ -63,9 +63,9 @@ class Instance {
     private filePattern: string,
     private func: (instance: Instance) => void
   ) {
-    let strategy = STRATEGY.KEEP_RUNNING;
+    let strategy = NodeMutationStrategy.KEEP_RUNNING;
     if (rewriter.options.strategy === Strategy.ALLOW_INSERT_AT_SAME_POSITION) {
-      strategy = strategy | STRATEGY.ALLOW_INSERT_AT_SAME_POSITION;
+      strategy = strategy | NodeMutationStrategy.ALLOW_INSERT_AT_SAME_POSITION;
     }
     NodeMutation.configure({ strategy });
   }
