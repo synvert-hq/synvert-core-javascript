@@ -134,6 +134,15 @@ class Rewriter {
    * DSL *
    *******/
 
+  /**
+   * Configure the rewriter.
+   * @example
+   * configure({ parser: "typescript" })
+   * @param {RewriterOptions} options
+   * @param {string} options.sourceType - script or module
+   * @param {string} options.parser - typescript or espree
+   * @param {string} options.strategy - allow_insert_at_same_position
+   */
   configure(options: RewriterOptions) {
     if (options.sourceType) {
       Rewriter.current.options.sourceType = options.sourceType;
