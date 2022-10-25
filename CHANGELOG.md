@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.21.0 (2022-10-25)
+
+* Add `allow_insert_at_same_position` strategy
+* Uppercase for enum keys
+
 ## 1.20.0 (2022-10-24)
 
 * `insertAfter` and `insertBefore` accept `InsertOptions`
