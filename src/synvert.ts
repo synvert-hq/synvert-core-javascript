@@ -1,6 +1,7 @@
 import Rewriter from "./rewriter";
 import Configuration from "./configuration";
 import { evalSnippet } from "./utils";
+import { Parser, Strategy } from "./types/options";
 import type { TestResultExt } from "./types/result";
 
 const ALL_FILES = "**/*.{js,jsx,ts,tsx}";
@@ -18,5 +19,7 @@ export {
   ALL_TS_FILES,
   version,
   evalSnippet,
+  Parser,
+  Strategy,
   TestResultExt,
 };
