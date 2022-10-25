@@ -29,12 +29,10 @@ import NodeMutation, {
 } from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
-import { Parser } from "./types/options";
+import { Parser, Strategy } from "./types/options";
 import { TestResultExt } from "./types/result";
 
 const espree = require("@xinminlabs/espree");
-
-NodeMutation.configure({ strategy: STRATEGY.KEEP_RUNNING });
 
 /**
  * Instance is an execution unit, it finds specified ast nodes,
@@ -64,7 +62,13 @@ class Instance {
     private rewriter: Rewriter,
     private filePattern: string,
     private func: (instance: Instance) => void
-  ) {}
+  ) {
+    let strategy = STRATEGY.KEEP_RUNNING;
+    if (rewriter.options.strategy === Strategy.AllowInsertAtSamePosition) {
+      strategy = strategy | STRATEGY.ALLOW_INSERT_AT_SAME_POSITION;
+    }
+    NodeMutation.configure({ strategy });
+  }
 
   /**
    * Process the instance.

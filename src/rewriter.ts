@@ -1,5 +1,5 @@
 import fs from "fs";
-import path, { dirname } from "path";
+import path from "path";
 import { RewriterOptions, Parser, SourceType } from "./types/options";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
@@ -140,6 +140,9 @@ class Rewriter {
     }
     if (options.parser) {
       Rewriter.current.options.parser = options.parser;
+    }
+    if (options.strategy) {
+      Rewriter.current.options.strategy = options.strategy;
     }
   }
 
