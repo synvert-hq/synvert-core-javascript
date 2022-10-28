@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.22.1 (2022-10-28)
+
+* node-mutation `espree` adpater `getSource` supports `fixIndent` option
+
 ## 1.22.0 (2022-10-28)
 
 * Add global variable `mutationAdapter`
