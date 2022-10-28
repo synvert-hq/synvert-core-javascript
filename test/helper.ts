@@ -4,8 +4,6 @@ import MutationAdapter from "../src/node-mutation/espree-adapter";
 import QueryAdapter from "../src/node-query/espree-adapter";
 const espree = require("@xinminlabs/espree");
 
-import "../src/array-ext";
-
 export const parse = (
   code: string,
   { firstStatement }: { firstStatement: boolean } = { firstStatement: true }

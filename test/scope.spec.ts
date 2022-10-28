@@ -104,9 +104,9 @@ describe("Scope", () => {
         expect(run).toBe(true);
       });
 
-      test("calls function if there is a matching node", () => {
+      test("calls function if there is a matching node with nested keys", () => {
         let run = false;
-        new GotoScope(instance, "body.body.last", function () {
+        new GotoScope(instance, "body.body.0", function () {
           run = true;
         }).process();
         expect(run).toBe(true);

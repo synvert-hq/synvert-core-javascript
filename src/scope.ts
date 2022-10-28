@@ -5,8 +5,6 @@ import { getTargetNode } from "@xinminlabs/node-query/lib/compiler/helpers";
 import type { NodeExt } from "./types/node-ext";
 import type { QueryOptions } from "@xinminlabs/node-query";
 import Instance from "./instance";
-import "./array-ext";
-import "./ast-node-ext";
 
 /**
  * Scope just likes its name, different scope points to different current node.
