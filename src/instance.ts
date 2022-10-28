@@ -26,6 +26,7 @@ import NodeMutation, {
   InsertOptions,
   ReplaceWithOptions,
   ReplaceOptions,
+  Adapter,
 } from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
@@ -469,6 +470,10 @@ class Instance {
     Instance.current.options = undefined;
   }
 
+  mutationAdapter(): Adapter<any> {
+    return NodeMutation.getAdapter();
+  }
+
   /**
    * Process one file.
    * @private
@@ -683,8 +688,9 @@ declare global {
   var replace: (selectors: string | string[], options: ReplaceOptions) => void;
   var replaceWith: (code: string, options: ReplaceWithOptions) => void;
   var noop: () => void;
-  var indent: (str: string, count: number) => string;
   var callHelper: (name: string, options: any) => void;
+  var mutationAdapter: () => Adapter<any>;
+  var indent: (str: string, count: number) => string;
 }
 
 global.withinNode = Instance.prototype.withinNode;
@@ -706,4 +712,5 @@ global.replace = Instance.prototype.replace;
 global.replaceWith = Instance.prototype.replaceWith;
 global.noop = Instance.prototype.noop;
 global.callHelper = Instance.prototype.callHelper;
+global.mutationAdapter = Instance.prototype.mutationAdapter;
 global.indent = indent;
