@@ -206,6 +206,12 @@ class EspreeAdapter implements Adapter<NodeExt> {
     return { line, column };
   }
 
+  getIndent(node: NodeExt): number {
+    return this.fileContent(node)
+      .split("\n")
+      [this.getStartLoc(node).line - 1].search(/\S|$/);
+  }
+
   private actualValue(node: NodeExt, multiKeys: string[]): any {
     let childNode: any = node;
     multiKeys.forEach((key) => {
