@@ -13,7 +13,7 @@ class EspreeAdapter implements Adapter<NodeExt> {
   getSource(node: NodeExt, options?: { fixIndent: boolean }): string {
     const source = this.fileContent(node).slice(node.start, node.end);
     if (options && options.fixIndent) {
-      const column = this.getEndLoc(node).column - 1;
+      const column = this.getIndent(node);
       return source
         .split("\n")
         .map((line, index) => {
