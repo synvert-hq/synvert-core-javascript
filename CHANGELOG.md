@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.22.0 (2022-10-28)
+
+* Add global variable `mutationAdapter`
+* Remove `EspreeAdapter#getIndent`
+* Remove unused `ast-node-ext` and `array-ext`
+
 ## 1.21.1 (2022-10-25)
 
 * Export `Parser` and `Strategy`
