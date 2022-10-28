@@ -10,9 +10,24 @@ import { NotSupportedError } from "@xinminlabs/node-mutation";
  */
 class EspreeAdapter implements Adapter<NodeExt> {
   // get node source
-  getSource(node: NodeExt): string {
-    const source = fs.readFileSync(node.loc!.source!, "utf-8");
-    return source.slice(node.start, node.end);
+  getSource(node: NodeExt, options?: { fixIndent: boolean }): string {
+    const source = this.fileContent(node).slice(node.start, node.end);
+    if (options && options.fixIndent) {
+      const column = this.getEndLoc(node).column - 1;
+      return source
+        .split("\n")
+        .map((line, index) => {
+          if (index === 0 || line === "") {
+            return line;
+          } else {
+            const index = line.search(/\S|$/);
+            return index < column ? line.slice(index) : line.slice(column);
+          }
+        })
+        .join("\n");
+    } else {
+      return source;
+    }
   }
 
   /**
