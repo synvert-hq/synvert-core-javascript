@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.23.0 (2022-10-29)
+
+* Add `elseFunc` to all conditions.
+
 ## 1.22.2 (2022-10-28)
 
 * Revert "remove EspreeAdapter#getIndent"
