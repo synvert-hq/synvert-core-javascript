@@ -17,6 +17,7 @@ abstract class Condition {
   protected nodeQuery: NodeQuery<Node>;
   protected options: ConditionOptions;
   protected func: (instance: Instance) => void;
+  protected elseFunc?: (instance: Instance) => void;
 
   /**
    * Create a Condition
@@ -24,21 +25,19 @@ abstract class Condition {
    * @param {string|Object} nqlOrRules - nql or rules to find nodes
    * @param {Object} options - to do find in specific child node, e.g. `{ in: 'callee' }`
    * @param {Function} func - a function to be called if nql or rules are matched.
+   * @param {Function} elseFunc - a fucntion to be called if nql or rules are not matched.
    */
   constructor(
     protected instance: Instance,
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
   ) {
     this.nodeQuery = new NodeQuery(nqlOrRules);
-    if (typeof options === "object") {
-      this.options = options;
-      this.func = func!;
-    } else {
-      this.options = {};
-      this.func = options;
-    }
+    this.options = options;
+    this.func = func;
+    this.elseFunc = elseFunc;
   }
 
   /**
@@ -47,6 +46,8 @@ abstract class Condition {
   process(): void {
     if (this.match()) {
       this.func.call(this.instance, this.instance);
+    } else if (this.elseFunc) {
+      this.elseFunc.call(this.instance, this.instance);
     }
   }
 
@@ -123,42 +124,16 @@ class IfOnlyExistCondition extends Condition {
  */
 class IfAllCondition extends Condition {
   /**
-   * Create an IfAllCondition
-   * @param {Instance} instance
-   * @param {string|Object} nqlOrRules - nql or rules to find nodes
-   * @param {Object} options - { match: nqlOrRules|function }
-   * @param {Function} func - a function to be called if all matching nodes match options.match.
-   * @param {Function} elseFunc - a function to be called if not all matching nodes match options.match.
-   */
-  constructor(
-    instance: Instance,
-    nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func: (instance: Instance) => void,
-    private elseFunc: (instance: Instance) => void
-  ) {
-    super(instance, nqlOrRules, options, func);
-  }
-
-  /**
    * Find all matching nodes, if all match options.match, run the func, else run the elseFunc.
    */
-  process() {
+  protected match(): boolean {
     const nodes = this.nodeQuery.queryNodes(this.targetNode(), {
       includingSelf: false,
     });
     if (nodes.length === 0) {
-      return;
+      return false;
     }
-    if (nodes.every(this._matchFunc.bind(this))) {
-      this.func.call(this.instance, this.instance);
-    } else {
-      this.elseFunc.call(this.instance, this.instance);
-    }
-  }
-
-  protected match(): boolean {
-    return true;
+    return nodes.every(this._matchFunc.bind(this));
   }
 
   /**

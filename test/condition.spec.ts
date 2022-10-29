@@ -34,6 +34,7 @@ describe("Condition", () => {
         new IfExistCondition(
           instance,
           { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          {},
           function () {
             run = true;
           }
@@ -46,6 +47,7 @@ describe("Condition", () => {
         new IfExistCondition(
           instance,
           { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          {},
           function () {
             run = true;
           }
@@ -59,6 +61,22 @@ describe("Condition", () => {
           instance,
           { nodeType: "MemberExpression", object: "$", property: "ajax" },
           { in: "expression" },
+          function () {
+            run = true;
+          }
+        ).process();
+        expect(run).toBe(true);
+      });
+
+      test("calls else function if no matching node", () => {
+        let run = false;
+        new IfExistCondition(
+          instance,
+          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          {},
+          function () {
+            run = false;
+          },
           function () {
             run = true;
           }
@@ -89,6 +107,7 @@ describe("Condition", () => {
         new UnlessExistCondition(
           instance,
           { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          {},
           function () {
             run = true;
           }
@@ -101,6 +120,7 @@ describe("Condition", () => {
         new UnlessExistCondition(
           instance,
           { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          {},
           function () {
             run = true;
           }
@@ -114,6 +134,22 @@ describe("Condition", () => {
           instance,
           { nodeType: "MemberExpression", object: "$", property: "ajax" },
           { in: "expression.callee" },
+          function () {
+            run = true;
+          }
+        ).process();
+        expect(run).toBe(true);
+      });
+
+      test("calls else function if there is a matching node", () => {
+        let run = false;
+        new UnlessExistCondition(
+          instance,
+          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          {},
+          function () {
+            run = false;
+          },
           function () {
             run = true;
           }
@@ -149,6 +185,7 @@ describe("Condition", () => {
             nodeType: "ExpressionStatement",
             expression: { nodeType: "Literal", value: "strict" },
           },
+          {},
           function () {
             run = true;
           }
@@ -172,13 +209,32 @@ describe("Condition", () => {
         mock.restore();
       });
 
-      test("calls function if there is a matching node", () => {
+      test("calls function if there is only one matching node", () => {
         let run = false;
         new IfOnlyExistCondition(
           instance,
           {
             nodeType: "ExpressionStatement",
             expression: { nodeType: "Literal", value: "use strict" },
+          },
+          {},
+          function () {
+            run = true;
+          }
+        ).process();
+        expect(run).toBe(true);
+      });
+
+      test("calls else function if there is more than one matching node", () => {
+        let run = false;
+        new IfOnlyExistCondition(
+          instance,
+          {
+            nodeType: "Literal",
+          },
+          {},
+          function () {
+            run = false;
           },
           function () {
             run = true;
@@ -213,9 +269,6 @@ describe("Condition", () => {
           { match: { local: { name: { in: ["a", "b"] } } } },
           function () {
             run = true;
-          },
-          function () {
-            run = true;
           }
         ).process();
         expect(run).toBe(false);
@@ -237,7 +290,7 @@ describe("Condition", () => {
         expect(run).toBe(true);
       });
 
-      test("calls function if not match", () => {
+      test("calls else function if not match", () => {
         let run = false;
         new IfAllCondition(
           instance,
