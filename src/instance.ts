@@ -191,7 +191,13 @@ class Instance {
     func: (instance: Instance) => void,
     elseFunc?: (instance: Instance) => void
   ) {
-    new IfExistCondition(Instance.current, nqlOrRules, options, func, elseFunc).process();
+    new IfExistCondition(
+      Instance.current,
+      nqlOrRules,
+      options,
+      func,
+      elseFunc
+    ).process();
   }
 
   /**
