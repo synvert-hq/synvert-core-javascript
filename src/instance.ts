@@ -182,14 +182,16 @@ class Instance {
    * ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
-   * @param {Function} func - to continue operating on the matching nodes.
+   * @param {Function} func - call the function if the matching nodes exist in the child nodes.
+   * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
   ifExistNode(
     nqlOrRules: string | object,
     options: ConditionOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
   ) {
-    new IfExistCondition(Instance.current, nqlOrRules, options, func).process();
+    new IfExistCondition(Instance.current, nqlOrRules, options, func, elseFunc).process();
   }
 
   /**
@@ -200,18 +202,21 @@ class Instance {
    * unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
-   * @param {Function} func - to continue operating on the matching nodes.
+   * @param {Function} func - call the function if no matching node exists in the child nodes.
+   * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
    */
   unlessExistNode(
     nqlOrRules: string | object,
     options: ConditionOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
   ) {
     new UnlessExistCondition(
       Instance.current,
       nqlOrRules,
       options,
-      func
+      func,
+      elseFunc
     ).process();
   }
 
@@ -223,18 +228,21 @@ class Instance {
    * ifOnlyExistNode({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
-   * @param {Function} func - to continue operating on the matching nodes.
+   * @param {Function} func - call the function if the matching nodes exist in the child nodes.
+   * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
   ifOnlyExistNode(
     nqlOrRules: string | object,
     options: ConditionOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
   ) {
     new IfOnlyExistCondition(
       Instance.current,
       nqlOrRules,
       options,
-      func
+      func,
+      elseFunc
     ).process();
   }
 
@@ -246,14 +254,14 @@ class Instance {
    * IfAllNode({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - { match: nqlOrRules, in: 'callee' }
-   * @param {Function} func - to continue if all the matching nodes match options.match.
-   * @param {Function} elseFunc - to continue if not all the matching nodes match options.match.
+   * @param {Function} func - call the function if the matching nodes match options.match.
+   * @param {Function} elseFunc - call the else function if no matching node matches options.match.
    */
   ifAllNodes(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    elseFunc?: (instance: Instance) => void
   ) {
     new IfAllCondition(
       Instance.current,
@@ -660,23 +668,26 @@ declare global {
   var ifExistNode: (
     nqlOrRules: string | object,
     options: ConditionOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
   ) => void;
   var unlessExistNode: (
     nqlOrRules: string | object,
     options: ConditionOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
   ) => void;
   var ifOnlyExistNode: (
     nqlOrRules: string | object,
     options: ConditionOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
   ) => void;
   var ifAllNodes: (
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    elseFunc?: (instance: Instance) => void
   ) => void;
   var append: (code: string) => void;
   var prepend: (code: string) => void;
