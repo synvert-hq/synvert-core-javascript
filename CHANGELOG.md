@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## 1.23.1 (2022-10-30)
+
+* `Condition` `options` is optional
+
 ## 1.23.0 (2022-10-29)
 
-* Add `elseFunc` to all conditions.
+* Add `elseFunc` to all conditions
 
 ## 1.22.2 (2022-10-28)
 
