@@ -187,11 +187,34 @@ class Instance {
    */
   ifExistNode(
     nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void
+  ifExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  ifExistNode(
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
     elseFunc?: (instance: Instance) => void
   ) {
-    new IfExistCondition(Instance.current, nqlOrRules, options, func, elseFunc).process();
+    if (typeof options === "function") {
+      return new IfExistCondition(Instance.current, nqlOrRules, {}, options, func).process();
+    }
+    return new IfExistCondition(Instance.current, nqlOrRules, options, func!, elseFunc).process();
   }
 
   /**
@@ -207,17 +230,34 @@ class Instance {
    */
   unlessExistNode(
     nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void
+  unlessExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  unlessExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  unlessExistNode(
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  unlessExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
     elseFunc?: (instance: Instance) => void
   ) {
-    new UnlessExistCondition(
-      Instance.current,
-      nqlOrRules,
-      options,
-      func,
-      elseFunc
-    ).process();
+    if (typeof options === "function") {
+      return new UnlessExistCondition(Instance.current, nqlOrRules, {}, options, func).process();
+    }
+    return new UnlessExistCondition(Instance.current, nqlOrRules, options, func!, elseFunc).process();
   }
 
   /**
@@ -233,17 +273,34 @@ class Instance {
    */
   ifOnlyExistNode(
     nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void
+  ifOnlyExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifOnlyExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  ifOnlyExistNode(
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifOnlyExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
     elseFunc?: (instance: Instance) => void
   ) {
-    new IfOnlyExistCondition(
-      Instance.current,
-      nqlOrRules,
-      options,
-      func,
-      elseFunc
-    ).process();
+    if (typeof options === "function") {
+      return new IfOnlyExistCondition(Instance.current, nqlOrRules, {}, options, func).process();
+    }
+    return new IfOnlyExistCondition(Instance.current, nqlOrRules, options, func!, elseFunc).process();
   }
 
   /**
@@ -259,17 +316,34 @@ class Instance {
    */
   ifAllNodes(
     nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void
+  ifAllNodes(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifAllNodes(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  ifAllNodes(
+    nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifAllNodes(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
     elseFunc?: (instance: Instance) => void
   ) {
-    new IfAllCondition(
-      Instance.current,
-      nqlOrRules,
-      options,
-      func,
-      elseFunc
-    ).process();
+    if (typeof options === "function") {
+      return new IfAllCondition(Instance.current, nqlOrRules, {}, options, func).process();
+    }
+    return new IfAllCondition(Instance.current, nqlOrRules, options, func!, elseFunc).process();
   }
 
   /**
@@ -630,65 +704,53 @@ class Instance {
 
 export default Instance;
 
+type WithInSignature = (
+  nqlOrRules: string | object,
+  func: (instance: Instance) => void
+) => void | (
+  (
+    nqlOrRules: string | object,
+    options: QueryOptions,
+    func: (instance: Instance) => void
+  ) => void
+);
+
+type ConditionSignature = (
+  nqlOrRules: string | object,
+  func: (instance: Instance) => void
+) => void | (
+  (
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ) => void
+) | (
+  (
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ) => void
+) | (
+  (
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ) => void
+);
+
 declare global {
-  var findNode: (
-    nql: string,
-    func: (instance: Instance) => void
-  ) =>
-    | void
-    | ((
-        nql: string,
-        options: QueryOptions,
-        func: (instance: Instance) => void
-      ) => void);
-  var withinNode: (
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void
-  ) =>
-    | void
-    | ((
-        nqlOrRules: string | object,
-        options: QueryOptions,
-        func: (instance: Instance) => void
-      ) => void);
-  var withNode: (
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void
-  ) =>
-    | void
-    | ((
-        nqlOrRules: string | object,
-        options: QueryOptions,
-        func: (instance: Instance) => void
-      ) => void);
+  var findNode: WithInSignature;
+  var withinNode: WithInSignature
+  var withNode: WithInSignature;
   var gotoNode: (
     childNodeName: string,
     func: (instance: Instance) => void
   ) => void;
-  var ifExistNode: (
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
-  ) => void;
-  var unlessExistNode: (
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
-  ) => void;
-  var ifOnlyExistNode: (
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
-  ) => void;
-  var ifAllNodes: (
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
-  ) => void;
+  var ifExistNode: ConditionSignature;
+  var unlessExistNode: ConditionSignature;
+  var ifOnlyExistNode: ConditionSignature;
+  var ifAllNodes: ConditionSignature;
   var append: (code: string) => void;
   var prepend: (code: string) => void;
   var insert: (code: string, options: InsertOptions) => void;
