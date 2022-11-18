@@ -3,6 +3,7 @@
   "version": "1.23.1",
   "description": "write javascript code to change javascript code",
   "main": "lib/synvert.js",
+  "types": "lib/synvert.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "test": "jest",
