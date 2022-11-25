@@ -632,6 +632,7 @@ class Instance {
         const result = this.currentMutation.process();
         debug("synvert-core:process")(result);
         if (result.affected) {
+          this.rewriter.addAffectedFile(filePath);
           fs.writeFileSync(this.currentFilePath, result.newSource!);
         }
         if (!result.conflicted) {

@@ -71,6 +71,39 @@ describe("Instance", () => {
       instance.process();
       expect(fs.readFileSync("code.ts", "utf8")).toEqual(input);
     });
+
+    test("gets affected files", () => {
+      const instance = new Instance(rewriter, "*.js", () => {
+        findNode(
+          ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
+          () => {
+            replace("callee.property", { with: "trimStart" });
+          }
+        );
+        withNode(
+          {
+            nodeType: "CallExpression",
+            callee: { nodeType: "MemberExpression", property: "trimRight" },
+          },
+          () => {
+            replace("callee.property", { with: "trimEnd" });
+          }
+        );
+      });
+      Instance.current = instance;
+      const input = `
+        const foo1 = bar.trimLeft();
+        const foo2 = bar.trimRight();
+      `;
+      const output = `
+        const foo1 = bar.trimStart();
+        const foo2 = bar.trimEnd();
+      `;
+      mock({ "code.js": input });
+      instance.process();
+      instance.process();
+      expect(rewriter.affectedFiles).toEqual(new Set<string>(["code.js"]));
+    });
   });
 
   describe("#test", () => {

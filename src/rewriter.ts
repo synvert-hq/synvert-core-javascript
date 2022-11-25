@@ -17,6 +17,7 @@ import Configuration from "./configuration";
  */
 class Rewriter {
   public subSnippets: Rewriter[] = [];
+  public affectedFiles: Set<string> = new Set<string>();
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
   public options: RewriterOptions = {
@@ -91,6 +92,7 @@ class Rewriter {
    */
   process(): void {
     const originalRewriter = Rewriter.current;
+    this.affectedFiles = new Set<string>();
     try {
       Rewriter.current = this;
       this.func.call(this, this);
@@ -128,6 +130,14 @@ class Rewriter {
     } finally {
       Rewriter.current = originalRewriter;
     }
+  }
+
+  /**
+   * Add an affected file.
+   * @param {string} filePath - file path
+   */
+  addAffectedFile(filePath: string): void {
+    this.affectedFiles.add(filePath);
   }
 
   /*******
