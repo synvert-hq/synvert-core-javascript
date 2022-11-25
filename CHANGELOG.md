@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.24.0 (2022-11-25)
+
+* Add `Rewriter#affectedFiles` after processing
+* Set `types` in `package.json`
+
 ## 1.23.1 (2022-10-30)
 
 * `Condition` `options` is optional
