@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.25.1 (2022-11-30)
+
+* Format remote snippet url
+
 ## 1.25.0 (2022-11-30)
 
 * Load snippet from github
