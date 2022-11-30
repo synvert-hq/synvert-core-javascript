@@ -61,9 +61,8 @@ export const loadSnippet = (snippetName: string): string => {
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   } else if (isValidFile(snippetName)) {
-    const snippetPath = snippetExpandPath(snippetName);
-    if (localSnippetExists(snippetPath)) {
-      return fs.readFileSync(snippetPath, "utf-8");
+    if (localSnippetExists(snippetName)) {
+      return fs.readFileSync(snippetName, "utf-8");
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   } else {
