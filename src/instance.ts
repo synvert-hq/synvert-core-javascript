@@ -15,7 +15,7 @@ import {
   IfAllCondition,
   ConditionOptions,
 } from "./condition";
-import { indent, loadHelper } from "./utils";
+import { indent, loadSnippet } from "./utils";
 import NodeQuery, {
   QueryOptions,
   TypescriptAdapter as TypescriptQueryAdapter,
@@ -594,7 +594,7 @@ class Instance {
    * @param options - options can be anything it needs to be passed to the helper
    */
   callHelper(helperName: string, options: any): void {
-    const helperContent = loadHelper(helperName);
+    const helperContent = loadSnippet(helperName);
     Instance.current.options = options;
     Function(helperContent).call(Instance.current, Instance.current);
     Instance.current.options = undefined;

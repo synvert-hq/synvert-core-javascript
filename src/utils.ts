@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import fetch from "sync-fetch";
 import { URL } from "url";
+import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
 
 /**
@@ -44,35 +45,37 @@ export const arrayBody = (node: any): Node[] => {
  * @returns {Rewriter} a Rewriter object
  */
 export const evalSnippet = (snippetName: string): Rewriter => {
-  if (isValidUrl(snippetName)) {
-    return eval(fetch(formatUrl(snippetName)).text());
-  } else if (isValidFile(snippetName)) {
-    return eval(fs.readFileSync(snippetName, "utf-8"));
-  } else {
-    return eval(
-      fs.readFileSync(
-        path.join(snippetsHome(), "lib", `${snippetName}.js`),
-        "utf-8"
-      )
-    );
-  }
+  return eval(loadSnippet(snippetName));
 };
 
 /**
- * Load snippet by helper name.
- * @param {string} snippetHelper - snippet helper name, it can be a http url, file path or short snippet name.
+ * Load snippet by snippet name.
+ * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {string} snippet helper content
  */
-export const loadHelper = (snippetHelper: string): string => {
-  if (isValidUrl(snippetHelper)) {
-    return fetch(formatUrl(snippetHelper)).text();
-  } else if (isValidFile(snippetHelper)) {
-    return fs.readFileSync(snippetHelper, "utf-8");
+export const loadSnippet = (snippetName: string): string => {
+  if (isValidUrl(snippetName)) {
+    const remoteSnippetUrl = formatUrl(snippetName);
+    if (remoteSnippetExists(remoteSnippetUrl)) {
+      return fetch(remoteSnippetUrl).text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
+  } else if (isValidFile(snippetName)) {
+    const snippetPath = snippetExpandPath(snippetName);
+    if (localSnippetExists(snippetPath)) {
+      return fs.readFileSync(snippetPath, "utf-8");
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
   } else {
-    return fs.readFileSync(
-      path.join(snippetsHome(), "lib", `${snippetHelper}.js`),
-      "utf-8"
-    );
+    const snippetPath = snippetExpandPath(snippetName);
+    if (localSnippetExists(snippetPath)) {
+      return fs.readFileSync(snippetPath, "utf-8");
+    }
+    const snippetUrl = remoteSnippetUrl(snippetName);
+    if (remoteSnippetExists(snippetUrl)) {
+      return fetch(snippetUrl).text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
   }
 };
 
@@ -94,9 +97,15 @@ const isValidFile = (path: string): boolean => {
   }
 };
 
-const formatUrl = (url: string): string => {
-  return convertToGithubRawUrl(url);
-};
+const formatUrl = (url: string): string => convertToGithubRawUrl(url);
+
+const localSnippetExists = (snippetPath: string) => fs.existsSync(snippetPath);
+
+const snippetExpandPath = (snippetName: string) => path.join(snippetsHome(), "lib", `${snippetName}.js`);
+
+const remoteSnippetExists = (snippetPath: string) => fetch(snippetPath).status === 200;
+
+const remoteSnippetUrl = (snippetName: string) => `https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/${snippetName}.js`
 
 const snippetsHome = (): string => {
   return (
