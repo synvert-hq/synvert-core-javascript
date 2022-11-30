@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.25.0 (2022-11-30)
+
+* Load snippet from github
+* export `SnippetNotFoundError`
+
 ## 1.24.0 (2022-11-25)
 
 * Add `Rewriter#affectedFiles` after processing
