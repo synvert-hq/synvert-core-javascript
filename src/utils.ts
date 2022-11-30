@@ -101,11 +101,14 @@ const formatUrl = (url: string): string => convertToGithubRawUrl(url);
 
 const localSnippetExists = (snippetPath: string) => fs.existsSync(snippetPath);
 
-const snippetExpandPath = (snippetName: string) => path.join(snippetsHome(), "lib", `${snippetName}.js`);
+const snippetExpandPath = (snippetName: string) =>
+  path.join(snippetsHome(), "lib", `${snippetName}.js`);
 
-const remoteSnippetExists = (snippetPath: string) => fetch(snippetPath).status === 200;
+const remoteSnippetExists = (snippetPath: string) =>
+  fetch(snippetPath).status === 200;
 
-const remoteSnippetUrl = (snippetName: string) => `https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/${snippetName}.js`
+const remoteSnippetUrl = (snippetName: string) =>
+  `https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/${snippetName}.js`;
 
 const snippetsHome = (): string => {
   return (
