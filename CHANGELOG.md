@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.25.2 (2022-11-30)
+
+* Fix load file snippet
+
 ## 1.25.1 (2022-11-30)
 
 * Format remote snippet url
