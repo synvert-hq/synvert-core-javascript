@@ -55,9 +55,9 @@ export const evalSnippet = (snippetName: string): Rewriter => {
  */
 export const loadSnippet = (snippetName: string): string => {
   if (isValidUrl(snippetName)) {
-    const remoteSnippetUrl = formatUrl(snippetName);
-    if (remoteSnippetExists(remoteSnippetUrl)) {
-      return fetch(remoteSnippetUrl).text();
+    const snippetUrl = formatUrl(snippetName);
+    if (remoteSnippetExists(snippetUrl)) {
+      return fetch(snippetUrl).text();
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   } else if (isValidFile(snippetName)) {
@@ -71,7 +71,7 @@ export const loadSnippet = (snippetName: string): string => {
     if (localSnippetExists(snippetPath)) {
       return fs.readFileSync(snippetPath, "utf-8");
     }
-    const snippetUrl = remoteSnippetUrl(snippetName);
+    const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
     if (remoteSnippetExists(snippetUrl)) {
       return fetch(snippetUrl).text();
     }
