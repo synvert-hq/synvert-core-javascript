@@ -1,7 +1,7 @@
 import { Node } from "acorn";
-import fs from "fs";
+import fs, { promises as promisesFs} from "fs";
 import path from "path";
-import fetch from "sync-fetch";
+import fetchSync from "sync-fetch";
 import { URL } from "url";
 import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
@@ -44,8 +44,12 @@ export const arrayBody = (node: any): Node[] => {
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Rewriter} a Rewriter object
  */
-export const evalSnippet = (snippetName: string): Rewriter => {
-  return eval(loadSnippet(snippetName));
+export const evalSnippetSync = (snippetName: string): Rewriter => {
+  return eval(loadSnippetSync(snippetName));
+};
+
+export const evalSnippet = async (snippetName: string): Promise<Rewriter> => {
+  return eval(await loadSnippet(snippetName));
 };
 
 /**
@@ -53,26 +57,47 @@ export const evalSnippet = (snippetName: string): Rewriter => {
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {string} snippet helper content
  */
-export const loadSnippet = (snippetName: string): string => {
+export const loadSnippetSync = (snippetName: string): string => {
   if (isValidUrl(snippetName)) {
     const snippetUrl = formatUrl(snippetName);
-    if (remoteSnippetExists(snippetUrl)) {
-      return fetch(snippetUrl).text();
+    if (remoteSnippetExistsSync(snippetUrl)) {
+      return fetchSync(snippetUrl).text();
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
-  } else if (isValidFile(snippetName)) {
-    if (localSnippetExists(snippetName)) {
-      return fs.readFileSync(snippetName, "utf-8");
-    }
-    throw new SnippetNotFoundError(`${snippetName} not found`);
+  } else if (isValidFileSync(snippetName)) {
+    return fs.readFileSync(snippetName, "utf-8");
   } else {
     const snippetPath = snippetExpandPath(snippetName);
-    if (localSnippetExists(snippetPath)) {
+    if (isValidFileSync(snippetPath)) {
       return fs.readFileSync(snippetPath, "utf-8");
     }
     const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
-    if (remoteSnippetExists(snippetUrl)) {
-      return fetch(snippetUrl).text();
+    if (remoteSnippetExistsSync(snippetUrl)) {
+      return fetchSync(snippetUrl).text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
+  }
+};
+
+export const loadSnippet = async (snippetName: string): Promise<string> => {
+  if (isValidUrl(snippetName)) {
+    const snippetUrl = formatUrl(snippetName);
+    if (await remoteSnippetExists(snippetUrl)) {
+      const response = await fetch(snippetUrl);
+      return await response.text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
+  } else if (await isValidFile(snippetName)) {
+    return await promisesFs.readFile(snippetName, "utf-8");
+  } else {
+    const snippetPath = snippetExpandPath(snippetName);
+    if (await isValidFile(snippetPath)) {
+      return await promisesFs.readFile(snippetPath, "utf-8");
+    }
+    const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
+    if (await remoteSnippetExists(snippetUrl)) {
+      const response = await fetch(snippetUrl);
+      return await response.text();
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   }
@@ -87,7 +112,7 @@ const isValidUrl = (urlString: string): boolean => {
   }
 };
 
-const isValidFile = (path: string): boolean => {
+export const isValidFileSync = (path: string): boolean => {
   try {
     const stats = fs.statSync(path);
     return stats.isFile();
@@ -96,15 +121,27 @@ const isValidFile = (path: string): boolean => {
   }
 };
 
+export const isValidFile = async (path: string): Promise<boolean> => {
+  try {
+    const stats = await promisesFs.stat(path);
+    return stats.isFile();
+  } catch {
+    return false;
+  }
+};
+
 const formatUrl = (url: string): string => convertToGithubRawUrl(url);
 
-const localSnippetExists = (snippetPath: string) => fs.existsSync(snippetPath);
-
-const snippetExpandPath = (snippetName: string) =>
+const snippetExpandPath = (snippetName: string): string =>
   path.join(snippetsHome(), "lib", `${snippetName}.js`);
 
-const remoteSnippetExists = (snippetPath: string) =>
-  fetch(snippetPath).status === 200;
+const remoteSnippetExistsSync = (snippetPath: string): boolean =>
+  fetchSync(snippetPath).status === 200;
+
+const remoteSnippetExists = async (snippetPath: string): Promise<boolean> => {
+  const response = await fetch(snippetPath);
+  return response.status === 200;
+}
 
 const remoteSnippetUrl = (snippetName: string) =>
   `https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/${snippetName}.js`;

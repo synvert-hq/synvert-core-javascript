@@ -1,9 +1,10 @@
-import fs from "fs";
+import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import lockfile from "@yarnpkg/lockfile";
 import compareVersions from "compare-versions";
 
 import Configuration from "./configuration";
+import { isValidFile, isValidFileSync } from "./utils";
 
 /**
  * NpmVersion checks and compares npm version.
@@ -20,21 +21,46 @@ class NpmVersion {
    * Check if the specified npm version in package-lock.json or yarn.lock matches npm version comparator.
    * @returns {boolean} true if matches, otherwise false.
    */
-  match(): boolean {
-    if (!this.packageExist()) {
+  matchSync(): boolean {
+    if (!this.packageExistSync()) {
       return true;
     }
     const [operator, version] = this.version.split(" ");
-    if (this.packageLockExist()) {
-      const packageVersion = this.npmPackageVersion();
+    if (this.packageLockExistSync()) {
+      const packageVersion = this.npmPackageVersionSync();
       return compareVersions.compare(
         packageVersion,
         version,
         operator as compareVersions.CompareOperator
       );
     }
-    if (this.yarnLockExist()) {
-      const packageVersion = this.yarnPackageVersion();
+    if (this.yarnLockExistSync()) {
+      const packageVersion = this.yarnPackageVersionSync();
+      return compareVersions.compare(
+        packageVersion,
+        version,
+        operator as compareVersions.CompareOperator
+      );
+    }
+
+    return true;
+  }
+
+  async match(): Promise<boolean> {
+    if (!await this.packageExist()) {
+      return true;
+    }
+    const [operator, version] = this.version.split(" ");
+    if (await this.packageLockExist()) {
+      const packageVersion = await this.npmPackageVersion();
+      return compareVersions.compare(
+        packageVersion,
+        version,
+        operator as compareVersions.CompareOperator
+      );
+    }
+    if (await this.yarnLockExist()) {
+      const packageVersion = await this.yarnPackageVersion();
       return compareVersions.compare(
         packageVersion,
         version,
@@ -50,8 +76,17 @@ class NpmVersion {
    * @private
    * @returns {string}
    */
-  private npmPackageVersion(): string {
-    const packageLockTree = this.packageLockTree();
+  private npmPackageVersionSync(): string {
+    const packageLockTree = this.packageLockTreeSync();
+    if (packageLockTree.packages) {
+      return packageLockTree.packages[`node_modules/${this.name}`].version;
+    } else {
+      return packageLockTree.dependencies[this.name].version;
+    }
+  }
+
+  private async npmPackageVersion(): Promise<string> {
+    const packageLockTree = await this.packageLockTree();
     if (packageLockTree.packages) {
       return packageLockTree.packages[`node_modules/${this.name}`].version;
     } else {
@@ -64,9 +99,15 @@ class NpmVersion {
    * @private
    * @returns {string}
    */
-  private yarnPackageVersion(): string {
-    const packageTree = this.packageTree();
-    const yarnLockTree = this.yarnLockTree();
+  private yarnPackageVersionSync(): string {
+    const packageTree = this.packageTreeSync();
+    const yarnLockTree = this.yarnLockTreeSync();
+    return yarnLockTree[`${this.name}@${packageTree.dependencies[this.name]}`];
+  }
+
+  private async yarnPackageVersion(): Promise<string> {
+    const packageTree = await this.packageTree();
+    const yarnLockTree = await this.yarnLockTree();
     return yarnLockTree[`${this.name}@${packageTree.dependencies[this.name]}`];
   }
 
@@ -74,8 +115,13 @@ class NpmVersion {
    * Get parse result of package.json.
    * @private
    */
-  private packageTree(): any {
+  private packageTreeSync(): any {
     return JSON.parse(fs.readFileSync(this.packagePath(), "utf-8"));
+  }
+
+  private async packageTree(): Promise<any> {
+    const content = await fs.readFileSync(this.packagePath(), "utf-8");
+    return JSON.parse(content);
   }
 
   /**
@@ -83,8 +129,12 @@ class NpmVersion {
    * @private
    * @returns {boolean}
    */
-  private packageExist(): boolean {
-    return fs.existsSync(this.packagePath());
+  private packageExistSync(): boolean {
+    return isValidFileSync(this.packagePath());
+  }
+
+  private async packageExist(): Promise<boolean> {
+    return isValidFile(this.packagePath());
   }
 
   /**
@@ -100,8 +150,13 @@ class NpmVersion {
    * Get parse result of package-lock.json.
    * @private
    */
-  private packageLockTree(): any {
+  private packageLockTreeSync(): any {
     return JSON.parse(fs.readFileSync(this.packageLockPath(), "utf-8"));
+  }
+
+  private async packageLockTree(): Promise<any> {
+    const content = await promisesFs.readFile(this.packageLockPath(), "utf-8");
+    return JSON.parse(content);
   }
 
   /**
@@ -109,8 +164,12 @@ class NpmVersion {
    * @private
    * @returns {boolean}
    */
-  private packageLockExist(): boolean {
-    return fs.existsSync(this.packageLockPath());
+  private packageLockExistSync(): boolean {
+    return isValidFileSync(this.packageLockPath());
+  }
+
+  private async packageLockExist(): Promise<boolean> {
+    return await isValidFile(this.packageLockPath());
   }
 
   /**
@@ -126,8 +185,13 @@ class NpmVersion {
    * Get parse result of yarn.lock.
    * @private
    */
-  private yarnLockTree(): any {
+  private yarnLockTreeSync(): any {
     return lockfile.parse(fs.readFileSync(this.yarnLockPath(), "utf-8"));
+  }
+
+  private async yarnLockTree(): Promise<any> {
+    const content = await promisesFs.readFile(this.yarnLockPath(), "utf-8");
+    return lockfile.parse(content);
   }
 
   /**
@@ -135,8 +199,12 @@ class NpmVersion {
    * @private
    * @returns {boolean}
    */
-  private yarnLockExist(): boolean {
-    return fs.existsSync(this.yarnLockPath());
+  private yarnLockExistSync(): boolean {
+    return isValidFileSync(this.yarnLockPath());
+  }
+
+  private async yarnLockExist(): Promise<boolean> {
+    return await isValidFile(this.yarnLockPath());
   }
 
   /**

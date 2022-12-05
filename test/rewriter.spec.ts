@@ -1,10 +1,11 @@
-import fs from "fs";
+import fs, { promises as promisesFs } from "fs";
 import mock from "mock-fs";
 import { resolve } from "path";
 
 import Configuration from "../src/configuration";
 import Rewriter from "../src/rewriter";
 import { SourceType } from "../src/types/options";
+import { isValidFile, isValidFileSync } from "../src/utils";
 
 describe("static register", () => {
   it("registers and fetches", () => {
@@ -25,12 +26,14 @@ describe("static register", () => {
   });
 
   describe("configure", () => {
-    const rewriter = new Rewriter("snippet group", "snippet name", () => {
-      configure({ sourceType: SourceType.SCRIPT });
+    it("sets sourceType option", () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", () => {
+        configure({ sourceType: SourceType.SCRIPT });
+      });
+      expect(rewriter.options.sourceType).toBe(SourceType.MODULE);
+      rewriter.processSync();
+      expect(rewriter.options.sourceType).toBe(SourceType.SCRIPT);
     });
-    expect(rewriter.options.sourceType).toBe(SourceType.MODULE);
-    rewriter.process();
-    expect(rewriter.options.sourceType).toBe(SourceType.SCRIPT);
   });
 
   describe("process", () => {
@@ -40,7 +43,7 @@ describe("static register", () => {
 
     test("writes new code to file", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        withinFiles("*.js", function () {
+        withinFilesSync("*.js", function () {
           withNode(
             { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
             () => {
@@ -52,8 +55,26 @@ describe("static register", () => {
       const input = `class FooBar {}`;
       const output = `class Synvert {}`;
       mock({ "code.js": input });
-      rewriter.process();
+      rewriter.processSync();
       expect(fs.readFileSync("code.js", "utf8")).toBe(output);
+    });
+
+    test("async writes new code to file", async () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
+        await withinFiles("*.js", function () {
+          withNode(
+            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            () => {
+              replace("id", { with: "Synvert" });
+            }
+          );
+        });
+      });
+      const input = `class FooBar {}`;
+      const output = `class Synvert {}`;
+      mock({ "code.js": input });
+      await rewriter.process();
+      expect(await promisesFs.readFile("code.js", "utf8")).toBe(output);
     });
   });
 
@@ -62,7 +83,7 @@ describe("static register", () => {
       mock.restore();
     });
 
-    test("writes new code to file", () => {
+    test("does not write code to file", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
         withinFiles("*.js", function () {
           withNode(
@@ -75,8 +96,25 @@ describe("static register", () => {
       });
       const input = `class FooBar {}`;
       mock({ "code.js": input });
-      rewriter.processWithSandbox();
+      rewriter.processWithSandboxSync();
       expect(fs.readFileSync("code.js", "utf8")).toBe(input);
+    });
+
+    test("async does not write code to file", async () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
+        await withinFiles("*.js", function () {
+          withNode(
+            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            () => {
+              replace("id", { with: "Synvert" });
+            }
+          );
+        });
+      });
+      const input = `class FooBar {}`;
+      mock({ "code.js": input });
+      await rewriter.processWithSandbox();
+      expect(await promisesFs.readFile("code.js", "utf8")).toBe(input);
     });
   });
 
@@ -85,9 +123,9 @@ describe("static register", () => {
       mock.restore();
     });
 
-    test("test", () => {
+    test("gets test results", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        withinFiles("*.js", function () {
+        withinFilesSync("*.js", function () {
           withNode(
             { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
             () => {
@@ -99,7 +137,31 @@ describe("static register", () => {
       const input = `class FooBar {}`;
       mock({ "code.js": input });
       Configuration.rootPath = resolve(".");
-      const results = rewriter.test();
+      const results = rewriter.testSync();
+      expect(results.length).toEqual(1);
+      expect(results[0].filePath).toEqual("code.js");
+      expect(results[0].affected).toBeTruthy();
+      expect(results[0].conflicted).toBeFalsy();
+      expect(results[0].actions).toEqual([
+        { start: 6, end: 12, newCode: "Synvert" },
+      ]);
+    });
+
+    test("async gets test results", async () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
+        await withinFiles("*.js", function () {
+          withNode(
+            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            () => {
+              replace("id", { with: "Synvert" });
+            }
+          );
+        });
+      });
+      const input = `class FooBar {}`;
+      mock({ "code.js": input });
+      Configuration.rootPath = resolve(".");
+      const results = await rewriter.test();
       expect(results.length).toEqual(1);
       expect(results[0].filePath).toEqual("code.js");
       expect(results[0].affected).toBeTruthy();
@@ -113,19 +175,30 @@ describe("static register", () => {
   describe("addFile", () => {
     test("adds a file", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        addFile("foobar.js", "foobar");
+        addFileSync("foobar.js", "foobar");
       });
-      rewriter.process();
-      expect(fs.existsSync("foobar.js")).toBeTruthy();
+      rewriter.processSync();
+      expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("foobar");
       fs.rmSync("foobar.js");
     });
 
-    test("does nothing in sandbox mode", () => {
+    test("does nothing if file exists", () => {
+      fs.writeFileSync("foobar.js", "old");
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        addFile("foobar.js", "foobar");
+        addFileSync("foobar.js", "foobar");
       });
-      rewriter.processWithSandbox();
-      expect(fs.existsSync("foobar.js")).toBeFalsy();
+      rewriter.processSync();
+      expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("old");
+      fs.rmSync("foobar.js");
+    });
+
+    test("async adds a file", async () => {
+      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
+        await addFile("foobar.js", "foobar");
+      });
+      await rewriter.process();
+      expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual("foobar");
+      await promisesFs.rm("foobar.js");
     });
   });
 
@@ -133,28 +206,28 @@ describe("static register", () => {
     it("removes a file", () => {
       fs.writeFileSync("foobar.js", "foobar");
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        removeFile("foobar.js");
+        removeFileSync("foobar.js");
       });
-      rewriter.process();
-      expect(fs.existsSync("foobar.js")).toBeFalsy();
+      rewriter.processSync();
+      expect(isValidFileSync("foobar.js")).toBeFalsy();
     });
 
     test("does nothing if file not exist", () => {
       const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        removeFile("foobar.js");
+        removeFileSync("foobar.js");
       });
-      rewriter.process();
-      expect(fs.existsSync("foobar.js")).toBeFalsy();
+      rewriter.processSync();
+      expect(isValidFileSync("foobar.js")).toBeFalsy();
     });
 
-    test("does nothing in sandbox mode", () => {
-      fs.writeFileSync("foobar.js", "foobar");
-      const rewriter = new Rewriter("snippet group", "snippet name", () => {
-        removeFile("foobar.js");
+    test("async removes a file", async () => {
+      await promisesFs.writeFile("foobar.js", "foobar");
+      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
+        await removeFile("foobar.js");
       });
-      rewriter.processWithSandbox();
-      expect(fs.existsSync("foobar.js")).toBeTruthy();
-      fs.rmSync("foobar.js");
+      await rewriter.process();
+      expect(await isValidFile("foobar.js")).toBeTruthy();
+      await promisesFs.rm("foobar.js");
     });
   });
 
@@ -176,15 +249,31 @@ describe("static register", () => {
     });
   });
 
-  describe("subSnippets", () => {
-    test("add and get sub snippet", () => {
+  describe("addSnippet", () => {
+    test("adds and gets sub snippet", () => {
       new Rewriter("group1", "name1", () => {});
       new Rewriter("group2", "name2", () => {});
       const rewriter = new Rewriter("group3", "name3", () => {
-        addSnippet("group1", "name1");
-        addSnippet("group2", "name2");
+        addSnippetSync("group1", "name1");
+        addSnippetSync("group2", "name2");
       });
-      rewriter.process();
+      rewriter.processSync();
+      const subSnippets = rewriter.subSnippets;
+      expect(subSnippets.length).toBe(2);
+      expect(subSnippets[0].group).toBe("group1");
+      expect(subSnippets[0].name).toBe("name1");
+      expect(subSnippets[1].group).toBe("group2");
+      expect(subSnippets[1].name).toBe("name2");
+    });
+
+    test("async adds and gets sub snippet", async () => {
+      new Rewriter("group1", "name1", () => {});
+      new Rewriter("group2", "name2", () => {});
+      const rewriter = new Rewriter("group3", "name3", async () => {
+        await addSnippet("group1", "name1");
+        await addSnippet("group2", "name2");
+      });
+      await rewriter.process();
       const subSnippets = rewriter.subSnippets;
       expect(subSnippets.length).toBe(2);
       expect(subSnippets[0].group).toBe("group1");
