@@ -1,8 +1,9 @@
-import fs from "fs";
+import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import compareVersions from "compare-versions";
 
 import Configuration from "./configuration";
+import { isValidFile, isValidFileSync } from "./utils";
 
 /**
  * NodeVersion checks and compares node version.
@@ -18,17 +19,34 @@ class NodeVersion {
    * Check if the specified node version matches current node version.
    * @returns {boolean} true if matches
    */
-  match(): boolean {
+  matchSync(): boolean {
     let versionFile;
-    if (fs.existsSync(path.join(Configuration.rootPath, ".node-version"))) {
+    if (isValidFileSync(path.join(Configuration.rootPath, ".node-version"))) {
       versionFile = ".node-version";
-    } else if (fs.existsSync(path.join(Configuration.rootPath, ".nvmrc"))) {
+    } else if (isValidFileSync(path.join(Configuration.rootPath, ".nvmrc"))) {
       versionFile = ".nvmrc";
     }
     if (!versionFile) {
       return true;
     }
     const version = fs.readFileSync(
+      path.join(Configuration.rootPath, versionFile),
+      "utf-8"
+    );
+    return compareVersions.compare(version, this.version, ">=");
+  }
+
+  async match(): Promise<boolean> {
+    let versionFile;
+    if ((await isValidFile(path.join(Configuration.rootPath, ".node-version")))) {
+      versionFile = ".node-version";
+    } else if ((await isValidFile(path.join(Configuration.rootPath, ".nvmrc")))) {
+      versionFile = ".nvmrc";
+    }
+    if (!versionFile) {
+      return true;
+    }
+    const version = await promisesFs.readFile(
       path.join(Configuration.rootPath, versionFile),
       "utf-8"
     );
