@@ -56,8 +56,8 @@ describe("match", () => {
 
     test("compares versions", async () => {
       const nodeVersion = new NodeVersion("10.0.0");
-      console.log(nodeVersion.matchSync())
-      console.log(await nodeVersion.match())
+      console.log(nodeVersion.matchSync());
+      console.log(await nodeVersion.match());
       expect(await nodeVersion.match()).toBe(true);
     });
 

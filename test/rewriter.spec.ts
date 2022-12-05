@@ -60,16 +60,20 @@ describe("static register", () => {
     });
 
     test("async writes new code to file", async () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
-        await withinFiles("*.js", function () {
-          withNode(
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
-            () => {
-              replace("id", { with: "Synvert" });
-            }
-          );
-        });
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        async () => {
+          await withinFiles("*.js", function () {
+            withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
       const input = `class FooBar {}`;
       const output = `class Synvert {}`;
       mock({ "code.js": input });
@@ -101,16 +105,20 @@ describe("static register", () => {
     });
 
     test("async does not write code to file", async () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
-        await withinFiles("*.js", function () {
-          withNode(
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
-            () => {
-              replace("id", { with: "Synvert" });
-            }
-          );
-        });
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        async () => {
+          await withinFiles("*.js", function () {
+            withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
       await rewriter.processWithSandbox();
@@ -148,16 +156,20 @@ describe("static register", () => {
     });
 
     test("async gets test results", async () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
-        await withinFiles("*.js", function () {
-          withNode(
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
-            () => {
-              replace("id", { with: "Synvert" });
-            }
-          );
-        });
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        async () => {
+          await withinFiles("*.js", function () {
+            withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
       Configuration.rootPath = resolve(".");
@@ -193,9 +205,13 @@ describe("static register", () => {
     });
 
     test("async adds a file", async () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
-        await addFile("foobar.js", "foobar");
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        async () => {
+          await addFile("foobar.js", "foobar");
+        }
+      );
       await rewriter.process();
       expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual("foobar");
       await promisesFs.rm("foobar.js");
@@ -222,9 +238,13 @@ describe("static register", () => {
 
     test("async removes a file", async () => {
       await promisesFs.writeFile("foobar.js", "foobar");
-      const rewriter = new Rewriter("snippet group", "snippet name", async () => {
-        await removeFile("foobar.js");
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        async () => {
+          await removeFile("foobar.js");
+        }
+      );
       await rewriter.process();
       expect(await isValidFile("foobar.js")).toBeTruthy();
       await promisesFs.rm("foobar.js");

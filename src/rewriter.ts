@@ -5,7 +5,12 @@ import Instance from "./instance";
 import NodeVersion from "./node-version";
 import NpmVersion from "./npm-version";
 import { TestResultExt } from "./types/result";
-import { evalSnippet, evalSnippetSync, isValidFile, isValidFileSync } from "./utils";
+import {
+  evalSnippet,
+  evalSnippetSync,
+  isValidFile,
+  isValidFileSync,
+} from "./utils";
 import Configuration from "./configuration";
 
 /**
@@ -280,7 +285,8 @@ class Rewriter {
     let rewriter = null;
     if (typeof name === "string") {
       rewriter =
-        Rewriter.fetch(group, name) || await evalSnippet([group, name].join("/"));
+        Rewriter.fetch(group, name) ||
+        (await evalSnippet([group, name].join("/")));
     } else {
       rewriter = await evalSnippet(group);
     }
@@ -309,7 +315,10 @@ class Rewriter {
    * @param {string} filePattern - pattern to find files, e.g. lib/*.js
    * @param {Functioin} func - a function rewrites code in the matching files.
    */
-  withinFilesSync(filePattern: string, func: (instance: Instance) => void): void {
+  withinFilesSync(
+    filePattern: string,
+    func: (instance: Instance) => void
+  ): void {
     if (!Rewriter.current.options.runInstance) return;
 
     if (
@@ -327,12 +336,17 @@ class Rewriter {
     }
   }
 
-  async withinFiles(filePattern: string, func: (instance: Instance) => void): Promise<void> {
+  async withinFiles(
+    filePattern: string,
+    func: (instance: Instance) => void
+  ): Promise<void> {
     if (!Rewriter.current.options.runInstance) return;
 
     if (
-      (!Rewriter.current.nodeVersion || await Rewriter.current.nodeVersion.match()) &&
-      (!Rewriter.current.npmVersion || await Rewriter.current.npmVersion.match())
+      (!Rewriter.current.nodeVersion ||
+        (await Rewriter.current.nodeVersion.match())) &&
+      (!Rewriter.current.npmVersion ||
+        (await Rewriter.current.npmVersion.match()))
     ) {
       const instance = new Instance(Rewriter.current, filePattern, func);
       Instance.current = instance;
