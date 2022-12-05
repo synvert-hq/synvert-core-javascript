@@ -47,7 +47,7 @@ class NpmVersion {
   }
 
   async match(): Promise<boolean> {
-    if (!await this.packageExist()) {
+    if (!(await this.packageExist())) {
       return true;
     }
     const [operator, version] = this.version.split(" ");
