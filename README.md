@@ -7,50 +7,13 @@
 
 Synvert core provides a set of DSLs to rewrite javascript code. e.g.
 
-Async version:
-
-```javascript
-const Synvert = require("synvert-core");
-
-new Synvert.Rewriter("jquery", "deprecate-event-shorthand", async () => {
-  description('jQuery event shorthand is deprecated.');
-
-  await withinFiles(Synvert.ALL_FILES, function () {
-    // $('#test').click(function(e) { });
-    // =>
-    // $('#test').on('click', function(e) { });
-    findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
-                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
-      replace("callee.property", { with: "on" });
-      insert("'click', ", { to: "arguments.0", at: "beginning" });
-    });
-
-    // $form.submit();
-    // =>
-    // $form.trigger('submit');
-    withNode(
-      {
-        nodeType: "CallExpression",
-        callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' },
-        arguments: { length: 0 },
-      },
-      () => {
-        replace(["callee.property", "arguments"], { with: "trigger('submit')" });
-      }
-    );
-  });
-});
-```
-
-Sync version:
-
 ```javascript
 const Synvert = require("synvert-core");
 
 new Synvert.Rewriter("jquery", "deprecate-event-shorthand", () => {
   description('jQuery event shorthand is deprecated.');
 
-  withinFilesSync(Synvert.ALL_FILES, function () {
+  withinFiles(Synvert.ALL_FILES, function () {
     // $('#test').click(function(e) { });
     // =>
     // $('#test').on('click', function(e) { });
