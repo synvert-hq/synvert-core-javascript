@@ -629,7 +629,7 @@ class Instance {
   }
 
   /**
-   * Call a helper to run shared code.
+   * Sync to call a helper to run shared code.
    * @param {string} helperName - snippet helper name, it can be a http url, file path or a short name
    * @param options - options can be anything it needs to be passed to the helper
    */
@@ -640,6 +640,12 @@ class Instance {
     Instance.current.options = undefined;
   }
 
+  /**
+   * Async to call a helper to run shared code.
+   * @async
+   * @param {string} helperName - snippet helper name, it can be a http url, file path or a short name
+   * @param options - options can be anything it needs to be passed to the helper
+   */
   async callHelper(helperName: string, options: any): Promise<void> {
     const helperContent = await loadSnippet(helperName);
     Instance.current.options = options;
@@ -934,7 +940,8 @@ declare global {
   var replace: (selectors: string | string[], options: ReplaceOptions) => void;
   var replaceWith: (code: string, options: ReplaceWithOptions) => void;
   var noop: () => void;
-  var callHelper: (name: string, options: any) => void;
+  var callHelperSync: (name: string, options: any) => void;
+  var callHelper: (name: string, options: any) => Promise<void>;
   var mutationAdapter: () => Adapter<any>;
   var indent: (str: string, count: number) => string;
 }
@@ -957,6 +964,7 @@ global.remove = Instance.prototype.remove;
 global.replace = Instance.prototype.replace;
 global.replaceWith = Instance.prototype.replaceWith;
 global.noop = Instance.prototype.noop;
+global.callHelperSync = Instance.prototype.callHelperSync;
 global.callHelper = Instance.prototype.callHelper;
 global.mutationAdapter = Instance.prototype.mutationAdapter;
 global.indent = indent;

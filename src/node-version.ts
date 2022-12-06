@@ -16,7 +16,7 @@ class NodeVersion {
   constructor(public version: string) {}
 
   /**
-   * Check if the specified node version matches current node version.
+   * Sync to check if the specified node version matches current node version.
    * @returns {boolean} true if matches
    */
   matchSync(): boolean {
@@ -36,6 +36,11 @@ class NodeVersion {
     return compareVersions.compare(version, this.version, ">=");
   }
 
+  /**
+   * Async to check if the specified node version matches current node version.
+   * @async
+   * @returns {boolean} true if matches
+   */
   async match(): Promise<boolean> {
     let versionFile;
     if (await isValidFile(path.join(Configuration.rootPath, ".node-version"))) {

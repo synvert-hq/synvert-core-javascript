@@ -40,7 +40,7 @@ export const arrayBody = (node: any): Node[] => {
 };
 
 /**
- * Eval the snippet by name.
+ * Sync to eval the snippet by name.
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Rewriter} a Rewriter object
  */
@@ -48,12 +48,18 @@ export const evalSnippetSync = (snippetName: string): Rewriter => {
   return eval(loadSnippetSync(snippetName));
 };
 
+/**
+ * Async to eval the snippet by name.
+ * @async
+ * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
+ * @returns {Promise<Rewriter>} a Rewriter object
+ */
 export const evalSnippet = async (snippetName: string): Promise<Rewriter> => {
   return eval(await loadSnippet(snippetName));
 };
 
 /**
- * Load snippet by snippet name.
+ * Sync to load snippet by snippet name.
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {string} snippet helper content
  */
@@ -79,6 +85,12 @@ export const loadSnippetSync = (snippetName: string): string => {
   }
 };
 
+/**
+ * Sync to load snippet by snippet name.
+ * @async
+ * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
+ * @returns {Promise<string>} snippet helper content
+ */
 export const loadSnippet = async (snippetName: string): Promise<string> => {
   if (isValidUrl(snippetName)) {
     const snippetUrl = formatUrl(snippetName);
@@ -103,15 +115,11 @@ export const loadSnippet = async (snippetName: string): Promise<string> => {
   }
 };
 
-const isValidUrl = (urlString: string): boolean => {
-  try {
-    const url = new URL(urlString);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-};
-
+/**
+ * Sync to check if it is a valid file path.
+ * @param {string} path - file path
+ * @returns {boolean} gets true it is a valid file
+ */
 export const isValidFileSync = (path: string): boolean => {
   try {
     const stats = fs.statSync(path);
@@ -121,10 +129,25 @@ export const isValidFileSync = (path: string): boolean => {
   }
 };
 
+/**
+ * Async to check if it is a valid file path.
+ * @async
+ * @param {string} path - file path
+ * @returns {Promise<boolean>} gets true it is a valid file
+ */
 export const isValidFile = async (path: string): Promise<boolean> => {
   try {
     const stats = await promisesFs.stat(path);
     return stats.isFile();
+  } catch {
+    return false;
+  }
+};
+
+const isValidUrl = (urlString: string): boolean => {
+  try {
+    const url = new URL(urlString);
+    return url.protocol === "http:" || url.protocol === "https:";
   } catch {
     return false;
   }

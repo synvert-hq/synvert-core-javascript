@@ -93,7 +93,7 @@ class Rewriter {
   }
 
   /**
-   * Process the rewriter.
+   * Sync to process the rewriter.
    */
   processSync(): void {
     const originalRewriter = Rewriter.current;
@@ -106,6 +106,10 @@ class Rewriter {
     }
   }
 
+  /**
+   * Async to process the rewriter.
+   * @async
+   */
   async process(): Promise<void> {
     const originalRewriter = Rewriter.current;
     this.affectedFiles = new Set<string>();
@@ -118,7 +122,7 @@ class Rewriter {
   }
 
   /**
-   * Process rwriter with sandbox mode.
+   * Sync to process rwriter with sandbox mode.
    * It will run the func but doesn't change any file.
    */
   processWithSandboxSync(): void {
@@ -132,6 +136,11 @@ class Rewriter {
     }
   }
 
+  /**
+   * Async to process rwriter with sandbox mode.
+   * It will run the func but doesn't change any file.
+   * @async
+   */
   async processWithSandbox(): Promise<void> {
     const originalRewriter = Rewriter.current;
     try {
@@ -144,7 +153,7 @@ class Rewriter {
   }
 
   /**
-   * Test the rewriter.
+   * Sync to test the rewriter.
    * @returns {TestResultExt[]} test results
    */
   testSync(): TestResultExt[] {
@@ -159,6 +168,11 @@ class Rewriter {
     }
   }
 
+  /**
+   * Async to test the rewriter.
+   * @async
+   * @returns {TestResultExt[]} test results
+   */
   async test(): Promise<TestResultExt[]> {
     const originalRewriter = Rewriter.current;
     try {
@@ -245,7 +259,7 @@ class Rewriter {
   }
 
   /**
-   * Call anther rewriter.
+   * Sync to call anther snippet.
    * @example
    * new Synvert.Rewriter("jquery", "migrate", () => {
    *   addSnippet("jquery", "deprecate-event-shorthand");
@@ -280,6 +294,20 @@ class Rewriter {
     currentRewriter.subSnippets.push(rewriter);
   }
 
+  /**
+   * Async to call anther snippet.
+   * @async
+   * @example
+   * new Synvert.Rewriter("jquery", "migrate", () => {
+   *   addSnippet("jquery", "deprecate-event-shorthand");
+   *   addSnippet("jquery", "deprecate-ready-event");
+   *   addSnippet("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
+   *   addSnippet("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
+   *   addSnippet("javascript/no-useless-constructor")
+   * });
+   * @param {string} group - group of another rewriter, if there's no name parameter, the group can be http url, file path or snippet name.
+   * @param {string} name - name of another rewriter.
+   */
   async addSnippet(group: string, name?: string): Promise<void> {
     const currentRewriter = Rewriter.current;
     let rewriter = null;
@@ -305,7 +333,7 @@ class Rewriter {
   }
 
   /**
-   * Find specified files.
+   * Sync to find specified files.
    * It creates an Instance to rewrite code.
    * @example
    * new Synvert.Rewriter("javascript", "no-unused-imports", () => {
@@ -336,6 +364,18 @@ class Rewriter {
     }
   }
 
+  /**
+   * Async to find specified files.
+   * It creates an Instance to rewrite code.
+   * @async
+   * @example
+   * new Synvert.Rewriter("javascript", "no-unused-imports", () => {
+   *   withinFiles('**\/*.js', function () {
+   *   })
+   * })
+   * @param {string} filePattern - pattern to find files, e.g. lib/*.js
+   * @param {Functioin} func - a function rewrites code in the matching files.
+   */
   async withinFiles(
     filePattern: string,
     func: (instance: Instance) => void
@@ -360,7 +400,7 @@ class Rewriter {
   }
 
   /**
-   * Add a new file.
+   * Sync to add a new file.
    * @param {string} fileName - file name
    * @param {string} content - file body
    */
@@ -376,6 +416,12 @@ class Rewriter {
     fs.writeFileSync(filePath, content);
   }
 
+  /**
+   * Async to add a new file.
+   * @async
+   * @param {string} fileName - file name
+   * @param {string} content - file body
+   */
   async addFile(fileName: string, content: string): Promise<void> {
     if (!Rewriter.current.options.runInstance) return;
 
@@ -389,7 +435,7 @@ class Rewriter {
   }
 
   /**
-   * Remove a file.
+   * Sync to remove a file.
    * @param {string} fileName - file name
    */
   removeFileSync(fileName: string): void {
@@ -401,6 +447,11 @@ class Rewriter {
     }
   }
 
+  /**
+   * Async to remove a file.
+   * @async
+   * @param {string} fileName - file name
+   */
   async removeFile(fileName: string): Promise<void> {
     if (!Rewriter.current.options.runInstance) return;
 
@@ -426,7 +477,7 @@ declare global {
   var ifNode: (version: string) => void;
   var ifNpm: (name: string, version: string) => void;
   var addSnippetSync: (group: string, name?: string) => void;
-  var addSnippet: (group: string, name?: string) => void;
+  var addSnippet: (group: string, name?: string) => Promise<void>;
   var withinFilesSync: (
     filePattern: string,
     func: (instance: Instance) => void
@@ -434,7 +485,7 @@ declare global {
   var withinFiles: (
     filePattern: string,
     func: (instance: Instance) => void
-  ) => void;
+  ) => Promise<void>;
   var withinFileSync: (
     filePattern: string,
     func: (instance: Instance) => void
@@ -442,11 +493,11 @@ declare global {
   var withinFile: (
     filePattern: string,
     func: (instance: Instance) => void
-  ) => void;
+  ) => Promise<void>;
   var addFileSync: (fileName: string, content: string) => void;
-  var addFile: (fileName: string, content: string) => void;
+  var addFile: (fileName: string, content: string) => Promise<void>;
   var removeFileSync: (fileName: string) => void;
-  var removeFile: (fileName: string) => void;
+  var removeFile: (fileName: string) => Promise<void>;
 }
 
 global.configure = Rewriter.prototype.configure;

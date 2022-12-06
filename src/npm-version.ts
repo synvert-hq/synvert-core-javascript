@@ -18,7 +18,8 @@ class NpmVersion {
   constructor(public name: string, public version: string) {}
 
   /**
-   * Check if the specified npm version in package-lock.json or yarn.lock matches npm version comparator.
+   * Sync to check if the specified npm version in package-lock.json or
+   * yarn.lock matches npm version comparator.
    * @returns {boolean} true if matches, otherwise false.
    */
   matchSync(): boolean {
@@ -46,6 +47,12 @@ class NpmVersion {
     return true;
   }
 
+  /**
+   * Async to check if the specified npm version in package-lock.json or
+   * yarn.lock matches npm version comparator.
+   * @async
+   * @returns {Promise<boolean>} true if matches, otherwise false.
+   */
   async match(): Promise<boolean> {
     if (!(await this.packageExist())) {
       return true;
