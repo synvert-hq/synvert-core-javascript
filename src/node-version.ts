@@ -38,9 +38,9 @@ class NodeVersion {
 
   async match(): Promise<boolean> {
     let versionFile;
-    if ((await isValidFile(path.join(Configuration.rootPath, ".node-version")))) {
+    if (await isValidFile(path.join(Configuration.rootPath, ".node-version"))) {
       versionFile = ".node-version";
-    } else if ((await isValidFile(path.join(Configuration.rootPath, ".nvmrc")))) {
+    } else if (await isValidFile(path.join(Configuration.rootPath, ".nvmrc"))) {
       versionFile = ".nvmrc";
     }
     if (!versionFile) {

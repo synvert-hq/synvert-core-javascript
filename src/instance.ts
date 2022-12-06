@@ -15,7 +15,13 @@ import {
   IfAllCondition,
   ConditionOptions,
 } from "./condition";
-import { indent, isValidFile, isValidFileSync, loadSnippet, loadSnippetSync } from "./utils";
+import {
+  indent,
+  isValidFile,
+  isValidFileSync,
+  loadSnippet,
+  loadSnippetSync,
+} from "./utils";
 import NodeQuery, {
   QueryOptions,
   TypescriptAdapter as TypescriptQueryAdapter,
@@ -84,16 +90,23 @@ class Instance {
       return this.processFileSync(Configuration.rootPath);
     }
 
-    this.matchFilesInPathsSync().forEach((filePath) => this.processFileSync(filePath));
+    this.matchFilesInPathsSync().forEach((filePath) =>
+      this.processFileSync(filePath)
+    );
   }
 
   async process(): Promise<void> {
-    if (await isValidFile(Configuration.rootPath) && minimatch(Configuration.rootPath, this.filePattern)) {
+    if (
+      (await isValidFile(Configuration.rootPath)) &&
+      minimatch(Configuration.rootPath, this.filePattern)
+    ) {
       return this.processFile(Configuration.rootPath);
     }
 
     const filePaths = await this.matchFilesInPaths();
-    await Promise.all(filePaths.map(async (filePath) => await this.processFile(filePath)));
+    await Promise.all(
+      filePaths.map(async (filePath) => await this.processFile(filePath))
+    );
   }
 
   /**
@@ -109,16 +122,25 @@ class Instance {
       return [this.testFileSync(Configuration.rootPath)];
     }
 
-    return this.matchFilesInPathsSync().map((filePath) => this.testFileSync(filePath));
+    return this.matchFilesInPathsSync().map((filePath) =>
+      this.testFileSync(filePath)
+    );
   }
 
   async test(): Promise<TestResultExt[]> {
-    if (await isValidFile(Configuration.rootPath) && minimatch(Configuration.rootPath, this.filePattern)) {
-      return await Promise.resolve([await this.testFile(Configuration.rootPath)]);
+    if (
+      (await isValidFile(Configuration.rootPath)) &&
+      minimatch(Configuration.rootPath, this.filePattern)
+    ) {
+      return await Promise.resolve([
+        await this.testFile(Configuration.rootPath),
+      ]);
     }
 
     const filePaths = await this.matchFilesInPaths();
-    return await Promise.all(filePaths.map(async (filePath) => await this.testFile(filePath)));
+    return await Promise.all(
+      filePaths.map(async (filePath) => await this.testFile(filePath))
+    );
   }
 
   /**
@@ -774,7 +796,9 @@ class Instance {
     const onlyPaths =
       Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
     // It uses onlyPaths.flatMap((onlyPath) => this.matchFiles(onlyPath)) without async/await
-    const [filePaths] = await Promise.all(onlyPaths.map(async (onlyPath) => await this.matchFiles(onlyPath)));
+    const [filePaths] = await Promise.all(
+      onlyPaths.map(async (onlyPath) => await this.matchFiles(onlyPath))
+    );
     return filePaths;
   }
 

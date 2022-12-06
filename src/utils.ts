@@ -1,5 +1,5 @@
 import { Node } from "acorn";
-import fs, { promises as promisesFs} from "fs";
+import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import fetchSync from "sync-fetch";
 import { URL } from "url";
@@ -141,7 +141,7 @@ const remoteSnippetExistsSync = (snippetPath: string): boolean =>
 const remoteSnippetExists = async (snippetPath: string): Promise<boolean> => {
   const response = await fetch(snippetPath);
   return response.status === 200;
-}
+};
 
 const remoteSnippetUrl = (snippetName: string) =>
   `https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/${snippetName}.js`;
