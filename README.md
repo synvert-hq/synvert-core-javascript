@@ -7,13 +7,50 @@
 
 Synvert core provides a set of DSLs to rewrite javascript code. e.g.
 
+Async version:
+
+```javascript
+const Synvert = require("synvert-core");
+
+new Synvert.Rewriter("jquery", "deprecate-event-shorthand", async () => {
+  description('jQuery event shorthand is deprecated.');
+
+  await withinFiles(Synvert.ALL_FILES, function () {
+    // $('#test').click(function(e) { });
+    // =>
+    // $('#test').on('click', function(e) { });
+    findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
+                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
+      replace("callee.property", { with: "on" });
+      insert("'click', ", { to: "arguments.0", at: "beginning" });
+    });
+
+    // $form.submit();
+    // =>
+    // $form.trigger('submit');
+    withNode(
+      {
+        nodeType: "CallExpression",
+        callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' },
+        arguments: { length: 0 },
+      },
+      () => {
+        replace(["callee.property", "arguments"], { with: "trigger('submit')" });
+      }
+    );
+  });
+});
+```
+
+Sync version:
+
 ```javascript
 const Synvert = require("synvert-core");
 
 new Synvert.Rewriter("jquery", "deprecate-event-shorthand", () => {
   description('jQuery event shorthand is deprecated.');
 
-  withinFiles(Synvert.ALL_FILES, function () {
+  withinFilesSync(Synvert.ALL_FILES, function () {
     // $('#test').click(function(e) { });
     // =>
     // $('#test').on('click', function(e) { });
@@ -50,11 +87,16 @@ DSL are as follows
 * [description](./Rewriter.html#description) - set description of the rewriter
 * [ifNode](./Rewriter.html#ifNode) - check if node version is greater than or equal to the specified node version
 * [ifNpm](./Rewriter.html#ifNpm) - check the version of the specifid npm package
-* [addFile](./Rewriter.html#addFile) - add a new file
-* [removeFile](./Rewriter.html#removeFile) - remove a file
-* [withinFiles](./Rewriter.html#withinFiles) - find specified files
+* [addFileSync](./Rewriter.html#addFileSync) - sync to add a new file
+* [addFile](./Rewriter.html#addFile) - async to add a new file
+* [removeFileSync](./Rewriter.html#removeFileSync) - sync to remove a file
+* [removeFile](./Rewriter.html#removeFile) - async to remove a file
+* [withinFilesSync](./Rewriter.html#withinFiles) - sync to find specified files
+* [withinFiles](./Rewriter.html#withinFiles) - async to find specified files
+* [withinFileSync](./Rewriter.html#withinFile) - alias to withinFilesSync
 * [withinFile](./Rewriter.html#withinFile) - alias to withinFiles
-* [addSnippet](./Rewriter.html#addSnippet) - call another rewriter
+* [addSnippetSync](./Rewriter.html#addSnippetSync) - sync to call another snippet
+* [addSnippet](./Rewriter.html#addSnippet) - sync to call another snippet
 
 Scopes:
 
@@ -85,5 +127,6 @@ Actions:
 
 Others:
 
-* [callHelper](./Instance.html#callHelper) - call a helper to run shared code
+* [callHelperSync](./Instance.html#callHelperSync) - sync to call a helper to run shared code
+* [callHelper](./Instance.html#callHelper) - async to call a helper to run shared code
 * [mutationAdapter](./Instance.html#mutationAdapter) - get a [mutation adapter](https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts) to get some helpers
