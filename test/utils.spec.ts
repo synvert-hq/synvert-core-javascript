@@ -1,4 +1,8 @@
-import { indent, rewriteSnippetToAsyncVersion, rewriteSnippetToSyncVersion } from "../src/utils";
+import {
+  indent,
+  rewriteSnippetToAsyncVersion,
+  rewriteSnippetToSyncVersion,
+} from "../src/utils";
 
 it("indent", () => {
   const oldCode = `
@@ -54,7 +58,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           });
         });
       });
-    `
+    `;
     const newSnippet = `
       const Synvert = require("synvert-core");
 
@@ -89,7 +93,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           });
         });
       });
-    `
+    `;
     expect(rewriteSnippetToAsyncVersion(originalSnippet)).toEqual(newSnippet);
   });
 });
@@ -114,7 +118,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           });
         });
       });
-    `
+    `;
     const newSnippet = `
       const Synvert = require("synvert-core");
 
@@ -133,7 +137,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           });
         });
       });
-    `
+    `;
     expect(rewriteSnippetToSyncVersion(originalSnippet)).toEqual(newSnippet);
   });
 });
