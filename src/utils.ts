@@ -144,7 +144,7 @@ const parseCode = (snippet: string): ts.Node => {
  * @returns {Rewriter} a Rewriter object
  */
 export const evalSnippetSync = (snippetName: string): Rewriter => {
-  return eval(loadSnippetSync(snippetName));
+  return eval(rewriteSnippetToSyncVersion(loadSnippetSync(snippetName)));
 };
 
 /**
@@ -154,7 +154,8 @@ export const evalSnippetSync = (snippetName: string): Rewriter => {
  * @returns {Promise<Rewriter>} a Rewriter object
  */
 export const evalSnippet = async (snippetName: string): Promise<Rewriter> => {
-  return eval(await loadSnippet(snippetName));
+  const snippet = await loadSnippet(snippetName);
+  return eval(rewriteSnippetToAsyncVersion(snippet));
 };
 
 /**

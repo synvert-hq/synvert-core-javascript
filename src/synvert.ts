@@ -3,8 +3,6 @@ import Configuration from "./configuration";
 import {
   evalSnippet,
   evalSnippetSync,
-  rewriteSnippetToAsyncVersion,
-  rewriteSnippetToSyncVersion,
 } from "./utils";
 import { SnippetNotFoundError } from "./errors";
 import { Parser, Strategy } from "./types/options";
@@ -26,8 +24,6 @@ export {
   version,
   evalSnippet,
   evalSnippetSync,
-  rewriteSnippetToAsyncVersion,
-  rewriteSnippetToSyncVersion,
   SnippetNotFoundError,
   Parser,
   Strategy,
