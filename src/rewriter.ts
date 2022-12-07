@@ -373,7 +373,6 @@ class Rewriter {
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (isValidFileSync(filePath)) {
-      console.log(`File ${filePath} already exists.`);
       return;
     }
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -391,7 +390,6 @@ class Rewriter {
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (await isValidFile(filePath)) {
-      console.log(`File ${filePath} already exists.`);
       return;
     }
     await promisesFs.mkdir(path.dirname(filePath), { recursive: true });
