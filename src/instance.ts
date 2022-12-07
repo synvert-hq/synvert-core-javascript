@@ -555,7 +555,7 @@ class Instance {
    * });
    * @param {string} selectors - name of child nodes
    */
-  delete(selectors: string | string[]): void {
+  deleteNode(selectors: string | string[]): void {
     this.currentMutation.delete(
       this.currentNode,
       selectors

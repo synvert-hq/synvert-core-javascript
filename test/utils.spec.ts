@@ -39,6 +39,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             replace("expresion.name", { with: "foobar" });
+            deleteNode("expression.expression");
           });
         });
       });
@@ -55,6 +56,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             replace("expresion.name", { with: "foobar" });
+            deleteNode("expression.expression");
           });
         });
       });
@@ -74,6 +76,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           await this.callHelper("helper/foobar")
           this.findNode(".CallExpression", () => {
             this.replace("expresion.name", { with: "foobar" });
+            this.deleteNode("expression.expression");
           });
         });
       });
@@ -90,6 +93,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           await this.callHelper("helper/foobar")
           this.findNode(".CallExpression", () => {
             this.replace("expresion.name", { with: "foobar" });
+            this.deleteNode("expression.expression");
           });
         });
       });
@@ -115,6 +119,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             replace("expresion.name", { with: "foobar" });
+            deleteNode("expression.expression");
           });
         });
       });
@@ -134,6 +139,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           this.callHelperSync("helper/foobar")
           this.findNode(".CallExpression", () => {
             this.replace("expresion.name", { with: "foobar" });
+            this.deleteNode("expression.expression");
           });
         });
       });
