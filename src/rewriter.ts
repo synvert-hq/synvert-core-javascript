@@ -325,7 +325,7 @@ class Rewriter {
     }
   }
 
-  withFileSync = this.withinFilesSync.bind(this)
+  withFileSync = this.withinFilesSync.bind(this);
 
   /**
    * Async to find specified files.
@@ -346,10 +346,8 @@ class Rewriter {
     if (!this.options.runInstance) return;
 
     if (
-      (!this.nodeVersion ||
-        (await this.nodeVersion.match())) &&
-      (!this.npmVersion ||
-        (await this.npmVersion.match()))
+      (!this.nodeVersion || (await this.nodeVersion.match())) &&
+      (!this.npmVersion || (await this.npmVersion.match()))
     ) {
       const instance = new Instance(this, filePattern, func);
       if (this.options.writeToFile) {
@@ -361,7 +359,7 @@ class Rewriter {
     }
   }
 
-  withFiles = this.withinFiles.bind(this)
+  withFiles = this.withinFiles.bind(this);
 
   /**
    * Sync to add a new file.

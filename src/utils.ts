@@ -70,7 +70,9 @@ export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
   NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
     mutation.insert(node, "async ", { at: "beginning", to: "arguments.1" })
   );
-  ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => mutation.insert(node, "await ", { at: "beginning" }));
+  ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "await ", { at: "beginning" })
+  );
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : newSnippet;
 };
@@ -124,11 +126,17 @@ const addProperScopeToSnippet = (snippet: string): string => {
   });
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : snippet;
-}
+};
 
 const parseCode = (snippet: string): ts.Node => {
-  return ts.createSourceFile("test.js", snippet, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
-}
+  return ts.createSourceFile(
+    "test.js",
+    snippet,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.JS
+  );
+};
 
 /**
  * Sync to eval the snippet by name.
