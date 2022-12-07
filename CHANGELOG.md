@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.1 (2022-12-08)
+
+* Rewrite snippet before eval
+
 ## 2.0.0 (2022-12-07)
 
 * Drop global variables
