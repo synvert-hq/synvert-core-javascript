@@ -27,9 +27,13 @@ describe("static register", () => {
 
   describe("configure", () => {
     it("sets sourceType option", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.configure({ sourceType: SourceType.SCRIPT });
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.configure({ sourceType: SourceType.SCRIPT });
+        }
+      );
       expect(rewriter.options.sourceType).toBe(SourceType.MODULE);
       rewriter.processSync();
       expect(rewriter.options.sourceType).toBe(SourceType.SCRIPT);
@@ -42,16 +46,20 @@ describe("static register", () => {
     });
 
     test("writes new code to file", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.withinFilesSync("*.js", function () {
-          this.withNode(
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
-            () => {
-              this.replace("id", { with: "Synvert" });
-            }
-          );
-        });
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.withinFilesSync("*.js", function () {
+            this.withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                this.replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
       const input = `class FooBar {}`;
       const output = `class Synvert {}`;
       mock({ "code.js": input });
@@ -88,16 +96,20 @@ describe("static register", () => {
     });
 
     test("does not write code to file", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.withinFiles("*.js", function () {
-          this.withNode(
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
-            () => {
-              this.replace("id", { with: "Synvert" });
-            }
-          );
-        });
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.withinFiles("*.js", function () {
+            this.withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                this.replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
       rewriter.processWithSandboxSync();
@@ -132,16 +144,20 @@ describe("static register", () => {
     });
 
     test("gets test results", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.withinFilesSync("*.js", function () {
-          this.withNode(
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
-            () => {
-              this.replace("id", { with: "Synvert" });
-            }
-          );
-        });
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.withinFilesSync("*.js", function () {
+            this.withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                this.replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
       Configuration.rootPath = resolve(".");
@@ -186,9 +202,13 @@ describe("static register", () => {
 
   describe("addFile", () => {
     test("adds a file", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.addFileSync("foobar.js", "foobar");
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.addFileSync("foobar.js", "foobar");
+        }
+      );
       rewriter.processSync();
       expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("foobar");
       fs.rmSync("foobar.js");
@@ -196,9 +216,13 @@ describe("static register", () => {
 
     test("does nothing if file exists", () => {
       fs.writeFileSync("foobar.js", "old");
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.addFileSync("foobar.js", "foobar");
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.addFileSync("foobar.js", "foobar");
+        }
+      );
       rewriter.processSync();
       expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("old");
       fs.rmSync("foobar.js");
@@ -221,17 +245,25 @@ describe("static register", () => {
   describe("removeFile", () => {
     test("removes a file", () => {
       fs.writeFileSync("foobar.js", "foobar");
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.removeFileSync("foobar.js");
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.removeFileSync("foobar.js");
+        }
+      );
       rewriter.processSync();
       expect(isValidFileSync("foobar.js")).toBeFalsy();
     });
 
     test("does nothing if file not exist", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.removeFileSync("foobar.js");
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.removeFileSync("foobar.js");
+        }
+      );
       rewriter.processSync();
       expect(isValidFileSync("foobar.js")).toBeFalsy();
     });
@@ -252,7 +284,11 @@ describe("static register", () => {
 
   describe("group and name", () => {
     test("get group and name", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {});
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {}
+      );
       expect(rewriter.group).toBe("snippet group");
       expect(rewriter.name).toBe("snippet name");
     });
@@ -260,9 +296,13 @@ describe("static register", () => {
 
   describe("description", () => {
     test("set and get description", () => {
-      const rewriter = new Rewriter("snippet group", "snippet name", function () {
-        this.description("this is a snippet description.");
-      });
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.description("this is a snippet description.");
+        }
+      );
       rewriter.process();
       expect(rewriter.description()).toBe(`this is a snippet description.`);
     });
