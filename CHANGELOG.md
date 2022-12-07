@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.0 (2022-12-07)
+
+* Drop global variables
+* Add utilities to rewrite snippets to sync and async versions
+
 ## 1.25.2 (2022-11-30)
 
 * Fix load file snippet
