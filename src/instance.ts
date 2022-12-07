@@ -201,8 +201,8 @@ class Instance {
     }
   }
 
-  withNode = this.withinNode.bind(this)
-  findNode = this.withinNode.bind(this)
+  withNode = this.withinNode.bind(this);
+  findNode = this.withinNode.bind(this);
 
   /**
    * Create a {@link GotoScope} to go to a child node,
@@ -420,13 +420,7 @@ class Instance {
     elseFunc?: (instance: Instance) => void
   ) {
     if (typeof options === "function") {
-      return new IfAllCondition(
-        this,
-        nqlOrRules,
-        {},
-        options,
-        func
-      ).process();
+      return new IfAllCondition(this, nqlOrRules, {}, options, func).process();
     }
     return new IfAllCondition(
       this,
@@ -466,10 +460,7 @@ class Instance {
    * @param {string} code - need to be prepended.
    */
   prepend(code: string): void {
-    this.currentMutation.prepend(
-      this.currentNode,
-      code
-    );
+    this.currentMutation.prepend(this.currentNode, code);
   }
 
   /**
@@ -486,11 +477,7 @@ class Instance {
    * @param {Object} options - insert position, beginning or end, end is the default
    */
   insert(code: string, options: InsertOptions): void {
-    this.currentMutation.insert(
-      this.currentNode,
-      code,
-      options
-    );
+    this.currentMutation.insert(this.currentNode, code, options);
   }
 
   /**
@@ -511,11 +498,10 @@ class Instance {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    this.currentMutation.insert(
-      this.currentNode,
-      `\n${column}${code}`,
-      { ...options, ...{ at: "end" } }
-    );
+    this.currentMutation.insert(this.currentNode, `\n${column}${code}`, {
+      ...options,
+      ...{ at: "end" },
+    });
   }
 
   /**
@@ -536,11 +522,10 @@ class Instance {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    this.currentMutation.insert(
-      this.currentNode,
-      `${code}\n${column}`,
-      { ...options, ...{ at: "beginning" } }
-    );
+    this.currentMutation.insert(this.currentNode, `${code}\n${column}`, {
+      ...options,
+      ...{ at: "beginning" },
+    });
   }
 
   /**
@@ -556,10 +541,7 @@ class Instance {
    * @param {string} selectors - name of child nodes
    */
   delete(selectors: string | string[]): void {
-    this.currentMutation.delete(
-      this.currentNode,
-      selectors
-    );
+    this.currentMutation.delete(this.currentNode, selectors);
   }
 
   /**
@@ -596,11 +578,7 @@ class Instance {
    * @param {Object} options - code need to be replaced with.
    */
   replace(selectors: string | string[], options: ReplaceOptions): void {
-    this.currentMutation.replace(
-      this.currentNode,
-      selectors,
-      options
-    );
+    this.currentMutation.replace(this.currentNode, selectors, options);
   }
 
   /**
@@ -617,11 +595,7 @@ class Instance {
    * @param {Object} options - { autoIndent: true } if auto fix indent
    */
   replaceWith(code: string, options: ReplaceWithOptions): void {
-    this.currentMutation.replaceWith(
-      this.currentNode,
-      code,
-      options
-    );
+    this.currentMutation.replaceWith(this.currentNode, code, options);
   }
 
   /**
