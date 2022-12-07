@@ -44,6 +44,82 @@ Want to see more examples, check out [synvert-snippets-javascript](https://githu
 
 Want to use the CLI, check out [synvert-javascript](https://github.com/xinminlabs/synvert-javascript).
 
+By default, you can't run the above snippet directly, synvert-core provides 2 utilities to convert it to sync and async verions.
+
+```javascript
+Synvert.rewriteSnippetToSyncVersion(snippetCode);
+
+// Then it converts snippet code to the following sync version
+
+const Synvert = require("synvert-core");
+
+new Synvert.Rewriter("jquery", "deprecate-event-shorthand", function () {
+  this.description('jQuery event shorthand is deprecated.');
+
+  this.withinFilesSync(Synvert.ALL_FILES, function () {
+    // $('#test').click(function(e) { });
+    // =>
+    // $('#test').on('click', function(e) { });
+    this.findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
+                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
+      this.replace("callee.property", { with: "on" });
+      this.insert("'click', ", { to: "arguments.0", at: "beginning" });
+    });
+
+    // $form.submit();
+    // =>
+    // $form.trigger('submit');
+    this.withNode(
+      {
+        nodeType: "CallExpression",
+        callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' },
+        arguments: { length: 0 },
+      },
+      () => {
+        this.replace(["callee.property", "arguments"], { with: "trigger('submit')" });
+      }
+    );
+  });
+});
+```
+
+```javascript
+Synvert.rewriteSnippetToAsyncVersion(snippetCode);
+
+// Then it converts snippet code to the following async version
+
+const Synvert = require("synvert-core");
+
+new Synvert.Rewriter("jquery", "deprecate-event-shorthand", async function () {
+  this.description('jQuery event shorthand is deprecated.');
+
+  await this.withinFiles(Synvert.ALL_FILES, async function () {
+    // $('#test').click(function(e) { });
+    // =>
+    // $('#test').on('click', function(e) { });
+    this.findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
+                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
+      this.replace("callee.property", { with: "on" });
+      this.insert("'click', ", { to: "arguments.0", at: "beginning" });
+    });
+
+    // $form.submit();
+    // =>
+    // $form.trigger('submit');
+    this.withNode(
+      {
+        nodeType: "CallExpression",
+        callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' },
+        arguments: { length: 0 },
+      },
+      () => {
+        this.replace(["callee.property", "arguments"], { with: "trigger('submit')" });
+      }
+    );
+  });
+});
+```
+
 DSL are as follows
 
 * [configure](./Rewriter.html#configure) - configure the rewriter, set sourceTyep and parser
