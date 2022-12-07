@@ -43,6 +43,20 @@ export const arrayBody = (node: any): Node[] => {
   }
 };
 
+const NEW_REWRITER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
+  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression]`
+);
+
+const NEW_INSTANCE_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+    [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression]`
+);
+
+const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+    [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
+);
+
 /**
  * Rewrite javascript snippet to async version.
  */
@@ -50,27 +64,21 @@ export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
   const newSnippet = addProperScopeToSnippet(snippet);
   const node = parseCode(newSnippet);
   const mutation = new NodeMutation<ts.Node>(newSnippet);
-  let nodes = new NodeQuery<ts.Node>(
-    `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression]`
-  ).queryNodes(node);
-  nodes.forEach((node) =>
+  NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
     mutation.insert(node, "async ", { at: "beginning", to: "arguments.2" })
   );
-  nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-      [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression]`
-  ).queryNodes(node);
-  nodes.forEach((node) =>
+  NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
     mutation.insert(node, "async ", { at: "beginning", to: "arguments.1" })
   );
-  nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-      [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
-  ).queryNodes(node);
-  nodes.forEach((node) => mutation.insert(node, "await ", { at: "beginning" }));
+  ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => mutation.insert(node, "await ", { at: "beginning" }));
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : newSnippet;
 };
+
+const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+    [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
+);
 
 /**
  * Rewrite javascript snippet to sync version.
@@ -79,42 +87,39 @@ export const rewriteSnippetToSyncVersion = (snippet: string): string => {
   const newSnippet = addProperScopeToSnippet(snippet);
   const node = parseCode(newSnippet);
   const mutation = new NodeMutation<ts.Node>(newSnippet);
-  let nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-      [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
-  ).queryNodes(node);
-  nodes.forEach((node) =>
+  SYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
     mutation.insert(node, "Sync", { at: "end", to: "expression" })
   );
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : newSnippet;
 };
 
+const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
+  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`
+);
+const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
+);
+const GLOBAL_DSL_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression IN (
+      configure description ifNode ifNpm addSnippet withinFiles withinFile addFile removeFile
+      withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes callHelper mutationAdapter
+      append prepend insert insertAfter insertBefore deleteNode remove replace replaceWith noop
+    )]`
+);
+
 const addProperScopeToSnippet = (snippet: string): string => {
   const node = parseCode(snippet);
   const mutation = new NodeMutation<ts.Node>(snippet);
-  let nodes = new NodeQuery<ts.Node>(
-    `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`
-  ).queryNodes(node);
-  nodes.forEach((node) => {
+  NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY.queryNodes(node).forEach((node) => {
     mutation.delete(node, "arguments.2.equalsGreaterThanToken");
     mutation.insert(node, "function ", { at: "beginning", to: "arguments.2" });
   });
-  nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
-  ).queryNodes(node);
-  nodes.forEach((node) => {
+  NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY.queryNodes(node).forEach((node) => {
     mutation.delete(node, "arguments.1.equalsGreaterThanToken");
     mutation.insert(node, "function ", { at: "beginning", to: "arguments.1" });
   });
-  nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression IN (
-        configure description ifNode ifNpm addSnippet withinFiles withinFile addFile removeFile
-        withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes callHelper mutationAdapter
-        append prepend insert insertAfter insertBefore deleteNode remove replace replaceWith noop
-      )]`
-  ).queryNodes(node);
-  nodes.forEach((node) => {
+  GLOBAL_DSL_QUERY.queryNodes(node).forEach((node) => {
     mutation.insert(node, "this.", { at: "beginning" });
   });
   const { affected, newSource } = mutation.process();
