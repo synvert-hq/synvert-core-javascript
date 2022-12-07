@@ -13,24 +13,23 @@ describe("Instance", () => {
     });
 
     test("writes new code to file", () => {
-      const instance = new Instance(rewriter, "*.js", () => {
-        findNode(
+      const instance = new Instance(rewriter, "*.js", function () {
+        this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
-            replace("callee.property", { with: "trimStart" });
+            this.replace("callee.property", { with: "trimStart" });
           }
         );
-        withNode(
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            replace("callee.property", { with: "trimEnd" });
+            this.replace("callee.property", { with: "trimEnd" });
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -45,24 +44,23 @@ describe("Instance", () => {
     });
 
     test("does not write new code to file if parser is espree and file extension is ts", () => {
-      const instance = new Instance(rewriter, "*.ts", () => {
-        findNode(
+      const instance = new Instance(rewriter, "*.ts", function () {
+        this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
-            replace("callee.property", { with: "trimStart" });
+            this.replace("callee.property", { with: "trimStart" });
           }
         );
-        withNode(
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            replace("callee.property", { with: "trimEnd" });
+            this.replace("callee.property", { with: "trimEnd" });
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -73,24 +71,23 @@ describe("Instance", () => {
     });
 
     test("gets affected files", () => {
-      const instance = new Instance(rewriter, "*.js", () => {
-        findNode(
+      const instance = new Instance(rewriter, "*.js", function () {
+        this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
-            replace("callee.property", { with: "trimStart" });
+            this.replace("callee.property", { with: "trimStart" });
           }
         );
-        withNode(
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            replace("callee.property", { with: "trimEnd" });
+            this.replace("callee.property", { with: "trimEnd" });
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -112,24 +109,23 @@ describe("Instance", () => {
     });
 
     test("writes new code to file", async () => {
-      const instance = new Instance(rewriter, "*.js", () => {
-        findNode(
+      const instance = new Instance(rewriter, "*.js", function () {
+        this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
-            replace("callee.property", { with: "trimStart" });
+            this.replace("callee.property", { with: "trimStart" });
           }
         );
-        withNode(
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            replace("callee.property", { with: "trimEnd" });
+            this.replace("callee.property", { with: "trimEnd" });
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -144,24 +140,23 @@ describe("Instance", () => {
     });
 
     test("does not write new code to file if parser is espree and file extension is ts", async () => {
-      const instance = new Instance(rewriter, "*.ts", () => {
-        findNode(
+      const instance = new Instance(rewriter, "*.ts", function () {
+        this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
-            replace("callee.property", { with: "trimStart" });
+            this.replace("callee.property", { with: "trimStart" });
           }
         );
-        withNode(
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            replace("callee.property", { with: "trimEnd" });
+            this.replace("callee.property", { with: "trimEnd" });
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -172,24 +167,23 @@ describe("Instance", () => {
     });
 
     test("gets affected files", async () => {
-      const instance = new Instance(rewriter, "*.js", () => {
-        findNode(
+      const instance = new Instance(rewriter, "*.js", function () {
+        this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
-            replace("callee.property", { with: "trimStart" });
+            this.replace("callee.property", { with: "trimStart" });
           }
         );
-        withNode(
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            replace("callee.property", { with: "trimEnd" });
+            this.replace("callee.property", { with: "trimEnd" });
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -211,18 +205,17 @@ describe("Instance", () => {
     });
 
     test("gets actions", () => {
-      const instance = new Instance(rewriter, "*.js", () => {
-        withNode(
+      const instance = new Instance(rewriter, "*.js", function () {
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            noop();
+            this.noop();
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -246,18 +239,17 @@ describe("Instance", () => {
     });
 
     test("gets no actions if parser is espree and file extension is ts", () => {
-      const instance = new Instance(rewriter, "*.ts", () => {
-        withNode(
+      const instance = new Instance(rewriter, "*.ts", function () {
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            noop();
+            this.noop();
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -281,18 +273,17 @@ describe("Instance", () => {
     });
 
     test("gets actions", async () => {
-      const instance = new Instance(rewriter, "*.js", () => {
-        withNode(
+      const instance = new Instance(rewriter, "*.js", function () {
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            noop();
+            this.noop();
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -316,18 +307,17 @@ describe("Instance", () => {
     });
 
     test("gets no actions if parser is espree and file extension is ts", async () => {
-      const instance = new Instance(rewriter, "*.ts", () => {
-        withNode(
+      const instance = new Instance(rewriter, "*.ts", function () {
+        this.withNode(
           {
             nodeType: "CallExpression",
             callee: { nodeType: "MemberExpression", property: "trimRight" },
           },
           () => {
-            noop();
+            this.noop();
           }
         );
       });
-      Instance.current = instance;
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();

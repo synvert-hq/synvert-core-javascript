@@ -62,34 +62,34 @@ describe("rewriteSnippetToAsyncVersion", () => {
     const newSnippet = `
       const Synvert = require("synvert-core");
 
-      new Synvert.Rewriter("group", "name1", async () => {
-        description("foobar");
+      new Synvert.Rewriter("group", "name1", async function () {
+        this.description("foobar");
 
-        configure({ parser: Synvert.Parser.TYPESCRIPT });
-        await addFile("foobar.js", "foobar");
-        await removeFile("foo.js");
-        await removeFile("bar.js");
-        await addSnippet("foo", "bar");
-        await withinFiles(Synvert.ALL_FILES, async () => {
-          await callHelper("helper/foobar")
-          findNode(".CallExpression", () => {
-            replace("expresion.name", { with: "foobar" });
+        this.configure({ parser: Synvert.Parser.TYPESCRIPT });
+        await this.addFile("foobar.js", "foobar");
+        await this.removeFile("foo.js");
+        await this.removeFile("bar.js");
+        await this.addSnippet("foo", "bar");
+        await this.withinFiles(Synvert.ALL_FILES, async function () {
+          await this.callHelper("helper/foobar")
+          this.findNode(".CallExpression", () => {
+            this.replace("expresion.name", { with: "foobar" });
           });
         });
       });
 
       new Synvert.Rewriter("group", "name2", async function () {
-        description("foobar");
+        this.description("foobar");
 
-        configure({ parser: Synvert.Parser.TYPESCRIPT });
-        await addFile("foobar.js", "foobar");
-        await removeFile("foo.js");
-        await removeFile("bar.js");
-        await addSnippet("foo", "bar");
-        await withinFiles(Synvert.ALL_FILES, async function () {
-          await callHelper("helper/foobar")
-          findNode(".CallExpression", () => {
-            replace("expresion.name", { with: "foobar" });
+        this.configure({ parser: Synvert.Parser.TYPESCRIPT });
+        await this.addFile("foobar.js", "foobar");
+        await this.removeFile("foo.js");
+        await this.removeFile("bar.js");
+        await this.addSnippet("foo", "bar");
+        await this.withinFiles(Synvert.ALL_FILES, async function () {
+          await this.callHelper("helper/foobar")
+          this.findNode(".CallExpression", () => {
+            this.replace("expresion.name", { with: "foobar" });
           });
         });
       });
@@ -122,18 +122,18 @@ describe("rewriteSnippetToSyncVersion", () => {
     const newSnippet = `
       const Synvert = require("synvert-core");
 
-      new Synvert.Rewriter("group", "name", () => {
-        description("foobar");
+      new Synvert.Rewriter("group", "name", function () {
+        this.description("foobar");
 
-        configure({ parser: Synvert.Parser.TYPESCRIPT });
-        addFileSync("foobar.js", "foobar");
-        removeFileSync("foo.js");
-        removeFileSync("bar.js");
-        addSnippetSync("foo", "bar");
-        withinFilesSync(Synvert.ALL_FILES, () => {
-          callHelperSync("helper/foobar")
-          findNode(".CallExpression", () => {
-            replace("expresion.name", { with: "foobar" });
+        this.configure({ parser: Synvert.Parser.TYPESCRIPT });
+        this.addFileSync("foobar.js", "foobar");
+        this.removeFileSync("foo.js");
+        this.removeFileSync("bar.js");
+        this.addSnippetSync("foo", "bar");
+        this.withinFilesSync(Synvert.ALL_FILES, function () {
+          this.callHelperSync("helper/foobar")
+          this.findNode(".CallExpression", () => {
+            this.replace("expresion.name", { with: "foobar" });
           });
         });
       });

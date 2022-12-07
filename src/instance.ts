@@ -195,11 +195,14 @@ class Instance {
     func?: (instance: Instance) => void
   ) {
     if (typeof options === "function") {
-      new WithinScope(Instance.current, nqlOrRules, {}, options).process();
+      new WithinScope(this, nqlOrRules, {}, options).process();
     } else {
-      new WithinScope(Instance.current, nqlOrRules, options, func!).process();
+      new WithinScope(this, nqlOrRules, options, func!).process();
     }
   }
+
+  withNode = this.withinNode.bind(this)
+  findNode = this.withinNode.bind(this)
 
   /**
    * Create a {@link GotoScope} to go to a child node,
@@ -211,7 +214,7 @@ class Instance {
    * @param {Function} func - to continue operating on the matching nodes.
    */
   gotoNode(childNodeName: string, func: (instance: Instance) => void) {
-    new GotoScope(Instance.current, childNodeName, func).process();
+    new GotoScope(this, childNodeName, func).process();
   }
 
   /**
@@ -253,7 +256,7 @@ class Instance {
   ) {
     if (typeof options === "function") {
       return new IfExistCondition(
-        Instance.current,
+        this,
         nqlOrRules,
         {},
         options,
@@ -261,7 +264,7 @@ class Instance {
       ).process();
     }
     return new IfExistCondition(
-      Instance.current,
+      this,
       nqlOrRules,
       options,
       func!,
@@ -308,7 +311,7 @@ class Instance {
   ) {
     if (typeof options === "function") {
       return new UnlessExistCondition(
-        Instance.current,
+        this,
         nqlOrRules,
         {},
         options,
@@ -316,7 +319,7 @@ class Instance {
       ).process();
     }
     return new UnlessExistCondition(
-      Instance.current,
+      this,
       nqlOrRules,
       options,
       func!,
@@ -363,7 +366,7 @@ class Instance {
   ) {
     if (typeof options === "function") {
       return new IfOnlyExistCondition(
-        Instance.current,
+        this,
         nqlOrRules,
         {},
         options,
@@ -371,7 +374,7 @@ class Instance {
       ).process();
     }
     return new IfOnlyExistCondition(
-      Instance.current,
+      this,
       nqlOrRules,
       options,
       func!,
@@ -418,7 +421,7 @@ class Instance {
   ) {
     if (typeof options === "function") {
       return new IfAllCondition(
-        Instance.current,
+        this,
         nqlOrRules,
         {},
         options,
@@ -426,7 +429,7 @@ class Instance {
       ).process();
     }
     return new IfAllCondition(
-      Instance.current,
+      this,
       nqlOrRules,
       options,
       func!,
@@ -448,7 +451,7 @@ class Instance {
    * @param {string} code - need to be appended.
    */
   append(code: string): void {
-    Instance.current.currentMutation.append(Instance.current.currentNode, code);
+    this.currentMutation.append(this.currentNode, code);
   }
 
   /**
@@ -463,8 +466,8 @@ class Instance {
    * @param {string} code - need to be prepended.
    */
   prepend(code: string): void {
-    Instance.current.currentMutation.prepend(
-      Instance.current.currentNode,
+    this.currentMutation.prepend(
+      this.currentNode,
       code
     );
   }
@@ -483,8 +486,8 @@ class Instance {
    * @param {Object} options - insert position, beginning or end, end is the default
    */
   insert(code: string, options: InsertOptions): void {
-    Instance.current.currentMutation.insert(
-      Instance.current.currentNode,
+    this.currentMutation.insert(
+      this.currentNode,
       code,
       options
     );
@@ -506,10 +509,10 @@ class Instance {
    */
   insertAfter(code: string, options: InsertOptions): void {
     const column = " ".repeat(
-      NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column
+      NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    Instance.current.currentMutation.insert(
-      Instance.current.currentNode,
+    this.currentMutation.insert(
+      this.currentNode,
       `\n${column}${code}`,
       { ...options, ...{ at: "end" } }
     );
@@ -531,10 +534,10 @@ class Instance {
    */
   insertBefore(code: string, options: InsertOptions): void {
     const column = " ".repeat(
-      NodeMutation.getAdapter().getStartLoc(Instance.current.currentNode).column
+      NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    Instance.current.currentMutation.insert(
-      Instance.current.currentNode,
+    this.currentMutation.insert(
+      this.currentNode,
       `${code}\n${column}`,
       { ...options, ...{ at: "beginning" } }
     );
@@ -553,8 +556,8 @@ class Instance {
    * @param {string} selectors - name of child nodes
    */
   delete(selectors: string | string[]): void {
-    Instance.current.currentMutation.delete(
-      Instance.current.currentNode,
+    this.currentMutation.delete(
+      this.currentNode,
       selectors
     );
   }
@@ -576,7 +579,7 @@ class Instance {
    * });
    */
   remove(): void {
-    Instance.current.currentMutation.remove(Instance.current.currentNode);
+    this.currentMutation.remove(this.currentNode);
   }
 
   /**
@@ -593,8 +596,8 @@ class Instance {
    * @param {Object} options - code need to be replaced with.
    */
   replace(selectors: string | string[], options: ReplaceOptions): void {
-    Instance.current.currentMutation.replace(
-      Instance.current.currentNode,
+    this.currentMutation.replace(
+      this.currentNode,
       selectors,
       options
     );
@@ -614,8 +617,8 @@ class Instance {
    * @param {Object} options - { autoIndent: true } if auto fix indent
    */
   replaceWith(code: string, options: ReplaceWithOptions): void {
-    Instance.current.currentMutation.replaceWith(
-      Instance.current.currentNode,
+    this.currentMutation.replaceWith(
+      this.currentNode,
       code,
       options
     );
@@ -625,7 +628,7 @@ class Instance {
    * No operation.
    */
   noop(): void {
-    Instance.current.currentMutation.noop(Instance.current.currentNode);
+    this.currentMutation.noop(this.currentNode);
   }
 
   /**
@@ -635,9 +638,9 @@ class Instance {
    */
   callHelperSync(helperName: string, options: any): void {
     const helperContent = loadSnippetSync(helperName);
-    Instance.current.options = options;
-    Function(helperContent).call(Instance.current, Instance.current);
-    Instance.current.options = undefined;
+    this.options = options;
+    Function(helperContent).call(this, this);
+    this.options = undefined;
   }
 
   /**
@@ -648,9 +651,9 @@ class Instance {
    */
   async callHelper(helperName: string, options: any): Promise<void> {
     const helperContent = await loadSnippet(helperName);
-    Instance.current.options = options;
-    Function(helperContent).call(Instance.current, Instance.current);
-    Instance.current.options = undefined;
+    this.options = options;
+    Function(helperContent).call(this, this);
+    this.options = undefined;
   }
 
   mutationAdapter(): Adapter<any> {
@@ -917,54 +920,3 @@ type ConditionSignature = (
       func: (instance: Instance) => void,
       elseFunc: (instance: Instance) => void
     ) => void);
-
-declare global {
-  var findNode: WithInSignature;
-  var withinNode: WithInSignature;
-  var withNode: WithInSignature;
-  var gotoNode: (
-    childNodeName: string,
-    func: (instance: Instance) => void
-  ) => void;
-  var ifExistNode: ConditionSignature;
-  var unlessExistNode: ConditionSignature;
-  var ifOnlyExistNode: ConditionSignature;
-  var ifAllNodes: ConditionSignature;
-  var append: (code: string) => void;
-  var prepend: (code: string) => void;
-  var insert: (code: string, options: InsertOptions) => void;
-  var insertAfter: (code: string, options: InsertOptions) => void;
-  var insertBefore: (code: string, options: InsertOptions) => void;
-  var deleteNode: (selectors: string | string[]) => void;
-  var remove: () => void;
-  var replace: (selectors: string | string[], options: ReplaceOptions) => void;
-  var replaceWith: (code: string, options: ReplaceWithOptions) => void;
-  var noop: () => void;
-  var callHelperSync: (name: string, options: any) => void;
-  var callHelper: (name: string, options: any) => Promise<void>;
-  var mutationAdapter: () => Adapter<any>;
-  var indent: (str: string, count: number) => string;
-}
-
-global.withinNode = Instance.prototype.withinNode;
-global.withNode = Instance.prototype.withinNode;
-global.findNode = Instance.prototype.withinNode;
-global.gotoNode = Instance.prototype.gotoNode;
-global.ifExistNode = Instance.prototype.ifExistNode;
-global.unlessExistNode = Instance.prototype.unlessExistNode;
-global.ifOnlyExistNode = Instance.prototype.ifOnlyExistNode;
-global.ifAllNodes = Instance.prototype.ifAllNodes;
-global.append = Instance.prototype.append;
-global.prepend = Instance.prototype.prepend;
-global.insert = Instance.prototype.insert;
-global.insertAfter = Instance.prototype.insertAfter;
-global.insertBefore = Instance.prototype.insertBefore;
-global.deleteNode = Instance.prototype.delete;
-global.remove = Instance.prototype.remove;
-global.replace = Instance.prototype.replace;
-global.replaceWith = Instance.prototype.replaceWith;
-global.noop = Instance.prototype.noop;
-global.callHelperSync = Instance.prototype.callHelperSync;
-global.callHelper = Instance.prototype.callHelper;
-global.mutationAdapter = Instance.prototype.mutationAdapter;
-global.indent = indent;

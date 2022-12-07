@@ -47,57 +47,83 @@ export const arrayBody = (node: any): Node[] => {
  * Rewrite javascript snippet to async version.
  */
 export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
-  const node = ts.createSourceFile(
-    "test.js",
-    snippet,
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.JS
-  );
-  const mutation = new NodeMutation<ts.Node>(snippet);
+  const newSnippet = addProperScopeToSnippet(snippet);
+  const node = parseCode(newSnippet);
+  const mutation = new NodeMutation<ts.Node>(newSnippet);
   let nodes = new NodeQuery<ts.Node>(
-    `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2.nodeType IN (ArrowFunction FunctionExpression)]`
+    `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression]`
   ).queryNodes(node);
   nodes.forEach((node) =>
-    mutation.insert((node as ts.NewExpression).arguments![2], "async ", {
-      at: "beginning",
-    })
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.2" })
   );
   nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1.nodeType IN (ArrowFunction FunctionExpression)]`
+    `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+      [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression]`
   ).queryNodes(node);
   nodes.forEach((node) =>
-    mutation.insert((node as ts.CallExpression).arguments![1], "async ", {
-      at: "beginning",
-    })
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.1" })
   );
   nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]`
+    `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+      [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
   ).queryNodes(node);
   nodes.forEach((node) => mutation.insert(node, "await ", { at: "beginning" }));
-  return mutation.process().newSource!;
+  const { affected, newSource } = mutation.process();
+  return affected ? newSource! : newSnippet;
 };
 
 /**
  * Rewrite javascript snippet to sync version.
  */
 export const rewriteSnippetToSyncVersion = (snippet: string): string => {
-  const node = ts.createSourceFile(
-    "test.js",
-    snippet,
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.JS
-  );
-  const mutation = new NodeMutation<ts.Node>(snippet);
+  const newSnippet = addProperScopeToSnippet(snippet);
+  const node = parseCode(newSnippet);
+  const mutation = new NodeMutation<ts.Node>(newSnippet);
   let nodes = new NodeQuery<ts.Node>(
-    `.CallExpression[expression IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]`
+    `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+      [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
   ).queryNodes(node);
   nodes.forEach((node) =>
     mutation.insert(node, "Sync", { at: "end", to: "expression" })
   );
-  return mutation.process().newSource!;
+  const { affected, newSource } = mutation.process();
+  return affected ? newSource! : newSnippet;
 };
+
+const addProperScopeToSnippet = (snippet: string): string => {
+  const node = parseCode(snippet);
+  const mutation = new NodeMutation<ts.Node>(snippet);
+  let nodes = new NodeQuery<ts.Node>(
+    `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`
+  ).queryNodes(node);
+  nodes.forEach((node) => {
+    mutation.delete(node, "arguments.2.equalsGreaterThanToken");
+    mutation.insert(node, "function ", { at: "beginning", to: "arguments.2" });
+  });
+  nodes = new NodeQuery<ts.Node>(
+    `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
+  ).queryNodes(node);
+  nodes.forEach((node) => {
+    mutation.delete(node, "arguments.1.equalsGreaterThanToken");
+    mutation.insert(node, "function ", { at: "beginning", to: "arguments.1" });
+  });
+  nodes = new NodeQuery<ts.Node>(
+    `.CallExpression[expression IN (
+        configure description ifNode ifNpm addSnippet withinFiles withinFile addFile removeFile
+        withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes callHelper mutationAdapter
+        append prepend insert insertAfter insertBefore deleteNode remove replace replaceWith noop
+      )]`
+  ).queryNodes(node);
+  nodes.forEach((node) => {
+    mutation.insert(node, "this.", { at: "beginning" });
+  });
+  const { affected, newSource } = mutation.process();
+  return affected ? newSource! : snippet;
+}
+
+const parseCode = (snippet: string): ts.Node => {
+  return ts.createSourceFile("test.js", snippet, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+}
 
 /**
  * Sync to eval the snippet by name.

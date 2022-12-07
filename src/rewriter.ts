@@ -96,14 +96,8 @@ class Rewriter {
    * Sync to process the rewriter.
    */
   processSync(): void {
-    const originalRewriter = Rewriter.current;
     this.affectedFiles = new Set<string>();
-    try {
-      Rewriter.current = this;
-      this.func.call(this, this);
-    } finally {
-      Rewriter.current = originalRewriter;
-    }
+    this.func.call(this, this);
   }
 
   /**
@@ -111,14 +105,8 @@ class Rewriter {
    * @async
    */
   async process(): Promise<void> {
-    const originalRewriter = Rewriter.current;
     this.affectedFiles = new Set<string>();
-    try {
-      Rewriter.current = this;
-      await this.func.call(this, this);
-    } finally {
-      Rewriter.current = originalRewriter;
-    }
+    await this.func.call(this, this);
   }
 
   /**
@@ -126,14 +114,8 @@ class Rewriter {
    * It will run the func but doesn't change any file.
    */
   processWithSandboxSync(): void {
-    const originalRewriter = Rewriter.current;
-    try {
-      Rewriter.current = this;
-      Rewriter.current.options.runInstance = false;
-      this.func.call(this, this);
-    } finally {
-      Rewriter.current = originalRewriter;
-    }
+    this.options.runInstance = false;
+    this.func.call(this, this);
   }
 
   /**
@@ -142,14 +124,8 @@ class Rewriter {
    * @async
    */
   async processWithSandbox(): Promise<void> {
-    const originalRewriter = Rewriter.current;
-    try {
-      Rewriter.current = this;
-      Rewriter.current.options.runInstance = false;
-      await this.func.call(this, this);
-    } finally {
-      Rewriter.current = originalRewriter;
-    }
+    this.options.runInstance = false;
+    await this.func.call(this, this);
   }
 
   /**
@@ -157,15 +133,9 @@ class Rewriter {
    * @returns {TestResultExt[]} test results
    */
   testSync(): TestResultExt[] {
-    const originalRewriter = Rewriter.current;
-    try {
-      Rewriter.current = this;
-      Rewriter.current.options.writeToFile = false;
-      this.func.call(this, this);
-      return Rewriter.current.testResults;
-    } finally {
-      Rewriter.current = originalRewriter;
-    }
+    this.options.writeToFile = false;
+    this.func.call(this, this);
+    return this.testResults;
   }
 
   /**
@@ -174,15 +144,9 @@ class Rewriter {
    * @returns {TestResultExt[]} test results
    */
   async test(): Promise<TestResultExt[]> {
-    const originalRewriter = Rewriter.current;
-    try {
-      Rewriter.current = this;
-      Rewriter.current.options.writeToFile = false;
-      await this.func.call(this, this);
-      return Promise.resolve(Rewriter.current.testResults);
-    } finally {
-      Rewriter.current = originalRewriter;
-    }
+    this.options.writeToFile = false;
+    await this.func.call(this, this);
+    return Promise.resolve(this.testResults);
   }
 
   /**
@@ -208,13 +172,13 @@ class Rewriter {
    */
   configure(options: RewriterOptions) {
     if (options.sourceType) {
-      Rewriter.current.options.sourceType = options.sourceType;
+      this.options.sourceType = options.sourceType;
     }
     if (options.parser) {
-      Rewriter.current.options.parser = options.parser;
+      this.options.parser = options.parser;
     }
     if (options.strategy) {
-      Rewriter.current.options.strategy = options.strategy;
+      this.options.strategy = options.strategy;
     }
   }
 
@@ -231,7 +195,7 @@ class Rewriter {
   description(description: string): void;
   description(description?: string): void | string {
     if (description) {
-      Rewriter.current.desc = description;
+      this.desc = description;
     } else {
       return this.desc;
     }
@@ -244,7 +208,7 @@ class Rewriter {
    * @param {string} version - specified node version.
    */
   ifNode(version: string): void {
-    Rewriter.current.nodeVersion = new NodeVersion(version);
+    this.nodeVersion = new NodeVersion(version);
   }
 
   /**
@@ -255,7 +219,7 @@ class Rewriter {
    * @param {string} version - equal, less than or greater than specified version, e.g. '>= 2.0.0',
    */
   ifNpm(name: string, version: string): void {
-    Rewriter.current.npmVersion = new NpmVersion(name, version);
+    this.npmVersion = new NpmVersion(name, version);
   }
 
   /**
@@ -272,7 +236,6 @@ class Rewriter {
    * @param {string} name - name of another rewriter.
    */
   addSnippetSync(group: string, name?: string): void {
-    const currentRewriter = Rewriter.current;
     let rewriter = null;
     if (typeof name === "string") {
       rewriter =
@@ -282,16 +245,16 @@ class Rewriter {
     }
     if (!rewriter || !(rewriter instanceof Rewriter)) return;
 
-    rewriter.options = currentRewriter.options;
+    rewriter.options = this.options;
     if (!rewriter.options.writeToFile) {
       const results = rewriter.testSync();
-      currentRewriter.mergeTestResults(results);
+      this.mergeTestResults(results);
     } else if (rewriter.options.runInstance) {
       rewriter.processSync();
     } else {
       rewriter.processWithSandboxSync();
     }
-    currentRewriter.subSnippets.push(rewriter);
+    this.subSnippets.push(rewriter);
   }
 
   /**
@@ -309,7 +272,6 @@ class Rewriter {
    * @param {string} name - name of another rewriter.
    */
   async addSnippet(group: string, name?: string): Promise<void> {
-    const currentRewriter = Rewriter.current;
     let rewriter = null;
     if (typeof name === "string") {
       rewriter =
@@ -320,16 +282,16 @@ class Rewriter {
     }
     if (!rewriter || !(rewriter instanceof Rewriter)) return;
 
-    rewriter.options = currentRewriter.options;
+    rewriter.options = this.options;
     if (!rewriter.options.writeToFile) {
       const results = await rewriter.test();
-      currentRewriter.mergeTestResults(results);
+      this.mergeTestResults(results);
     } else if (rewriter.options.runInstance) {
       rewriter.process();
     } else {
       rewriter.processWithSandbox();
     }
-    currentRewriter.subSnippets.push(rewriter);
+    this.subSnippets.push(rewriter);
   }
 
   /**
@@ -347,22 +309,23 @@ class Rewriter {
     filePattern: string,
     func: (instance: Instance) => void
   ): void {
-    if (!Rewriter.current.options.runInstance) return;
+    if (!this.options.runInstance) return;
 
     if (
-      (!Rewriter.current.nodeVersion || Rewriter.current.nodeVersion.match()) &&
-      (!Rewriter.current.npmVersion || Rewriter.current.npmVersion.match())
+      (!this.nodeVersion || this.nodeVersion.match()) &&
+      (!this.npmVersion || this.npmVersion.match())
     ) {
-      const instance = new Instance(Rewriter.current, filePattern, func);
-      Instance.current = instance;
-      if (Rewriter.current.options.writeToFile) {
+      const instance = new Instance(this, filePattern, func);
+      if (this.options.writeToFile) {
         instance.processSync();
       } else {
         const results = instance.testSync();
-        Rewriter.current.mergeTestResults(results);
+        this.mergeTestResults(results);
       }
     }
   }
+
+  withFileSync = this.withinFilesSync.bind(this)
 
   /**
    * Async to find specified files.
@@ -380,24 +343,25 @@ class Rewriter {
     filePattern: string,
     func: (instance: Instance) => void
   ): Promise<void> {
-    if (!Rewriter.current.options.runInstance) return;
+    if (!this.options.runInstance) return;
 
     if (
-      (!Rewriter.current.nodeVersion ||
-        (await Rewriter.current.nodeVersion.match())) &&
-      (!Rewriter.current.npmVersion ||
-        (await Rewriter.current.npmVersion.match()))
+      (!this.nodeVersion ||
+        (await this.nodeVersion.match())) &&
+      (!this.npmVersion ||
+        (await this.npmVersion.match()))
     ) {
-      const instance = new Instance(Rewriter.current, filePattern, func);
-      Instance.current = instance;
-      if (Rewriter.current.options.writeToFile) {
+      const instance = new Instance(this, filePattern, func);
+      if (this.options.writeToFile) {
         await instance.process();
       } else {
         const results = await instance.test();
-        Rewriter.current.mergeTestResults(results);
+        this.mergeTestResults(results);
       }
     }
   }
+
+  withFiles = this.withinFiles.bind(this)
 
   /**
    * Sync to add a new file.
@@ -405,7 +369,7 @@ class Rewriter {
    * @param {string} content - file body
    */
   addFileSync(fileName: string, content: string): void {
-    if (!Rewriter.current.options.runInstance) return;
+    if (!this.options.runInstance) return;
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (isValidFileSync(filePath)) {
@@ -423,7 +387,7 @@ class Rewriter {
    * @param {string} content - file body
    */
   async addFile(fileName: string, content: string): Promise<void> {
-    if (!Rewriter.current.options.runInstance) return;
+    if (!this.options.runInstance) return;
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (await isValidFile(filePath)) {
@@ -439,7 +403,7 @@ class Rewriter {
    * @param {string} fileName - file name
    */
   removeFileSync(fileName: string): void {
-    if (!Rewriter.current.options.runInstance) return;
+    if (!this.options.runInstance) return;
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (isValidFileSync(filePath)) {
@@ -453,7 +417,7 @@ class Rewriter {
    * @param {string} fileName - file name
    */
   async removeFile(fileName: string): Promise<void> {
-    if (!Rewriter.current.options.runInstance) return;
+    if (!this.options.runInstance) return;
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (await isValidFile(filePath)) {
@@ -462,55 +426,11 @@ class Rewriter {
   }
 
   private mergeTestResults(results: TestResultExt[]): void {
-    Rewriter.current.testResults = [
-      ...Rewriter.current.testResults,
+    this.testResults = [
+      ...this.testResults,
       ...results.filter((result) => result.affected),
     ];
   }
 }
 
 export default Rewriter;
-
-declare global {
-  var configure: (options: RewriterOptions) => void;
-  var description: (description: string | null) => void | string;
-  var ifNode: (version: string) => void;
-  var ifNpm: (name: string, version: string) => void;
-  var addSnippetSync: (group: string, name?: string) => void;
-  var addSnippet: (group: string, name?: string) => Promise<void>;
-  var withinFilesSync: (
-    filePattern: string,
-    func: (instance: Instance) => void
-  ) => void;
-  var withinFiles: (
-    filePattern: string,
-    func: (instance: Instance) => void
-  ) => Promise<void>;
-  var withinFileSync: (
-    filePattern: string,
-    func: (instance: Instance) => void
-  ) => void;
-  var withinFile: (
-    filePattern: string,
-    func: (instance: Instance) => void
-  ) => Promise<void>;
-  var addFileSync: (fileName: string, content: string) => void;
-  var addFile: (fileName: string, content: string) => Promise<void>;
-  var removeFileSync: (fileName: string) => void;
-  var removeFile: (fileName: string) => Promise<void>;
-}
-
-global.configure = Rewriter.prototype.configure;
-global.description = Rewriter.prototype.description;
-global.ifNode = Rewriter.prototype.ifNode;
-global.ifNpm = Rewriter.prototype.ifNpm;
-global.addSnippetSync = Rewriter.prototype.addSnippetSync;
-global.addSnippet = Rewriter.prototype.addSnippet;
-global.withinFilesSync = Rewriter.prototype.withinFilesSync;
-global.withinFiles = Rewriter.prototype.withinFiles;
-global.withinFileSync = Rewriter.prototype.withinFilesSync;
-global.withinFile = Rewriter.prototype.withinFiles;
-global.addFileSync = Rewriter.prototype.addFileSync;
-global.addFile = Rewriter.prototype.addFile;
-global.removeFileSync = Rewriter.prototype.removeFileSync;
-global.removeFile = Rewriter.prototype.removeFile;
