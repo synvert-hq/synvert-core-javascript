@@ -47,7 +47,7 @@ Want to use the CLI, check out [synvert-javascript](https://github.com/xinminlab
 By default, you can't run the above snippet directly, synvert-core provides 2 utilities to convert it to sync and async verions.
 
 ```javascript
-Synvert.evalSnippetSync(snippetSourceCode);
+Synvert.rewriteSnippetToSyncVersion(snippetSourceCode);
 
 // Then it converts snippet code to the following sync version
 
@@ -84,7 +84,7 @@ new Synvert.Rewriter("jquery", "deprecate-event-shorthand", function () {
 ```
 
 ```javascript
-await Synvert.evalSnippet(snippetSourceCode);
+Synvert.rewriteSnippetToAsyncVersion(snippetSourceCode);
 
 // Then it converts snippet code to the following async version
 
