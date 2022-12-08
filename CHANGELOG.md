@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.2 (2022-12-08)
+
+* Load snippet will do rewrite internally
+
 ## 2.0.1 (2022-12-08)
 
 * Rewrite snippet before eval
