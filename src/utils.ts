@@ -199,11 +199,15 @@ export const loadSnippet = async (snippetName: string): Promise<string> => {
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   } else if (await isValidFile(snippetName)) {
-    return rewriteSnippetToAsyncVersion(await promisesFs.readFile(snippetName, "utf-8"));
+    return rewriteSnippetToAsyncVersion(
+      await promisesFs.readFile(snippetName, "utf-8")
+    );
   } else {
     const snippetPath = snippetExpandPath(snippetName);
     if (await isValidFile(snippetPath)) {
-      return rewriteSnippetToAsyncVersion(await promisesFs.readFile(snippetPath, "utf-8"));
+      return rewriteSnippetToAsyncVersion(
+        await promisesFs.readFile(snippetPath, "utf-8")
+      );
     }
     const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
     if (await remoteSnippetExists(snippetUrl)) {
