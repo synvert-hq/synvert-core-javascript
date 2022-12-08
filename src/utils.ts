@@ -144,7 +144,7 @@ const parseCode = (snippet: string): ts.Node => {
  * @returns {Rewriter} a Rewriter object
  */
 export const evalSnippetSync = (snippetName: string): Rewriter => {
-  return eval(rewriteSnippetToSyncVersion(loadSnippetSync(snippetName)));
+  return eval(loadSnippetSync(snippetName));
 };
 
 /**
@@ -154,8 +154,7 @@ export const evalSnippetSync = (snippetName: string): Rewriter => {
  * @returns {Promise<Rewriter>} a Rewriter object
  */
 export const evalSnippet = async (snippetName: string): Promise<Rewriter> => {
-  const snippet = await loadSnippet(snippetName);
-  return eval(rewriteSnippetToAsyncVersion(snippet));
+  return eval(await loadSnippet(snippetName));
 };
 
 /**
@@ -167,19 +166,19 @@ export const loadSnippetSync = (snippetName: string): string => {
   if (isValidUrl(snippetName)) {
     const snippetUrl = formatUrl(snippetName);
     if (remoteSnippetExistsSync(snippetUrl)) {
-      return fetchSync(snippetUrl).text();
+      return rewriteSnippetToSyncVersion(fetchSync(snippetUrl).text());
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   } else if (isValidFileSync(snippetName)) {
-    return fs.readFileSync(snippetName, "utf-8");
+    return rewriteSnippetToSyncVersion(fs.readFileSync(snippetName, "utf-8"));
   } else {
     const snippetPath = snippetExpandPath(snippetName);
     if (isValidFileSync(snippetPath)) {
-      return fs.readFileSync(snippetPath, "utf-8");
+      return rewriteSnippetToSyncVersion(fs.readFileSync(snippetPath, "utf-8"));
     }
     const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
     if (remoteSnippetExistsSync(snippetUrl)) {
-      return fetchSync(snippetUrl).text();
+      return rewriteSnippetToSyncVersion(fetchSync(snippetUrl).text());
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   }
@@ -196,20 +195,20 @@ export const loadSnippet = async (snippetName: string): Promise<string> => {
     const snippetUrl = formatUrl(snippetName);
     if (await remoteSnippetExists(snippetUrl)) {
       const response = await fetch(snippetUrl);
-      return await response.text();
+      return rewriteSnippetToAsyncVersion(await response.text());
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   } else if (await isValidFile(snippetName)) {
-    return await promisesFs.readFile(snippetName, "utf-8");
+    return rewriteSnippetToAsyncVersion(await promisesFs.readFile(snippetName, "utf-8"));
   } else {
     const snippetPath = snippetExpandPath(snippetName);
     if (await isValidFile(snippetPath)) {
-      return await promisesFs.readFile(snippetPath, "utf-8");
+      return rewriteSnippetToAsyncVersion(await promisesFs.readFile(snippetPath, "utf-8"));
     }
     const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
     if (await remoteSnippetExists(snippetUrl)) {
       const response = await fetch(snippetUrl);
-      return await response.text();
+      return rewriteSnippetToAsyncVersion(await response.text());
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   }
