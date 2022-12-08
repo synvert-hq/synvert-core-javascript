@@ -1,9 +1,6 @@
 import Rewriter from "./rewriter";
 import Configuration from "./configuration";
-import {
-  evalSnippet,
-  evalSnippetSync,
-} from "./utils";
+import { evalSnippet, evalSnippetSync } from "./utils";
 import { SnippetNotFoundError } from "./errors";
 import { Parser, Strategy } from "./types/options";
 import type { TestResultExt } from "./types/result";
