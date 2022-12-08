@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.3 (2022-12-08)
+
+* Expose `rewriteSnippetToSyncVersion` and `rewriteSnippetToAsyncVersion`
+
 ## 2.0.2 (2022-12-08)
 
 * Load snippet will do rewrite internally
