@@ -84,7 +84,7 @@ new Synvert.Rewriter("jquery", "deprecate-event-shorthand", function () {
 ```
 
 ```javascript
-Synvert.evalSnippet(snippetSourceCode);
+await Synvert.evalSnippet(snippetSourceCode);
 
 // Then it converts snippet code to the following async version
 
