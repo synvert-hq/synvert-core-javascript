@@ -99,7 +99,11 @@ describe("rewriteSnippetToAsyncVersion", () => {
       });
     `;
     expect(rewriteSnippetToAsyncVersion(originalSnippet)).toEqual(newSnippet);
-    expect(rewriteSnippetToAsyncVersion(rewriteSnippetToAsyncVersion(originalSnippet))).toEqual(newSnippet);
+    expect(
+      rewriteSnippetToAsyncVersion(
+        rewriteSnippetToAsyncVersion(originalSnippet)
+      )
+    ).toEqual(newSnippet);
   });
 });
 
@@ -146,6 +150,8 @@ describe("rewriteSnippetToSyncVersion", () => {
       });
     `;
     expect(rewriteSnippetToSyncVersion(originalSnippet)).toEqual(newSnippet);
-    expect(rewriteSnippetToSyncVersion(rewriteSnippetToSyncVersion(originalSnippet))).toEqual(newSnippet);
+    expect(
+      rewriteSnippetToSyncVersion(rewriteSnippetToSyncVersion(originalSnippet))
+    ).toEqual(newSnippet);
   });
 });

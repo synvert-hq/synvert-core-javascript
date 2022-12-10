@@ -56,7 +56,7 @@ const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
     [name IN (withinNodes withinNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNode)]]
     [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`
-)
+);
 
 const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
@@ -78,10 +78,10 @@ export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
   );
   SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
     mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-  )
+  );
   ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {
     if (NodeQuery.getAdapter().getNodeType(node.parent) !== "AwaitExpression") {
-      mutation.insert(node, "await ", { at: "beginning" })
+      mutation.insert(node, "await ", { at: "beginning" });
     }
   });
   const { affected, newSource } = mutation.process();
@@ -210,11 +210,15 @@ export const loadSnippet = async (snippetName: string): Promise<string> => {
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   } else if (await isValidFile(snippetName)) {
-    return rewriteSnippetToAsyncVersion(await promisesFs.readFile(snippetName, "utf-8"));
+    return rewriteSnippetToAsyncVersion(
+      await promisesFs.readFile(snippetName, "utf-8")
+    );
   } else {
     const snippetPath = snippetExpandPath(snippetName);
     if (await isValidFile(snippetPath)) {
-      return rewriteSnippetToAsyncVersion(await promisesFs.readFile(snippetPath, "utf-8"));
+      return rewriteSnippetToAsyncVersion(
+        await promisesFs.readFile(snippetPath, "utf-8")
+      );
     }
     const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
     if (await remoteSnippetExists(snippetUrl)) {
