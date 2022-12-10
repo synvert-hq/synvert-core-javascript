@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.0.5 (2022-12-10)
+
+* Await `callHelper`
+* Remove unnecessary async/await
+
 ## 2.0.4 (2022-12-10)
 
 * Rewrite snippet twice still gets the same result
