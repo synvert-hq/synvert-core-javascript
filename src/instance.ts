@@ -772,21 +772,7 @@ class Instance {
   private matchFilesInPathsSync(): string[] {
     const onlyPaths =
       Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    return onlyPaths.flatMap((onlyPath) => this.matchFilesSync(onlyPath));
-  }
-
-  private async matchFilesInPaths(): Promise<string[]> {
-    const onlyPaths =
-      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    // It uses onlyPaths.flatMap((onlyPath) => this.matchFiles(onlyPath)) without async/await
-    const [filePaths] = await Promise.all(
-      onlyPaths.map(async (onlyPath) => await this.matchFiles(onlyPath))
-    );
-    return filePaths;
-  }
-
-  private matchFilesSync(onlyPath: string): string[] {
-    return fg.sync(path.join(onlyPath, this.filePattern), {
+    return fg.sync(onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)), {
       ignore: Configuration.skipPaths,
       cwd: Configuration.rootPath,
       onlyFiles: true,
@@ -794,8 +780,10 @@ class Instance {
     });
   }
 
-  private async matchFiles(onlyPath: string): Promise<string[]> {
-    return fg(path.join(onlyPath, this.filePattern), {
+  private async matchFilesInPaths(): Promise<string[]> {
+    const onlyPaths =
+      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
+    return fg(onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)), {
       ignore: Configuration.skipPaths,
       cwd: Configuration.rootPath,
       onlyFiles: true,
