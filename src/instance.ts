@@ -134,7 +134,9 @@ class Instance {
     }
 
     const filePaths = await this.matchFilesInPaths();
-    return await Promise.all(filePaths.map((filePath) => this.testFile(filePath)));
+    return await Promise.all(
+      filePaths.map((filePath) => this.testFile(filePath))
+    );
   }
 
   /**
@@ -766,23 +768,29 @@ class Instance {
   private matchFilesInPathsSync(): string[] {
     const onlyPaths =
       Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    return fg.sync(onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)), {
-      ignore: Configuration.skipPaths,
-      cwd: Configuration.rootPath,
-      onlyFiles: true,
-      unique: true,
-    });
+    return fg.sync(
+      onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)),
+      {
+        ignore: Configuration.skipPaths,
+        cwd: Configuration.rootPath,
+        onlyFiles: true,
+        unique: true,
+      }
+    );
   }
 
   private async matchFilesInPaths(): Promise<string[]> {
     const onlyPaths =
       Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    return fg(onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)), {
-      ignore: Configuration.skipPaths,
-      cwd: Configuration.rootPath,
-      onlyFiles: true,
-      unique: true,
-    });
+    return fg(
+      onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)),
+      {
+        ignore: Configuration.skipPaths,
+        cwd: Configuration.rootPath,
+        onlyFiles: true,
+        unique: true,
+      }
+    );
   }
 
   /**
