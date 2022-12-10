@@ -104,9 +104,7 @@ class Instance {
     }
 
     const filePaths = await this.matchFilesInPaths();
-    await Promise.all(
-      filePaths.map(async (filePath) => await this.processFile(filePath))
-    );
+    await Promise.all(filePaths.map((filePath) => this.processFile(filePath)));
   }
 
   /**
@@ -138,9 +136,7 @@ class Instance {
     }
 
     const filePaths = await this.matchFilesInPaths();
-    return await Promise.all(
-      filePaths.map(async (filePath) => await this.testFile(filePath))
-    );
+    return await Promise.all(filePaths.map((filePath) => this.testFile(filePath)));
   }
 
   /**
