@@ -44,13 +44,19 @@ export const arrayBody = (node: any): Node[] => {
 };
 
 const NEW_REWRITER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression]`
+  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression[modifiers=undefined]]`
 );
 
 const NEW_INSTANCE_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression]`
+    [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`
 );
+
+const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+    [name IN (withinNodes withinNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNode)]]
+    [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`
+)
 
 const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
@@ -65,14 +71,19 @@ export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
   const node = parseCode(newSnippet);
   const mutation = new NodeMutation<ts.Node>(newSnippet);
   NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-    mutation.insert(node, "async ", { at: "beginning", to: "arguments.2" })
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
   );
   NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-    mutation.insert(node, "async ", { at: "beginning", to: "arguments.1" })
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
   );
-  ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
-    mutation.insert(node, "await ", { at: "beginning" })
-  );
+  SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+  )
+  ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {
+    if (NodeQuery.getAdapter().getNodeType(node.parent) !== "AwaitExpression") {
+      mutation.insert(node, "await ", { at: "beginning" })
+    }
+  });
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : newSnippet;
 };
