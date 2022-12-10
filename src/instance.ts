@@ -620,7 +620,7 @@ class Instance {
   async callHelper(helperName: string, options: any): Promise<void> {
     const helperContent = await loadSnippet(helperName);
     this.options = options;
-    Function(helperContent).call(this, this);
+    await Function(helperContent).call(this, this);
     this.options = undefined;
   }
 
