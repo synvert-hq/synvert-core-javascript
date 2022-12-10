@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.4 (2022-12-10)
+
+* Rewrite snippet twice still gets the same result
+
 ## 2.0.3 (2022-12-08)
 
 * Expose `rewriteSnippetToSyncVersion` and `rewriteSnippetToAsyncVersion`
