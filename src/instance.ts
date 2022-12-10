@@ -130,9 +130,7 @@ class Instance {
       (await isValidFile(Configuration.rootPath)) &&
       minimatch(Configuration.rootPath, this.filePattern)
     ) {
-      return await Promise.resolve([
-        await this.testFile(Configuration.rootPath),
-      ]);
+      return [await this.testFile(Configuration.rootPath)];
     }
 
     const filePaths = await this.matchFilesInPaths();

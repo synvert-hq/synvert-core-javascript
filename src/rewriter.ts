@@ -146,7 +146,7 @@ class Rewriter {
   async test(): Promise<TestResultExt[]> {
     this.options.writeToFile = false;
     await this.func.call(this, this);
-    return Promise.resolve(this.testResults);
+    return this.testResults;
   }
 
   /**
