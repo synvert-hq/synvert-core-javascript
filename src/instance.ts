@@ -49,8 +49,6 @@ const espree = require("@xinminlabs/espree");
  */
 class Instance {
   public currentNode!: Node;
-  public currentFileSource!: string;
-  public currentFilePath!: string;
   private currentMutation!: NodeMutation<Node>;
   public options: any;
 
@@ -642,16 +640,15 @@ class Instance {
     ) {
       return;
     }
-    this.currentFilePath = path.join(Configuration.rootPath, filePath);
+    const currentFilePath = path.join(Configuration.rootPath, filePath);
     if (Configuration.showRunProcess) {
       console.log(filePath);
     }
     while (true) {
-      let source = fs.readFileSync(this.currentFilePath, "utf-8");
-      this.currentFileSource = source;
+      const source = fs.readFileSync(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<Node>(source);
       try {
-        const node = this.parseCode(this.currentFilePath, source);
+        const node = this.parseCode(currentFilePath, source);
 
         this.processWithNode(node, this.func);
 
@@ -659,7 +656,7 @@ class Instance {
         debug("synvert-core:process")(result);
         if (result.affected) {
           this.rewriter.addAffectedFile(filePath);
-          fs.writeFileSync(this.currentFilePath, result.newSource!);
+          fs.writeFileSync(currentFilePath, result.newSource!);
         }
         if (!result.conflicted) {
           break;
@@ -681,16 +678,15 @@ class Instance {
     ) {
       return;
     }
-    this.currentFilePath = path.join(Configuration.rootPath, filePath);
+    const currentFilePath = path.join(Configuration.rootPath, filePath);
     if (Configuration.showRunProcess) {
       console.log(filePath);
     }
     while (true) {
-      let source = await promisesFs.readFile(this.currentFilePath, "utf-8");
-      this.currentFileSource = source;
+      const source = await promisesFs.readFile(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<Node>(source);
       try {
-        const node = this.parseCode(this.currentFilePath, source);
+        const node = this.parseCode(currentFilePath, source);
 
         this.processWithNode(node, this.func);
 
@@ -698,7 +694,7 @@ class Instance {
         debug("synvert-core:process")(result);
         if (result.affected) {
           this.rewriter.addAffectedFile(filePath);
-          await promisesFs.writeFile(this.currentFilePath, result.newSource!);
+          await promisesFs.writeFile(currentFilePath, result.newSource!);
         }
         if (!result.conflicted) {
           break;
@@ -726,11 +722,10 @@ class Instance {
     ) {
       return { conflicted: false, affected: false, actions: [], filePath };
     }
-    this.currentFilePath = path.join(Configuration.rootPath, filePath);
-    let source = fs.readFileSync(this.currentFilePath, "utf-8");
-    this.currentFileSource = source;
+    const currentFilePath = path.join(Configuration.rootPath, filePath);
+    const source = fs.readFileSync(currentFilePath, "utf-8");
     this.currentMutation = new NodeMutation<Node>(source);
-    const node = this.parseCode(this.currentFilePath, source);
+    const node = this.parseCode(currentFilePath, source);
 
     this.processWithNode(node, this.func);
 
@@ -747,11 +742,10 @@ class Instance {
     ) {
       return { conflicted: false, affected: false, actions: [], filePath };
     }
-    this.currentFilePath = path.join(Configuration.rootPath, filePath);
-    let source = await promisesFs.readFile(this.currentFilePath, "utf-8");
-    this.currentFileSource = source;
+    const currentFilePath = path.join(Configuration.rootPath, filePath);
+    const source = await promisesFs.readFile(currentFilePath, "utf-8");
     this.currentMutation = new NodeMutation<Node>(source);
-    const node = this.parseCode(this.currentFilePath, source);
+    const node = this.parseCode(currentFilePath, source);
 
     this.processWithNode(node, this.func);
 
