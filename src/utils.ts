@@ -4,8 +4,8 @@ import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import fetchSync from "sync-fetch";
 import { URL } from "url";
-import NodeQuery from "@xinminlabs/node-query";
-import NodeMutation from "@xinminlabs/node-mutation";
+import NodeQuery, { TypescriptAdapter as TypescriptQueryAdapter } from "@xinminlabs/node-query";
+import NodeMutation, { TypescriptAdapter as TypescriptMutationAdapter } from "@xinminlabs/node-mutation";
 
 import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
@@ -67,25 +67,29 @@ const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
  * Rewrite javascript snippet to async version.
  */
 export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
-  const newSnippet = addProperScopeToSnippet(snippet);
-  const node = parseCode(newSnippet);
-  const mutation = new NodeMutation<ts.Node>(newSnippet);
-  NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-  );
-  NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-  );
-  SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
-    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-  );
-  ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {
-    if (NodeQuery.getAdapter().getNodeType(node.parent) !== "AwaitExpression") {
-      mutation.insert(node, "await ", { at: "beginning" });
+  return makeSureTypescriptAdapter(
+    () => {
+      const newSnippet = addProperScopeToSnippet(snippet);
+      const node = parseCode(newSnippet);
+      const mutation = new NodeMutation<ts.Node>(newSnippet);
+      NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
+        mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+      );
+      NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
+        mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+      );
+      SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
+        mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+      );
+      ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {
+        if (NodeQuery.getAdapter().getNodeType(node.parent) !== "AwaitExpression") {
+          mutation.insert(node, "await ", { at: "beginning" });
+        }
+      });
+      const { affected, newSource } = mutation.process();
+      return affected ? newSource! : newSnippet;
     }
-  });
-  const { affected, newSource } = mutation.process();
-  return affected ? newSource! : newSnippet;
+  );
 };
 
 const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
@@ -97,14 +101,20 @@ const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
  * Rewrite javascript snippet to sync version.
  */
 export const rewriteSnippetToSyncVersion = (snippet: string): string => {
-  const newSnippet = addProperScopeToSnippet(snippet);
-  const node = parseCode(newSnippet);
-  const mutation = new NodeMutation<ts.Node>(newSnippet);
-  SYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
-    mutation.insert(node, "Sync", { at: "end", to: "expression" })
+  return makeSureTypescriptAdapter(
+    () => {
+      NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
+      NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
+      const newSnippet = addProperScopeToSnippet(snippet);
+      const node = parseCode(newSnippet);
+      const mutation = new NodeMutation<ts.Node>(newSnippet);
+      SYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
+        mutation.insert(node, "Sync", { at: "end", to: "expression" })
+      );
+      const { affected, newSource } = mutation.process();
+      return affected ? newSource! : newSnippet;
+    }
   );
-  const { affected, newSource } = mutation.process();
-  return affected ? newSource! : newSnippet;
 };
 
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
@@ -148,6 +158,19 @@ const parseCode = (snippet: string): ts.Node => {
     ts.ScriptKind.JS
   );
 };
+
+const makeSureTypescriptAdapter = (func: () => string): string => {
+  const originalQueryAdapter = NodeQuery.getAdapter();
+  const originalMutationAdapter = NodeMutation.getAdapter();
+  try {
+    NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
+    NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
+    return func();
+  } finally {
+    NodeQuery.configure({ adapter: originalQueryAdapter });
+    NodeMutation.configure({ adapter: originalMutationAdapter });
+  }
+}
 
 /**
  * Sync to eval the snippet by name.
