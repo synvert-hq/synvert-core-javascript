@@ -54,7 +54,7 @@ const NEW_INSTANCE_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
 
 const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (withinNodes withinNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNode)]]
+    [name IN (withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNode)]]
     [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`
 );
 
