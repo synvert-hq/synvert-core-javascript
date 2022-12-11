@@ -851,36 +851,3 @@ class Instance {
 }
 
 export default Instance;
-
-type WithInSignature = (
-  nqlOrRules: string | object,
-  func: (instance: Instance) => void
-) =>
-  | void
-  | ((
-      nqlOrRules: string | object,
-      options: QueryOptions,
-      func: (instance: Instance) => void
-    ) => void);
-
-type ConditionSignature = (
-  nqlOrRules: string | object,
-  func: (instance: Instance) => void
-) =>
-  | void
-  | ((
-      nqlOrRules: string | object,
-      func: (instance: Instance) => void,
-      elseFunc: (instance: Instance) => void
-    ) => void)
-  | ((
-      nqlOrRules: string | object,
-      options: ConditionOptions,
-      func: (instance: Instance) => void
-    ) => void)
-  | ((
-      nqlOrRules: string | object,
-      options: ConditionOptions,
-      func: (instance: Instance) => void,
-      elseFunc: (instance: Instance) => void
-    ) => void);
