@@ -3,8 +3,12 @@ import mock from "mock-fs";
 
 import Rewriter from "../src/rewriter";
 import Instance from "../src/instance";
-import NodeQuery, { TypescriptAdapter as TypescriptQueryAdapter } from "@xinminlabs/node-query";
-import NodeMutation, { TypescriptAdapter as TypescriptMutationAdapter } from "@xinminlabs/node-mutation";
+import NodeQuery, {
+  TypescriptAdapter as TypescriptQueryAdapter,
+} from "@xinminlabs/node-query";
+import NodeMutation, {
+  TypescriptAdapter as TypescriptMutationAdapter,
+} from "@xinminlabs/node-mutation";
 import { Parser } from "../src/types/options";
 
 describe("Instance", () => {
@@ -374,7 +378,7 @@ describe("Instance", () => {
       `;
       mock({
         "lib/helpers/helper.js": helper,
-        "code.js": input
+        "code.js": input,
       });
       process.env.SYNVERT_SNIPPETS_HOME = ".";
       instance.processSync();
@@ -386,7 +390,7 @@ describe("Instance", () => {
     beforeEach(() => {
       NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
       NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
-    })
+    });
     afterEach(() => {
       mock.restore();
     });
@@ -422,7 +426,7 @@ describe("Instance", () => {
       `;
       mock({
         "lib/helpers/helper.js": helper,
-        "code.js": input
+        "code.js": input,
       });
       process.env.SYNVERT_SNIPPETS_HOME = ".";
       await instance.process();
