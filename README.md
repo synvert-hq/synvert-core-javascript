@@ -86,4 +86,5 @@ Actions:
 Others:
 
 * [callHelper](./Instance.html#callHelper) - call a helper to run shared code
-* [mutationAdapter](./Instance.html#mutationAdapter) - get a [mutation adapter](https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts) to get some helpers
+* [queryAdapter](./Instance.html#queryAdapter) - get a [query adapter](https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts) to get some helper methods
+* [mutationAdapter](./Instance.html#mutationAdapter) - get a [mutation adapter](https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts) to get some helper methods

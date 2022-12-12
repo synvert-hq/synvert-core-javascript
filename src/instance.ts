@@ -25,6 +25,7 @@ import {
 import NodeQuery, {
   QueryOptions,
   TypescriptAdapter as TypescriptQueryAdapter,
+  Adapter as QueryAdapter,
 } from "@xinminlabs/node-query";
 import NodeMutation, {
   Strategy as NodeMutationStrategy,
@@ -32,7 +33,7 @@ import NodeMutation, {
   InsertOptions,
   ReplaceWithOptions,
   ReplaceOptions,
-  Adapter,
+  Adapter as MutationAdapter,
 } from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
@@ -837,8 +838,12 @@ class Instance {
     this.options = undefined;
   }
 
-  mutationAdapter(): Adapter<any> {
+  mutationAdapter(): MutationAdapter<any> {
     return NodeMutation.getAdapter();
+  }
+
+  queryAdapter(): QueryAdapter<any> {
+    return NodeQuery.getAdapter();
   }
 
   /**
