@@ -86,93 +86,17 @@ new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, 
 </code></pre>
 <p>Want to see more examples, check out <a href="https://github.com/xinminlabs/synvert-snippets-javascript">synvert-snippets-javascript</a>.</p>
 <p>Want to use the CLI, check out <a href="https://github.com/xinminlabs/synvert-javascript">synvert-javascript</a>.</p>
-<p>By default, you can't run the above snippet directly, synvert-core provides 2 utilities to convert it to sync and async verions.</p>
-<pre class="prettyprint source lang-javascript"><code>Synvert.rewriteSnippetToSyncVersion(snippetSourceCode);
-
-// Then it converts snippet code to the following sync version
-
-const Synvert = require(&quot;synvert-core&quot;);
-
-new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, function () {
-  this.description('jQuery event shorthand is deprecated.');
-
-  this.withinFilesSync(Synvert.ALL_FILES, function () {
-    // $('#test').click(function(e) { });
-    // =>
-    // $('#test').on('click', function(e) { });
-    this.findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
-                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
-      this.replace(&quot;callee.property&quot;, { with: &quot;on&quot; });
-      this.insert(&quot;'click', &quot;, { to: &quot;arguments.0&quot;, at: &quot;beginning&quot; });
-    });
-
-    // $form.submit();
-    // =>
-    // $form.trigger('submit');
-    this.withNode(
-      {
-        nodeType: &quot;CallExpression&quot;,
-        callee: { nodeType: &quot;MemberExpression&quot;, object: /^\$/, property: 'submit' },
-        arguments: { length: 0 },
-      },
-      () => {
-        this.replace([&quot;callee.property&quot;, &quot;arguments&quot;], { with: &quot;trigger('submit')&quot; });
-      }
-    );
-  });
-});
-</code></pre>
-<pre class="prettyprint source lang-javascript"><code>Synvert.rewriteSnippetToAsyncVersion(snippetSourceCode);
-
-// Then it converts snippet code to the following async version
-
-const Synvert = require(&quot;synvert-core&quot;);
-
-new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, async function () {
-  this.description('jQuery event shorthand is deprecated.');
-
-  await this.withinFiles(Synvert.ALL_FILES, async function () {
-    // $('#test').click(function(e) { });
-    // =>
-    // $('#test').on('click', function(e) { });
-    this.findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
-                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
-      this.replace(&quot;callee.property&quot;, { with: &quot;on&quot; });
-      this.insert(&quot;'click', &quot;, { to: &quot;arguments.0&quot;, at: &quot;beginning&quot; });
-    });
-
-    // $form.submit();
-    // =>
-    // $form.trigger('submit');
-    this.withNode(
-      {
-        nodeType: &quot;CallExpression&quot;,
-        callee: { nodeType: &quot;MemberExpression&quot;, object: /^\$/, property: 'submit' },
-        arguments: { length: 0 },
-      },
-      () => {
-        this.replace([&quot;callee.property&quot;, &quot;arguments&quot;], { with: &quot;trigger('submit')&quot; });
-      }
-    );
-  });
-});
-</code></pre>
 <p>DSL are as follows</p>
 <ul>
 <li><a href="./Rewriter.html#configure">configure</a> - configure the rewriter, set sourceTyep and parser</li>
 <li><a href="./Rewriter.html#description">description</a> - set description of the rewriter</li>
 <li><a href="./Rewriter.html#ifNode">ifNode</a> - check if node version is greater than or equal to the specified node version</li>
 <li><a href="./Rewriter.html#ifNpm">ifNpm</a> - check the version of the specifid npm package</li>
-<li><a href="./Rewriter.html#addFileSync">addFileSync</a> - sync to add a new file</li>
-<li><a href="./Rewriter.html#addFile">addFile</a> - async to add a new file</li>
-<li><a href="./Rewriter.html#removeFileSync">removeFileSync</a> - sync to remove a file</li>
-<li><a href="./Rewriter.html#removeFile">removeFile</a> - async to remove a file</li>
-<li><a href="./Rewriter.html#withinFiles">withinFilesSync</a> - sync to find specified files</li>
-<li><a href="./Rewriter.html#withinFiles">withinFiles</a> - async to find specified files</li>
-<li><a href="./Rewriter.html#withinFile">withinFileSync</a> - alias to withinFilesSync</li>
+<li><a href="./Rewriter.html#addFile">addFile</a> - add a new file</li>
+<li><a href="./Rewriter.html#removeFile">removeFile</a> - remove a file</li>
+<li><a href="./Rewriter.html#withinFiles">withinFiles</a> - find specified files</li>
 <li><a href="./Rewriter.html#withinFile">withinFile</a> - alias to withinFiles</li>
-<li><a href="./Rewriter.html#addSnippetSync">addSnippetSync</a> - sync to call another snippet</li>
-<li><a href="./Rewriter.html#addSnippet">addSnippet</a> - sync to call another snippet</li>
+<li><a href="./Rewriter.html#addSnippet">addSnippet</a> - call another snippet</li>
 </ul>
 <p>Scopes:</p>
 <ul>
@@ -203,9 +127,9 @@ new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, 
 </ul>
 <p>Others:</p>
 <ul>
-<li><a href="./Instance.html#callHelperSync">callHelperSync</a> - sync to call a helper to run shared code</li>
-<li><a href="./Instance.html#callHelper">callHelper</a> - async to call a helper to run shared code</li>
-<li><a href="./Instance.html#mutationAdapter">mutationAdapter</a> - get a <a href="https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts">mutation adapter</a> to get some helpers</li>
+<li><a href="./Instance.html#callHelper">callHelper</a> - call a helper to run shared code</li>
+<li><a href="./Instance.html#queryAdapter">queryAdapter</a> - get a <a href="https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts">query adapter</a> to get some helper methods</li>
+<li><a href="./Instance.html#mutationAdapter">mutationAdapter</a> - get a <a href="https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts">mutation adapter</a> to get some helper methods</li>
 </ul></article>
     </section>
 
@@ -219,7 +143,7 @@ new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, 
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Mon Dec 12 2022 12:18:21 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Mon Dec 12 2022 12:40:10 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
