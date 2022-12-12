@@ -845,7 +845,7 @@ class Instance {
    * indent("foo\nbar", 2)
    * @param {string} str
    * @param {number} count
-   * @returns indented str
+   * @returns {string} indented str
    */
   indent(str: string, count: number): string {
     return str

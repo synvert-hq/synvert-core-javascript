@@ -86,5 +86,6 @@ Actions:
 Others:
 
 * [callHelper](./Instance.html#callHelper) - call a helper to run shared code
+* [indent](./Instance#indent) - set proper indent of a string code
 * [queryAdapter](./Instance.html#queryAdapter) - get a [query adapter](https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts) to get some helper methods
 * [mutationAdapter](./Instance.html#mutationAdapter) - get a [mutation adapter](https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts) to get some helper methods
