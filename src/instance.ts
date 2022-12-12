@@ -587,7 +587,13 @@ class Instance {
     elseFunc?: (instance: Instance) => void
   ) {
     if (typeof options === "function") {
-      return new IfAllCondition(this, nqlOrRules, {}, options, func).processSync();
+      return new IfAllCondition(
+        this,
+        nqlOrRules,
+        {},
+        options,
+        func
+      ).processSync();
     }
     return new IfAllCondition(
       this,
@@ -625,7 +631,13 @@ class Instance {
     elseFunc?: (instance: Instance) => void
   ) {
     if (typeof options === "function") {
-      return await new IfAllCondition(this, nqlOrRules, {}, options, func).process();
+      return await new IfAllCondition(
+        this,
+        nqlOrRules,
+        {},
+        options,
+        func
+      ).process();
     }
     await new IfAllCondition(
       this,
@@ -833,7 +845,7 @@ class Instance {
     this.options = options;
     // await Function(`(async () => { ${helperContent} })()`).call(this, this);
     // is not working
-    await eval(`(async () => { ${helperContent} })()`)
+    await eval(`(async () => { ${helperContent} })()`);
     this.options = undefined;
   }
 
