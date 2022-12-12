@@ -10,6 +10,12 @@ import NodeMutation, { TypescriptAdapter as TypescriptMutationAdapter } from "@x
 import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
 
+const REWRITER_METHODS = "addFile removeFile withinFiles withinFile addSnippet"
+const SCOPE_METHODS = "withinNode withNode findNode gotoNode"
+const CONDITION_METHODS = "ifExistNode unlessExistNode ifOnlyExistNode ifAllNode"
+const ACTION_METHODS = "append prepend insert insertAfter insertBefore deleteNode remove replace replaceWith noop"
+const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${SCOPE_METHODS} callHelper mutationAdapter ${ACTION_METHODS}`
+
 /**
  * Add `count` spaces to `str`.
  * @example
@@ -54,16 +60,13 @@ const NEW_INSTANCE_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
 
 const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNode)]]
+    [name IN (${SCOPE_METHODS} ${CONDITION_METHODS})]]
     [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`
 );
 
 const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (
-      addFile removeFile withinFiles withinFile addSnippet callHelper
-      withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExsitNode ifAllNode
-    )]]`
+    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`
 );
 
 /**
@@ -97,10 +100,7 @@ export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
 
 const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (
-      addFile removeFile withinFiles withinFile addSnippet callHelper
-      withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExsitNode ifAllNode
-    )]]`
+    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`
 );
 
 /**
@@ -130,11 +130,7 @@ const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
 );
 const GLOBAL_DSL_QUERY = new NodeQuery<ts.Node>(
-  `.CallExpression[expression IN (
-      configure description ifNode ifNpm addSnippet withinFiles withinFile addFile removeFile
-      withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes callHelper mutationAdapter
-      append prepend insert insertAfter insertBefore deleteNode remove replace replaceWith noop
-    )]`
+  `.CallExpression[expression IN (${ALL_METHODS})]`
 );
 
 const addProperScopeToSnippet = (snippet: string): string => {
