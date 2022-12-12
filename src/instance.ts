@@ -16,7 +16,6 @@ import {
   ConditionOptions,
 } from "./condition";
 import {
-  indent,
   isValidFile,
   isValidFileSync,
   loadSnippet,
@@ -838,10 +837,40 @@ class Instance {
     this.options = undefined;
   }
 
+  /**
+   * Add `count` spaces to `str`.
+   * @example
+   * //   foo
+   * //   bar
+   * indent("foo\nbar", 2)
+   * @param {string} str
+   * @param {number} count
+   * @returns indented str
+   */
+  indent(str: string, count: number): string {
+    return str
+      .split("\n")
+      .map((line) => {
+        if (/^\s*$/.test(line)) {
+          return line;
+        }
+        return " ".repeat(count) + line;
+      })
+      .join("\n");
+  };
+
+  /**
+   * Get a node-mutation adapter
+   * @returns {MutationAdapter}
+   */
   mutationAdapter(): MutationAdapter<any> {
     return NodeMutation.getAdapter();
   }
 
+  /**
+   * Get a node-query adapter
+   * @returns {QueryAdapter}
+   */
   queryAdapter(): QueryAdapter<any> {
     return NodeQuery.getAdapter();
   }

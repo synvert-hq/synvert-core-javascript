@@ -1,26 +1,7 @@
 import {
-  indent,
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
 } from "../src/utils";
-
-it("indent", () => {
-  const oldCode = `
-  class Foo {
-    bar() {
-      test()
-    }
-  }
-  `;
-  const newCode = `
-    class Foo {
-      bar() {
-        test()
-      }
-    }
-  `;
-  expect(indent(oldCode, 2)).toEqual(newCode);
-});
 
 describe("rewriteSnippetToAsyncVersion", () => {
   test("rewrites snippet", () => {

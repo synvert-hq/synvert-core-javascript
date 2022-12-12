@@ -14,29 +14,7 @@ const REWRITER_METHODS = "addFile removeFile withinFiles withinFile addSnippet"
 const SCOPE_METHODS = "withinNode withNode findNode gotoNode"
 const CONDITION_METHODS = "ifExistNode unlessExistNode ifOnlyExistNode ifAllNode"
 const ACTION_METHODS = "append prepend insert insertAfter insertBefore deleteNode remove replace replaceWith noop"
-const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${SCOPE_METHODS} callHelper mutationAdapter ${ACTION_METHODS}`
-
-/**
- * Add `count` spaces to `str`.
- * @example
- * //   foo
- * //   bar
- * indent("foo\nbar", 2)
- * @param {string} str
- * @param {number} count
- * @returns indented str
- */
-export const indent = (str: string, count: number): string => {
-  return str
-    .split("\n")
-    .map((line) => {
-      if (/^\s*$/.test(line)) {
-        return line;
-      }
-      return " ".repeat(count) + line;
-    })
-    .join("\n");
-};
+const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${SCOPE_METHODS} ${ACTION_METHODS} callHelper indent queryAdapter mutationAdapter`
 
 export const arrayBody = (node: any): Node[] => {
   switch (node.type) {

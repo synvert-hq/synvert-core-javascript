@@ -429,4 +429,23 @@ describe("Instance", () => {
       expect(await promisesFs.readFile("code.js", "utf8")).toEqual(output);
     });
   });
+
+  describe("indent", () => {
+    const oldCode = `
+    class Foo {
+      bar() {
+        test()
+      }
+    }
+    `;
+    const newCode = `
+      class Foo {
+        bar() {
+          test()
+        }
+      }
+    `;
+    const instance = new Instance(rewriter, "*.js", function () {});
+    expect(instance.indent(oldCode, 2)).toEqual(newCode);
+  });
 });
