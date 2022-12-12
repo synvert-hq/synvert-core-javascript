@@ -74,7 +74,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.addSnippet("foo", "bar");
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
-          this.findNode(".CallExpression", async () => {
+          await this.findNode(".CallExpression", async () => {
             this.replace("expresion.name", { with: "foobar" });
             this.deleteNode("expression.expression");
           });
@@ -91,7 +91,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.addSnippet("foo", "bar");
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
-          this.findNode(".CallExpression", async () => {
+          await this.findNode(".CallExpression", async () => {
             this.replace("expresion.name", { with: "foobar" });
             this.deleteNode("expression.expression");
           });
@@ -142,7 +142,7 @@ describe("rewriteSnippetToSyncVersion", () => {
         this.addSnippetSync("foo", "bar");
         this.withinFilesSync(Synvert.ALL_FILES, function () {
           this.callHelperSync("helper/foobar")
-          this.findNode(".CallExpression", () => {
+          this.findNodeSync(".CallExpression", () => {
             this.replace("expresion.name", { with: "foobar" });
             this.deleteNode("expression.expression");
           });

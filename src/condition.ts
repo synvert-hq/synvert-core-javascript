@@ -43,11 +43,19 @@ abstract class Condition {
   /**
    * If condition matches, run the func.
    */
-  process(): void {
+  processSync(): void {
     if (this.match()) {
       this.func.call(this.instance, this.instance);
     } else if (this.elseFunc) {
       this.elseFunc.call(this.instance, this.instance);
+    }
+  }
+
+  async process() {
+    if (this.match()) {
+      await this.func.call(this.instance, this.instance);
+    } else if (this.elseFunc) {
+      await this.elseFunc.call(this.instance, this.instance);
     }
   }
 

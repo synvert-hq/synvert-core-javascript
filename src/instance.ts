@@ -142,9 +142,15 @@ class Instance {
    * @param {Node} node - set to current node
    * @param {Function} func
    */
-  processWithNode(node: Node, func: (instance: Instance) => void) {
+  processWithNodeSync(node: Node, func: (instance: Instance) => void) {
     this.currentNode = node;
     func.call(this, this);
+    this.currentNode = node;
+  }
+
+  async processWithNode(node: Node, func: (instance: Instance) => void) {
+    this.currentNode = node;
+    await func.call(this, this);
     this.currentNode = node;
   }
 
@@ -153,10 +159,17 @@ class Instance {
    * @param {Node} node - set to other node
    * @param {Function} func
    */
-  processWithOtherNode(node: Node, func: (instance: Instance) => void) {
+  processWithOtherNodeSync(node: Node, func: (instance: Instance) => void) {
     const originalNode = this.currentNode;
     this.currentNode = node;
     func.call(this, this);
+    this.currentNode = originalNode;
+  }
+
+  async processWithOtherNode(node: Node, func: (instance: Instance) => void) {
+    const originalNode = this.currentNode;
+    this.currentNode = node;
+    await func.call(this, this);
     this.currentNode = originalNode;
   }
 
@@ -174,24 +187,48 @@ class Instance {
    * @param {string|Object} nqlOrRules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  withinNode(
+  withinNodeSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void
   ): void;
-  withinNode(
+  withinNodeSync(
     nqlOrRules: string | object,
     options: QueryOptions,
     func: (instance: Instance) => void
   ): void;
-  withinNode(
+  withinNodeSync(
     nqlOrRules: string | object,
     options: QueryOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void
   ) {
     if (typeof options === "function") {
-      new WithinScope(this, nqlOrRules, {}, options).process();
+      new WithinScope(this, nqlOrRules, {}, options).processSync();
     } else {
-      new WithinScope(this, nqlOrRules, options, func!).process();
+      new WithinScope(this, nqlOrRules, options, func!).processSync();
+    }
+  }
+
+  withNodeSync = this.withinNodeSync.bind(this);
+  findNodeSync = this.withinNodeSync.bind(this);
+
+  async withinNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async withinNode(
+    nqlOrRules: string | object,
+    options: QueryOptions,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async withinNode(
+    nqlOrRules: string | object,
+    options: QueryOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void
+  ) {
+    if (typeof options === "function") {
+      await new WithinScope(this, nqlOrRules, {}, options).process();
+    } else {
+      await new WithinScope(this, nqlOrRules, options, func!).process();
     }
   }
 
@@ -207,8 +244,12 @@ class Instance {
    * @param {string} child_node_name - the name of the child nodes.
    * @param {Function} func - to continue operating on the matching nodes.
    */
-  gotoNode(childNodeName: string, func: (instance: Instance) => void) {
-    new GotoScope(this, childNodeName, func).process();
+  gotoNodeSync(childNodeName: string, func: (instance: Instance) => void) {
+    new GotoScope(this, childNodeName, func).processSync();
+  }
+
+  async gotoNode(childNodeName: string, func: (instance: Instance) => void) {
+    await new GotoScope(this, childNodeName, func).process();
   }
 
   /**
@@ -222,27 +263,27 @@ class Instance {
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
-  ifExistNode(
+  ifExistNodeSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void
   ): void;
-  ifExistNode(
+  ifExistNodeSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  ifExistNode(
+  ifExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ): void;
-  ifExistNode(
+  ifExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  ifExistNode(
+  ifExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void,
@@ -255,9 +296,53 @@ class Instance {
         {},
         options,
         func
-      ).process();
+      ).processSync();
     }
     return new IfExistCondition(
+      this,
+      nqlOrRules,
+      options,
+      func!,
+      elseFunc
+    ).processSync();
+  }
+
+  async ifExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async ifExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async ifExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async ifExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async ifExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
+  ) {
+    if (typeof options === "function") {
+      return await new IfExistCondition(
+        this,
+        nqlOrRules,
+        {},
+        options,
+        func
+      ).process();
+    }
+    await new IfExistCondition(
       this,
       nqlOrRules,
       options,
@@ -277,27 +362,27 @@ class Instance {
    * @param {Function} func - call the function if no matching node exists in the child nodes.
    * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
    */
-  unlessExistNode(
+  unlessExistNodeSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void
   ): void;
-  unlessExistNode(
+  unlessExistNodeSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  unlessExistNode(
+  unlessExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ): void;
-  unlessExistNode(
+  unlessExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  unlessExistNode(
+  unlessExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void,
@@ -310,9 +395,53 @@ class Instance {
         {},
         options,
         func
-      ).process();
+      ).processSync();
     }
     return new UnlessExistCondition(
+      this,
+      nqlOrRules,
+      options,
+      func!,
+      elseFunc
+    ).processSync();
+  }
+
+  async unlessExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async unlessExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async unlessExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async unlessExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async unlessExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
+  ) {
+    if (typeof options === "function") {
+      return await new UnlessExistCondition(
+        this,
+        nqlOrRules,
+        {},
+        options,
+        func
+      ).process();
+    }
+    await new UnlessExistCondition(
       this,
       nqlOrRules,
       options,
@@ -332,27 +461,27 @@ class Instance {
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
-  ifOnlyExistNode(
+  ifOnlyExistNodeSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void
   ): void;
-  ifOnlyExistNode(
+  ifOnlyExistNodeSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  ifOnlyExistNode(
+  ifOnlyExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ): void;
-  ifOnlyExistNode(
+  ifOnlyExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  ifOnlyExistNode(
+  ifOnlyExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void,
@@ -365,9 +494,53 @@ class Instance {
         {},
         options,
         func
-      ).process();
+      ).processSync();
     }
     return new IfOnlyExistCondition(
+      this,
+      nqlOrRules,
+      options,
+      func!,
+      elseFunc
+    ).processSync();
+  }
+
+  async ifOnlyExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async ifOnlyExistNode(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async ifOnlyExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async ifOnlyExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async ifOnlyExistNode(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
+  ) {
+    if (typeof options === "function") {
+      return await new IfOnlyExistCondition(
+        this,
+        nqlOrRules,
+        {},
+        options,
+        func
+      ).process();
+    }
+    await new IfOnlyExistCondition(
       this,
       nqlOrRules,
       options,
@@ -387,36 +560,74 @@ class Instance {
    * @param {Function} func - call the function if the matching nodes match options.match.
    * @param {Function} elseFunc - call the else function if no matching node matches options.match.
    */
-  ifAllNodes(
+  ifAllNodesSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void
   ): void;
-  ifAllNodes(
+  ifAllNodesSync(
     nqlOrRules: string | object,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  ifAllNodes(
+  ifAllNodesSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void
   ): void;
-  ifAllNodes(
+  ifAllNodesSync(
     nqlOrRules: string | object,
     options: ConditionOptions,
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): void;
-  ifAllNodes(
+  ifAllNodesSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
     func?: (instance: Instance) => void,
     elseFunc?: (instance: Instance) => void
   ) {
     if (typeof options === "function") {
-      return new IfAllCondition(this, nqlOrRules, {}, options, func).process();
+      return new IfAllCondition(this, nqlOrRules, {}, options, func).processSync();
     }
     return new IfAllCondition(
+      this,
+      nqlOrRules,
+      options,
+      func!,
+      elseFunc
+    ).processSync();
+  }
+
+  async ifAllNodes(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async ifAllNodes(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async ifAllNodes(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): Promise<void>;
+  async ifAllNodes(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): Promise<void>;
+  async ifAllNodes(
+    nqlOrRules: string | object,
+    options: ConditionOptions | ((instance: Instance) => void),
+    func?: (instance: Instance) => void,
+    elseFunc?: (instance: Instance) => void
+  ) {
+    if (typeof options === "function") {
+      return await new IfAllCondition(this, nqlOrRules, {}, options, func).process();
+    }
+    await new IfAllCondition(
       this,
       nqlOrRules,
       options,
@@ -620,7 +831,9 @@ class Instance {
   async callHelper(helperName: string, options: any): Promise<void> {
     const helperContent = await loadSnippet(helperName);
     this.options = options;
-    await Function(helperContent).call(this, this);
+    // await Function(`(async () => { ${helperContent} })()`).call(this, this);
+    // is not working
+    await eval(`(async () => { ${helperContent} })()`)
     this.options = undefined;
   }
 
@@ -650,7 +863,7 @@ class Instance {
       try {
         const node = this.parseCode(currentFilePath, source);
 
-        this.processWithNode(node, this.func);
+        this.processWithNodeSync(node, this.func);
 
         const result = this.currentMutation.process();
         debug("synvert-core:process")(result);
@@ -688,7 +901,7 @@ class Instance {
       try {
         const node = this.parseCode(currentFilePath, source);
 
-        this.processWithNode(node, this.func);
+        await this.processWithNode(node, this.func);
 
         const result = this.currentMutation.process();
         debug("synvert-core:process")(result);
@@ -727,7 +940,7 @@ class Instance {
     this.currentMutation = new NodeMutation<Node>(source);
     const node = this.parseCode(currentFilePath, source);
 
-    this.processWithNode(node, this.func);
+    this.processWithNodeSync(node, this.func);
 
     const result = this.currentMutation.test() as TestResultExt;
     result.filePath = filePath;
@@ -747,7 +960,7 @@ class Instance {
     this.currentMutation = new NodeMutation<Node>(source);
     const node = this.parseCode(currentFilePath, source);
 
-    this.processWithNode(node, this.func);
+    await this.processWithNode(node, this.func);
 
     const result = this.currentMutation.test() as TestResultExt;
     result.filePath = filePath;

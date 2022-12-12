@@ -52,21 +52,38 @@ class WithinScope extends Scope {
    * It checks the current node and iterates all child nodes,
    * then run the function code on each matching node.
    */
-  process(): void {
+  processSync(): void {
     const instance = this.instance;
     const currentNode = instance.currentNode;
     if (!currentNode) {
       return;
     }
 
-    instance.processWithNode(currentNode, () => {
+    instance.processWithNodeSync(currentNode, () => {
       this.nodeQuery
         .queryNodes(currentNode as NodeExt, this.options)
         .forEach((matchingNode) => {
-          instance.processWithNode(matchingNode, () => {
+          instance.processWithNodeSync(matchingNode, () => {
             this.func.call(this.instance, this.instance);
           });
         });
+    });
+  }
+
+  async process(): Promise<void> {
+    const instance = this.instance;
+    const currentNode = instance.currentNode;
+    if (!currentNode) {
+      return;
+    }
+
+    await instance.processWithNode(currentNode, async () => {
+      const matchingNodes = this.nodeQuery.queryNodes(currentNode as NodeExt, this.options);
+      await Promise.all(matchingNodes.map((matchingNode) => {
+        instance.processWithNode(matchingNode, async () => {
+          await this.func.call(this.instance, this.instance);
+        });
+      }));
     });
   }
 }
@@ -93,15 +110,27 @@ class GotoScope extends Scope {
   /**
    * Go to a child now, then run the func with the the child node.
    */
-  process(): void {
+  processSync(): void {
     const currentNode = this.instance.currentNode;
     if (!currentNode) return;
 
     const childNode = getTargetNode(currentNode, this.childNodeName) as Node;
     if (!childNode) return;
 
-    this.instance.processWithOtherNode(childNode, () => {
+    this.instance.processWithOtherNodeSync(childNode, () => {
       this.func.call(this.instance, this.instance);
+    });
+  }
+
+  async process(): Promise<void> {
+    const currentNode = this.instance.currentNode;
+    if (!currentNode) return;
+
+    const childNode = getTargetNode(currentNode, this.childNodeName) as Node;
+    if (!childNode) return;
+
+    await this.instance.processWithOtherNode(childNode, async () => {
+      await this.func.call(this.instance, this.instance);
     });
   }
 }

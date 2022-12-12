@@ -60,7 +60,10 @@ const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
 
 const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
+    [name IN (
+      addFile removeFile withinFiles withinFile addSnippet callHelper
+      withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExsitNode ifAllNode
+    )]]`
 );
 
 /**
@@ -94,7 +97,10 @@ export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
 
 const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (addFile removeFile withinFiles withinFile addSnippet callHelper)]]`
+    [name IN (
+      addFile removeFile withinFiles withinFile addSnippet callHelper
+      withinNode withNode findNode gotoNode ifExistNode unlessExistNode ifOnlyExsitNode ifAllNode
+    )]]`
 );
 
 /**
