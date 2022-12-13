@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.1.0 (2022-12-13)
+
+* Move `indent` to be an Instance method
+* Add `queryAdapter` method
+* Define both sync and async conditions and scopes
+* Remove `Instance#currentFilePath` and `Instance#currentFileSource`
+
 ## 2.0.5 (2022-12-10)
 
 * Await `callHelper`
