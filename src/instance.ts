@@ -554,7 +554,7 @@ class Instance {
    * if so, then call the func, else call the elseFunc.
    * @example
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
-   * IfAllNode({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
+   * IfAllNodes({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - { match: nqlOrRules, in: 'callee' }
    * @param {Function} func - call the function if the matching nodes match options.match.
