@@ -82,13 +82,11 @@ class WithinScope extends Scope {
         currentNode as NodeExt,
         this.options
       );
-      await Promise.all(
-        matchingNodes.map((matchingNode) => {
-          instance.processWithNode(matchingNode, async () => {
-            await this.func.call(this.instance, this.instance);
-          });
-        })
-      );
+      for (const matchingNode of matchingNodes) {
+        await instance.processWithNode(matchingNode, async () => {
+          await this.func.call(this.instance, this.instance);
+        });
+      }
     });
   }
 }
