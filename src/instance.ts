@@ -41,9 +41,17 @@ const espree = require("@xinminlabs/espree");
  * Instance is an execution unit, it finds specified ast nodes,
  * checks if the nodes match some conditions, then insert, replace or delete code.
  * One instance can contains one or many Scope and Condition.
+ * @property {string} filePath - file path to run instance
+ * @property {MutationAdapter} mutationAdapter - mutation adapter
+ * @property {QueryAdapter} queryAdapter - query adapter
+ * @borrows Instance#withinNodeSync as Instance#withNodeSync
+ * @borrows Instance#findNodeSync as Instance#withNodeSync
  * @borrows Instance#withinNode as Instance#withNode
+ * @borrows Instance#findNode as Instance#withNode
  */
 class Instance {
+  public mutationAdapter: MutationAdapter<any>;
+  public queryAdapter: QueryAdapter<any>;
   public currentNode!: Node;
   private currentMutation!: NodeMutation<Node>;
   public options: any;
@@ -64,6 +72,8 @@ class Instance {
     public filePath: string,
     private func: (instance: Instance) => void
   ) {
+    this.mutationAdapter = NodeMutation.getAdapter();
+    this.queryAdapter = NodeQuery.getAdapter();
     let strategy = NodeMutationStrategy.KEEP_RUNNING;
     if (rewriter.options.strategy === Strategy.ALLOW_INSERT_AT_SAME_POSITION) {
       strategy = strategy | NodeMutationStrategy.ALLOW_INSERT_AT_SAME_POSITION;
@@ -926,22 +936,6 @@ class Instance {
         return " ".repeat(count) + line;
       })
       .join("\n");
-  }
-
-  /**
-   * Get a node-mutation adapter
-   * @returns {MutationAdapter}
-   */
-  mutationAdapter(): MutationAdapter<any> {
-    return NodeMutation.getAdapter();
-  }
-
-  /**
-   * Get a node-query adapter
-   * @returns {QueryAdapter}
-   */
-  queryAdapter(): QueryAdapter<any> {
-    return NodeQuery.getAdapter();
   }
 
   /**

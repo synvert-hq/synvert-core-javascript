@@ -14,6 +14,27 @@ import { Parser } from "../src/types/options";
 describe("Instance", () => {
   const rewriter = new Rewriter("snippet group", "snippet name", () => {});
 
+  describe("#filePath", () => {
+    test("get file path", () => {
+      const instance = new Instance(rewriter, "code.js", function () {});
+      expect(instance.filePath).toEqual("code.js");
+    });
+  });
+
+  describe("#mutationAdapter", () => {
+    test("get mutation adapter", () => {
+      const instance = new Instance(rewriter, "code.js", function () {});
+      expect(instance.mutationAdapter).not.toBeNull();
+    });
+  });
+
+  describe("#queryAdapter", () => {
+    test("get query adapter", () => {
+      const instance = new Instance(rewriter, "code.js", function () {});
+      expect(instance.queryAdapter).not.toBeNull();
+    });
+  });
+
   describe("processSync", () => {
     afterEach(() => {
       mock.restore();
