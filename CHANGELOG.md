@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.2.0 (2022-12-16)
+
+* Process scopes in serial
+* One Instance handles only one file
+* Add `Instance#filePath`, `Instance#mutationAdapter` and `Instance#queryAdapter` properties
+
 ## 2.1.0 (2022-12-13)
 
 * Move `indent` to be an Instance method
