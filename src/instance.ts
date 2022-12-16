@@ -13,10 +13,7 @@ import {
   IfAllCondition,
   ConditionOptions,
 } from "./condition";
-import {
-  loadSnippet,
-  loadSnippetSync,
-} from "./utils";
+import { loadSnippet, loadSnippetSync } from "./utils";
 import NodeQuery, {
   QueryOptions,
   TypescriptAdapter as TypescriptQueryAdapter,
@@ -169,7 +166,12 @@ class Instance {
       this.rewriter.options.parser === Parser.ESPREE &&
       [".ts", ".tsx"].includes(path.extname(this.filePath))
     ) {
-      return { conflicted: false, affected: false, actions: [], filePath: this.filePath };
+      return {
+        conflicted: false,
+        affected: false,
+        actions: [],
+        filePath: this.filePath,
+      };
     }
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = fs.readFileSync(currentFilePath, "utf-8");
@@ -189,7 +191,12 @@ class Instance {
       this.rewriter.options.parser === Parser.ESPREE &&
       [".ts", ".tsx"].includes(path.extname(this.filePath))
     ) {
-      return { conflicted: false, affected: false, actions: [], filePath: this.filePath };
+      return {
+        conflicted: false,
+        affected: false,
+        actions: [],
+        filePath: this.filePath,
+      };
     }
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = await promisesFs.readFile(currentFilePath, "utf-8");
