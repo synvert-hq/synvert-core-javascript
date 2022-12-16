@@ -1,5 +1,7 @@
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
+import fg from "fast-glob";
+import minimatch from "minimatch";
 import { RewriterOptions, Parser, SourceType } from "./types/options";
 import Instance from "./instance";
 import NodeVersion from "./node-version";
@@ -310,18 +312,37 @@ class Rewriter {
     func: (instance: Instance) => void
   ): void {
     if (!this.options.runInstance) return;
+    if (this.nodeVersion && !this.nodeVersion.match()) return;
+    if (this.npmVersion && !this.npmVersion.match()) return;
 
-    if (
-      (!this.nodeVersion || this.nodeVersion.match()) &&
-      (!this.npmVersion || this.npmVersion.match())
-    ) {
-      const instance = new Instance(this, filePattern, func);
-      if (this.options.writeToFile) {
-        instance.processSync();
-      } else {
-        const results = instance.testSync();
-        this.mergeTestResults(results);
+    if (this.options.writeToFile) {
+      if (
+        isValidFileSync(Configuration.rootPath) &&
+        minimatch(Configuration.rootPath, filePattern)
+      ) {
+        const instance = new Instance(this, filePattern, func);
+        return instance.processSync();
       }
+      this.matchFilesInPathsSync(filePattern).forEach((filePath) => {
+        const instance = new Instance(this, filePath, func);
+        instance.processSync();
+      });
+    } else {
+      if (
+        isValidFileSync(Configuration.rootPath) &&
+        minimatch(Configuration.rootPath, filePattern)
+      ) {
+        const instance = new Instance(this, filePattern, func);
+        const result = instance.testSync();
+        this.mergeTestResults([result]);
+        return;
+      }
+      const filePaths = this.matchFilesInPathsSync(filePattern);
+      const results = filePaths.map((filePath) => {
+        const instance = new Instance(this, filePath, func);
+        return instance.testSync();
+      });
+      this.mergeTestResults(results);
     }
   }
 
@@ -344,19 +365,39 @@ class Rewriter {
     func: (instance: Instance) => void
   ): Promise<void> {
     if (!this.options.runInstance) return;
+    if (this.nodeVersion && !(await this.nodeVersion.match())) return;
+    if (this.npmVersion && !(await this.npmVersion.match())) return;
 
-    if (
-      (!this.nodeVersion || (await this.nodeVersion.match())) &&
-      (!this.npmVersion || (await this.npmVersion.match()))
-    ) {
-      const instance = new Instance(this, filePattern, func);
-      if (this.options.writeToFile) {
-        await instance.process();
-      } else {
-        const results = await instance.test();
-        this.mergeTestResults(results);
+    if (this.options.writeToFile) {
+      if (
+        (await isValidFile(Configuration.rootPath)) &&
+        minimatch(Configuration.rootPath, filePattern)
+      ) {
+        const instance = new Instance(this, filePattern, func);
+        return await instance.process();
       }
-    }
+      const filePaths = await this.matchFilesInPaths(filePattern);
+      await Promise.all(filePaths.map((filePath) => {
+        const instance = new Instance(this, filePath, func);
+        return instance.process();
+      }));
+    } else {
+      if (
+        (await isValidFile(Configuration.rootPath)) &&
+        minimatch(Configuration.rootPath, filePattern)
+      ) {
+        const instance = new Instance(this, filePattern, func);
+        const result = await instance.test();
+        this.mergeTestResults([result]);
+        return;
+      }
+      const filePaths = await this.matchFilesInPaths(filePattern);
+      const results = await Promise.all(filePaths.map((filePath) => {
+        const instance = new Instance(this, filePath, func);
+        return instance.test();
+      }));
+      this.mergeTestResults(results);
+    };
   }
 
   withFiles = this.withinFiles.bind(this);
@@ -426,6 +467,37 @@ class Rewriter {
       ...this.testResults,
       ...results.filter((result) => result.affected),
     ];
+  }
+  /**
+   * Return matching files.
+   * @returns {string[]} matching files
+   */
+  private matchFilesInPathsSync(filePattern: string): string[] {
+    const onlyPaths =
+      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
+    return fg.sync(
+      onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
+      {
+        ignore: Configuration.skipPaths,
+        cwd: Configuration.rootPath,
+        onlyFiles: true,
+        unique: true,
+      }
+    );
+  }
+
+  private async matchFilesInPaths(filePattern: string): Promise<string[]> {
+    const onlyPaths =
+      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
+    return fg(
+      onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
+      {
+        ignore: Configuration.skipPaths,
+        cwd: Configuration.rootPath,
+        onlyFiles: true,
+        unique: true,
+      }
+    );
   }
 }
 

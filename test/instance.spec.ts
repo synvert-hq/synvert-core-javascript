@@ -20,7 +20,7 @@ describe("Instance", () => {
     });
 
     test("writes new code to file", () => {
-      const instance = new Instance(rewriter, "*.js", function () {
+      const instance = new Instance(rewriter, "code.js", function () {
         this.findNodeSync(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
@@ -51,7 +51,7 @@ describe("Instance", () => {
     });
 
     test("does not write new code to file if parser is espree and file extension is ts", () => {
-      const instance = new Instance(rewriter, "*.ts", function () {
+      const instance = new Instance(rewriter, "code.ts", function () {
         this.findNodeSync(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
@@ -78,7 +78,7 @@ describe("Instance", () => {
     });
 
     test("gets affected files", () => {
-      const instance = new Instance(rewriter, "*.js", function () {
+      const instance = new Instance(rewriter, "code.js", function () {
         this.findNodeSync(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
@@ -116,7 +116,7 @@ describe("Instance", () => {
     });
 
     test("writes new code to file", async () => {
-      const instance = new Instance(rewriter, "*.js", async function () {
+      const instance = new Instance(rewriter, "code.js", async function () {
         await this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
@@ -147,7 +147,7 @@ describe("Instance", () => {
     });
 
     test("does not write new code to file if parser is espree and file extension is ts", async () => {
-      const instance = new Instance(rewriter, "*.ts", async function () {
+      const instance = new Instance(rewriter, "code.ts", async function () {
         await this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
@@ -174,7 +174,7 @@ describe("Instance", () => {
     });
 
     test("gets affected files", async () => {
-      const instance = new Instance(rewriter, "*.js", async function () {
+      const instance = new Instance(rewriter, "code.js", async function () {
         await this.findNode(
           ".CallExpression[callee=.MemberExpression[property=trimLeft]]",
           () => {
@@ -212,7 +212,7 @@ describe("Instance", () => {
     });
 
     test("gets actions", () => {
-      const instance = new Instance(rewriter, "*.js", function () {
+      const instance = new Instance(rewriter, "code.js", function () {
         this.withNodeSync(
           {
             nodeType: "CallExpression",
@@ -229,24 +229,22 @@ describe("Instance", () => {
       `;
       mock({ "code.js": input });
       const results = instance.testSync();
-      expect(results).toEqual([
-        {
-          actions: [
-            {
-              end: 74,
-              newCode: undefined,
-              start: 59,
-            },
-          ],
-          affected: true,
-          conflicted: false,
-          filePath: "code.js",
-        },
-      ]);
+      expect(results).toEqual({
+        actions: [
+          {
+            end: 74,
+            newCode: undefined,
+            start: 59,
+          },
+        ],
+        affected: true,
+        conflicted: false,
+        filePath: "code.js",
+      });
     });
 
     test("gets no actions if parser is espree and file extension is ts", () => {
-      const instance = new Instance(rewriter, "*.ts", function () {
+      const instance = new Instance(rewriter, "code.ts", function () {
         this.withNodeSync(
           {
             nodeType: "CallExpression",
@@ -263,14 +261,12 @@ describe("Instance", () => {
       `;
       mock({ "code.ts": input });
       const results = instance.testSync();
-      expect(results).toEqual([
-        {
-          actions: [],
-          affected: false,
-          conflicted: false,
-          filePath: "code.ts",
-        },
-      ]);
+      expect(results).toEqual({
+        actions: [],
+        affected: false,
+        conflicted: false,
+        filePath: "code.ts",
+      });
     });
   });
 
@@ -280,7 +276,7 @@ describe("Instance", () => {
     });
 
     test("gets actions", async () => {
-      const instance = new Instance(rewriter, "*.js", async function () {
+      const instance = new Instance(rewriter, "code.js", async function () {
         await this.withNode(
           {
             nodeType: "CallExpression",
@@ -297,24 +293,22 @@ describe("Instance", () => {
       `;
       mock({ "code.js": input });
       const results = await instance.test();
-      expect(results).toEqual([
-        {
-          actions: [
-            {
-              end: 74,
-              newCode: undefined,
-              start: 59,
-            },
-          ],
-          affected: true,
-          conflicted: false,
-          filePath: "code.js",
-        },
-      ]);
+      expect(results).toEqual({
+        actions: [
+          {
+            end: 74,
+            newCode: undefined,
+            start: 59,
+          },
+        ],
+        affected: true,
+        conflicted: false,
+        filePath: "code.js",
+      });
     });
 
     test("gets no actions if parser is espree and file extension is ts", async () => {
-      const instance = new Instance(rewriter, "*.ts", async function () {
+      const instance = new Instance(rewriter, "code.ts", async function () {
         await this.withNode(
           {
             nodeType: "CallExpression",
@@ -331,14 +325,12 @@ describe("Instance", () => {
       `;
       mock({ "code.ts": input });
       const results = await instance.test();
-      expect(results).toEqual([
-        {
-          actions: [],
-          affected: false,
-          conflicted: false,
-          filePath: "code.ts",
-        },
-      ]);
+      expect(results).toEqual({
+        actions: [],
+        affected: false,
+        conflicted: false,
+        filePath: "code.ts",
+      });
     });
   });
 
@@ -365,7 +357,7 @@ describe("Instance", () => {
           }
         );
       `;
-      const instance = new Instance(rewriter, "*.js", function () {
+      const instance = new Instance(rewriter, "code.js", function () {
         this.callHelperSync("helpers/helper");
       });
       const input = `
@@ -413,7 +405,7 @@ describe("Instance", () => {
         );
       `;
       rewriter.options.parser = Parser.TYPESCRIPT;
-      const instance = new Instance(rewriter, "*.js", async function () {
+      const instance = new Instance(rewriter, "code.js", async function () {
         await this.callHelper("helpers/helper");
       });
       const input = `
@@ -449,7 +441,7 @@ describe("Instance", () => {
         }
       }
     `;
-    const instance = new Instance(rewriter, "*.js", function () {});
+    const instance = new Instance(rewriter, "code.js", function () {});
     expect(instance.indent(oldCode, 2)).toEqual(newCode);
   });
 });

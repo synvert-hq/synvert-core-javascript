@@ -1,8 +1,6 @@
 import ts from "typescript";
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
-import fg from "fast-glob";
-import minimatch from "minimatch";
 import debug from "debug";
 import { Node } from "acorn";
 import Configuration from "./configuration";
@@ -16,8 +14,6 @@ import {
   ConditionOptions,
 } from "./condition";
 import {
-  isValidFile,
-  isValidFileSync,
   loadSnippet,
   loadSnippetSync,
 } from "./utils";
@@ -60,12 +56,12 @@ class Instance {
 
   /**
    * Create an Instance
-   * @param {string} filePattern - pattern to find files, e.g. `lib/*.js`
+   * @param {string} filePath - file path
    * @param {Function} func - a function to find nodes, match conditions and rewrite code.
    */
   constructor(
     private rewriter: Rewriter,
-    private filePattern: string,
+    private filePath: string,
     private func: (instance: Instance) => void
   ) {
     let strategy = NodeMutationStrategy.KEEP_RUNNING;
@@ -76,65 +72,126 @@ class Instance {
   }
 
   /**
-   * Process the instance.
-   * It finds all files, for each file, it runs the func, rewrites the original code,
-   * then write the code back to the original file.
+   * Process one file.
    */
   processSync(): void {
     if (
-      isValidFileSync(Configuration.rootPath) &&
-      minimatch(Configuration.rootPath, this.filePattern)
+      this.rewriter.options.parser === Parser.ESPREE &&
+      [".ts", ".tsx"].includes(path.extname(this.filePath))
     ) {
-      return this.processFileSync(Configuration.rootPath);
+      return;
     }
+    const currentFilePath = path.join(Configuration.rootPath, this.filePath);
+    if (Configuration.showRunProcess) {
+      console.log(this.filePath);
+    }
+    while (true) {
+      const source = fs.readFileSync(currentFilePath, "utf-8");
+      this.currentMutation = new NodeMutation<Node>(source);
+      try {
+        const node = this.parseCode(currentFilePath, source);
 
-    this.matchFilesInPathsSync().forEach((filePath) =>
-      this.processFileSync(filePath)
-    );
+        this.processWithNodeSync(node, this.func);
+
+        const result = this.currentMutation.process();
+        debug("synvert-core:process")(result);
+        if (result.affected) {
+          this.rewriter.addAffectedFile(this.filePath);
+          fs.writeFileSync(currentFilePath, result.newSource!);
+        }
+        if (!result.conflicted) {
+          break;
+        }
+      } catch (e) {
+        console.log(e);
+        if (e instanceof SyntaxError) {
+          console.log(`May not parse source code: ${source}`);
+        }
+        break;
+      }
+    }
   }
 
   async process(): Promise<void> {
     if (
-      (await isValidFile(Configuration.rootPath)) &&
-      minimatch(Configuration.rootPath, this.filePattern)
+      this.rewriter.options.parser === Parser.ESPREE &&
+      [".ts", ".tsx"].includes(path.extname(this.filePath))
     ) {
-      return this.processFile(Configuration.rootPath);
+      return;
     }
+    const currentFilePath = path.join(Configuration.rootPath, this.filePath);
+    if (Configuration.showRunProcess) {
+      console.log(this.filePath);
+    }
+    while (true) {
+      const source = await promisesFs.readFile(currentFilePath, "utf-8");
+      this.currentMutation = new NodeMutation<Node>(source);
+      try {
+        const node = this.parseCode(currentFilePath, source);
 
-    const filePaths = await this.matchFilesInPaths();
-    await Promise.all(filePaths.map((filePath) => this.processFile(filePath)));
+        await this.processWithNode(node, this.func);
+
+        const result = this.currentMutation.process();
+        debug("synvert-core:process")(result);
+        if (result.affected) {
+          this.rewriter.addAffectedFile(this.filePath);
+          await promisesFs.writeFile(currentFilePath, result.newSource!);
+        }
+        if (!result.conflicted) {
+          break;
+        }
+      } catch (e) {
+        console.log(e);
+        if (e instanceof SyntaxError) {
+          console.log(`May not parse source code: ${source}`);
+        }
+        break;
+      }
+    }
   }
 
   /**
-   * Test the instance.
-   * It finds all files, for each file, it runs the func, and gets the process results.
-   * @returns {TestResultExt[]} test results
+   * Test one file.
+   * @returns {TestResultExt}
    */
-  testSync(): TestResultExt[] {
+  testSync(): TestResultExt {
     if (
-      isValidFileSync(Configuration.rootPath) &&
-      minimatch(Configuration.rootPath, this.filePattern)
+      this.rewriter.options.parser === Parser.ESPREE &&
+      [".ts", ".tsx"].includes(path.extname(this.filePath))
     ) {
-      return [this.testFileSync(Configuration.rootPath)];
+      return { conflicted: false, affected: false, actions: [], filePath: this.filePath };
     }
+    const currentFilePath = path.join(Configuration.rootPath, this.filePath);
+    const source = fs.readFileSync(currentFilePath, "utf-8");
+    this.currentMutation = new NodeMutation<Node>(source);
+    const node = this.parseCode(currentFilePath, source);
 
-    return this.matchFilesInPathsSync().map((filePath) =>
-      this.testFileSync(filePath)
-    );
+    this.processWithNodeSync(node, this.func);
+
+    const result = this.currentMutation.test() as TestResultExt;
+    result.filePath = this.filePath;
+    debug("synvert-core:test")(result);
+    return result;
   }
 
-  async test(): Promise<TestResultExt[]> {
+  async test(): Promise<TestResultExt> {
     if (
-      (await isValidFile(Configuration.rootPath)) &&
-      minimatch(Configuration.rootPath, this.filePattern)
+      this.rewriter.options.parser === Parser.ESPREE &&
+      [".ts", ".tsx"].includes(path.extname(this.filePath))
     ) {
-      return [await this.testFile(Configuration.rootPath)];
+      return { conflicted: false, affected: false, actions: [], filePath: this.filePath };
     }
+    const currentFilePath = path.join(Configuration.rootPath, this.filePath);
+    const source = await promisesFs.readFile(currentFilePath, "utf-8");
+    this.currentMutation = new NodeMutation<Node>(source);
+    const node = this.parseCode(currentFilePath, source);
 
-    const filePaths = await this.matchFilesInPaths();
-    return await Promise.all(
-      filePaths.map((filePath) => this.testFile(filePath))
-    );
+    await this.processWithNode(node, this.func);
+
+    const result = this.currentMutation.test() as TestResultExt;
+    result.filePath = this.filePath;
+    debug("synvert-core:test")(result);
+    return result;
   }
 
   /**
@@ -845,7 +902,7 @@ class Instance {
     this.options = options;
     // await Function(`(async () => { ${helperContent} })()`).call(this, this);
     // is not working
-    await eval(`(async () => { ${helperContent} })()`);
+    await eval(`(async () => { ${helperContent} }).call(this, this)`);
     this.options = undefined;
   }
 
@@ -885,165 +942,6 @@ class Instance {
    */
   queryAdapter(): QueryAdapter<any> {
     return NodeQuery.getAdapter();
-  }
-
-  /**
-   * Process one file.
-   * @private
-   * @param {string} filePath - file path
-   */
-  private processFileSync(filePath: string): void {
-    if (
-      this.rewriter.options.parser === Parser.ESPREE &&
-      [".ts", ".tsx"].includes(path.extname(filePath))
-    ) {
-      return;
-    }
-    const currentFilePath = path.join(Configuration.rootPath, filePath);
-    if (Configuration.showRunProcess) {
-      console.log(filePath);
-    }
-    while (true) {
-      const source = fs.readFileSync(currentFilePath, "utf-8");
-      this.currentMutation = new NodeMutation<Node>(source);
-      try {
-        const node = this.parseCode(currentFilePath, source);
-
-        this.processWithNodeSync(node, this.func);
-
-        const result = this.currentMutation.process();
-        debug("synvert-core:process")(result);
-        if (result.affected) {
-          this.rewriter.addAffectedFile(filePath);
-          fs.writeFileSync(currentFilePath, result.newSource!);
-        }
-        if (!result.conflicted) {
-          break;
-        }
-      } catch (e) {
-        console.log(e);
-        if (e instanceof SyntaxError) {
-          console.log(`May not parse source code: ${source}`);
-        }
-        break;
-      }
-    }
-  }
-
-  private async processFile(filePath: string): Promise<void> {
-    if (
-      this.rewriter.options.parser === Parser.ESPREE &&
-      [".ts", ".tsx"].includes(path.extname(filePath))
-    ) {
-      return;
-    }
-    const currentFilePath = path.join(Configuration.rootPath, filePath);
-    if (Configuration.showRunProcess) {
-      console.log(filePath);
-    }
-    while (true) {
-      const source = await promisesFs.readFile(currentFilePath, "utf-8");
-      this.currentMutation = new NodeMutation<Node>(source);
-      try {
-        const node = this.parseCode(currentFilePath, source);
-
-        await this.processWithNode(node, this.func);
-
-        const result = this.currentMutation.process();
-        debug("synvert-core:process")(result);
-        if (result.affected) {
-          this.rewriter.addAffectedFile(filePath);
-          await promisesFs.writeFile(currentFilePath, result.newSource!);
-        }
-        if (!result.conflicted) {
-          break;
-        }
-      } catch (e) {
-        console.log(e);
-        if (e instanceof SyntaxError) {
-          console.log(`May not parse source code: ${source}`);
-        }
-        break;
-      }
-    }
-  }
-
-  /**
-   * Test one file.
-   * @private
-   * @param {string} filePath - file path
-   * @returns {TestResultExt}
-   */
-  private testFileSync(filePath: string): TestResultExt {
-    if (
-      this.rewriter.options.parser === Parser.ESPREE &&
-      [".ts", ".tsx"].includes(path.extname(filePath))
-    ) {
-      return { conflicted: false, affected: false, actions: [], filePath };
-    }
-    const currentFilePath = path.join(Configuration.rootPath, filePath);
-    const source = fs.readFileSync(currentFilePath, "utf-8");
-    this.currentMutation = new NodeMutation<Node>(source);
-    const node = this.parseCode(currentFilePath, source);
-
-    this.processWithNodeSync(node, this.func);
-
-    const result = this.currentMutation.test() as TestResultExt;
-    result.filePath = filePath;
-    debug("synvert-core:test")(result);
-    return result;
-  }
-
-  private async testFile(filePath: string): Promise<TestResultExt> {
-    if (
-      this.rewriter.options.parser === Parser.ESPREE &&
-      [".ts", ".tsx"].includes(path.extname(filePath))
-    ) {
-      return { conflicted: false, affected: false, actions: [], filePath };
-    }
-    const currentFilePath = path.join(Configuration.rootPath, filePath);
-    const source = await promisesFs.readFile(currentFilePath, "utf-8");
-    this.currentMutation = new NodeMutation<Node>(source);
-    const node = this.parseCode(currentFilePath, source);
-
-    await this.processWithNode(node, this.func);
-
-    const result = this.currentMutation.test() as TestResultExt;
-    result.filePath = filePath;
-    debug("synvert-core:test")(result);
-    return result;
-  }
-
-  /**
-   * Return matching files.
-   * @returns {string[]} matching files
-   */
-  private matchFilesInPathsSync(): string[] {
-    const onlyPaths =
-      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    return fg.sync(
-      onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)),
-      {
-        ignore: Configuration.skipPaths,
-        cwd: Configuration.rootPath,
-        onlyFiles: true,
-        unique: true,
-      }
-    );
-  }
-
-  private async matchFilesInPaths(): Promise<string[]> {
-    const onlyPaths =
-      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    return fg(
-      onlyPaths.map((onlyPath) => path.join(onlyPath, this.filePattern)),
-      {
-        ignore: Configuration.skipPaths,
-        cwd: Configuration.rootPath,
-        onlyFiles: true,
-        unique: true,
-      }
-    );
   }
 
   /**
