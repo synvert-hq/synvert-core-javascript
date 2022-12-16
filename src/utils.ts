@@ -92,8 +92,6 @@ const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
  */
 export const rewriteSnippetToSyncVersion = (snippet: string): string => {
   return makeSureTypescriptAdapter(() => {
-    NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-    NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
     const newSnippet = addProperScopeToSnippet(snippet);
     const node = parseCode(newSnippet);
     const mutation = new NodeMutation<ts.Node>(newSnippet);

@@ -100,6 +100,8 @@ class Instance {
       this.currentMutation = new NodeMutation<Node>(source);
       try {
         const node = this.parseCode(currentFilePath, source);
+        this.mutationAdapter = NodeMutation.getAdapter();
+        this.queryAdapter = NodeQuery.getAdapter();
 
         this.processWithNodeSync(node, this.func);
 
@@ -138,6 +140,8 @@ class Instance {
       this.currentMutation = new NodeMutation<Node>(source);
       try {
         const node = this.parseCode(currentFilePath, source);
+        this.mutationAdapter = NodeMutation.getAdapter();
+        this.queryAdapter = NodeQuery.getAdapter();
 
         await this.processWithNode(node, this.func);
 
