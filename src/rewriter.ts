@@ -377,10 +377,12 @@ class Rewriter {
         return await instance.process();
       }
       const filePaths = await this.matchFilesInPaths(filePattern);
-      await Promise.all(filePaths.map((filePath) => {
-        const instance = new Instance(this, filePath, func);
-        return instance.process();
-      }));
+      await Promise.all(
+        filePaths.map((filePath) => {
+          const instance = new Instance(this, filePath, func);
+          return instance.process();
+        })
+      );
     } else {
       if (
         (await isValidFile(Configuration.rootPath)) &&
@@ -392,12 +394,14 @@ class Rewriter {
         return;
       }
       const filePaths = await this.matchFilesInPaths(filePattern);
-      const results = await Promise.all(filePaths.map((filePath) => {
-        const instance = new Instance(this, filePath, func);
-        return instance.test();
-      }));
+      const results = await Promise.all(
+        filePaths.map((filePath) => {
+          const instance = new Instance(this, filePath, func);
+          return instance.test();
+        })
+      );
       this.mergeTestResults(results);
-    };
+    }
   }
 
   withFiles = this.withinFiles.bind(this);
