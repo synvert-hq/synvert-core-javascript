@@ -289,9 +289,9 @@ class Rewriter {
       const results = await rewriter.test();
       this.mergeTestResults(results);
     } else if (rewriter.options.runInstance) {
-      rewriter.process();
+      await rewriter.process();
     } else {
-      rewriter.processWithSandbox();
+      await rewriter.processWithSandbox();
     }
     this.subSnippets.push(rewriter);
   }
