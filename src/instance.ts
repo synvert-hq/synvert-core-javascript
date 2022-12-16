@@ -61,7 +61,7 @@ class Instance {
    */
   constructor(
     private rewriter: Rewriter,
-    private filePath: string,
+    public filePath: string,
     private func: (instance: Instance) => void
   ) {
     let strategy = NodeMutationStrategy.KEEP_RUNNING;
