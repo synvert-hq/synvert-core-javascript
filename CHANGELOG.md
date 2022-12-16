@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.2.1 (2022-12-16)
+
+* Update `this.mutationAdapter` and `this.queryAdapter` properly
+* Await `Rewriter#process` in `addSnippet`
+* Do not add `this.` before queryAdapter and mutationAdapter
+
 ## 2.2.0 (2022-12-16)
 
 * Process scopes in serial
