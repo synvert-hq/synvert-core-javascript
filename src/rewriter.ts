@@ -491,9 +491,7 @@ class Rewriter {
       }
     );
     return fsStats
-      .filter(
-        (fsStat) => fsStat.stats!.size < Configuration.maxFileSize
-      )
+      .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
       .map((fsStat) => fsStat.path);
   }
 
@@ -511,9 +509,7 @@ class Rewriter {
       }
     );
     return fsStats
-      .filter(
-        (fsStat) => fsStat.stats!.size < Configuration.maxFileSize
-      )
+      .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
       .map((fsStat) => fsStat.path);
   }
 }
