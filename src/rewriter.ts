@@ -490,7 +490,11 @@ class Rewriter {
         stats: true,
       }
     );
-    return fsStats.filter(fsStat => fsStat.stats!.size < Configuration.largeFileSizeThreshold).map((fsStat) => fsStat.path);
+    return fsStats
+      .filter(
+        (fsStat) => fsStat.stats!.size < Configuration.largeFileSizeThreshold
+      )
+      .map((fsStat) => fsStat.path);
   }
 
   private async matchFilesInPaths(filePattern: string): Promise<string[]> {
@@ -506,7 +510,11 @@ class Rewriter {
         stats: true,
       }
     );
-    return fsStats.filter(fsStat => fsStat.stats!.size < Configuration.largeFileSizeThreshold).map((fsStat) => fsStat.path);
+    return fsStats
+      .filter(
+        (fsStat) => fsStat.stats!.size < Configuration.largeFileSizeThreshold
+      )
+      .map((fsStat) => fsStat.path);
   }
 }
 

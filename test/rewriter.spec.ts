@@ -82,7 +82,7 @@ describe("static register", () => {
           });
         }
       );
-      const input = `class FooBar {} //` + 'a'.repeat(10240);
+      const input = `class FooBar {} //` + "a".repeat(10240);
       mock({ "code.js": input });
       rewriter.processSync();
       expect(fs.readFileSync("code.js", "utf8")).toBe(input);
@@ -125,7 +125,7 @@ describe("static register", () => {
           });
         }
       );
-      const input = `class FooBar {} //` + 'a'.repeat(10240);
+      const input = `class FooBar {} //` + "a".repeat(10240);
       mock({ "code.js": input });
       await rewriter.process();
       expect(await promisesFs.readFile("code.js", "utf8")).toBe(input);
