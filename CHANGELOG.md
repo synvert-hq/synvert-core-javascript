@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.4.0 (2022-12-17)
+
+* Rename `largeFileSizeThreshold` Configuration to `maxFileSize`
+
 ## 2.3.0 (2022-12-17)
 
 * Add `Configuration#largeFileSizeThreshold`
