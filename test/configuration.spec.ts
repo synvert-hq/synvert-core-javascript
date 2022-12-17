@@ -24,4 +24,10 @@ describe("Configuration", () => {
     Configuration.showRunProcess = true;
     expect(Configuration.showRunProcess).toEqual(true);
   });
+
+  it("maxFileSize", () => {
+    expect(Configuration.maxFileSize).toEqual(10240);
+    Configuration.maxFileSize = 1000;
+    expect(Configuration.maxFileSize).toEqual(1000);
+  });
 });
