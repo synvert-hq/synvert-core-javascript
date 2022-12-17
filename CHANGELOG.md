@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.3.0 (2022-12-17)
+
+* Add `Configuration#largeFileSizeThreshold`
+
 ## 2.2.1 (2022-12-16)
 
 * Update `this.mutationAdapter` and `this.queryAdapter` properly
