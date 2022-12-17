@@ -472,6 +472,7 @@ class Rewriter {
       ...results.filter((result) => result.affected),
     ];
   }
+
   /**
    * Return matching files.
    * @returns {string[]} matching files
@@ -479,29 +480,33 @@ class Rewriter {
   private matchFilesInPathsSync(filePattern: string): string[] {
     const onlyPaths =
       Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    return fg.sync(
+    const fsStats = fg.sync(
       onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
       {
         ignore: Configuration.skipPaths,
         cwd: Configuration.rootPath,
         onlyFiles: true,
         unique: true,
+        stats: true,
       }
     );
+    return fsStats.filter(fsStat => fsStat.stats!.size < Configuration.largeFileSizeThreshold).map((fsStat) => fsStat.path);
   }
 
   private async matchFilesInPaths(filePattern: string): Promise<string[]> {
     const onlyPaths =
       Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    return fg(
+    const fsStats = await fg(
       onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
       {
         ignore: Configuration.skipPaths,
         cwd: Configuration.rootPath,
         onlyFiles: true,
         unique: true,
+        stats: true,
       }
     );
+    return fsStats.filter(fsStat => fsStat.stats!.size < Configuration.largeFileSizeThreshold).map((fsStat) => fsStat.path);
   }
 }
 

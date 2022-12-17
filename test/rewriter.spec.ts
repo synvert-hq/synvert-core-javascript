@@ -67,6 +67,27 @@ describe("static register", () => {
       expect(fs.readFileSync("code.js", "utf8")).toBe(output);
     });
 
+    test("does not write new code to large file", () => {
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        function () {
+          this.withinFilesSync("*.js", function () {
+            this.withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                this.replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
+      const input = `class FooBar {} //` + 'a'.repeat(10240);
+      mock({ "code.js": input });
+      rewriter.processSync();
+      expect(fs.readFileSync("code.js", "utf8")).toBe(input);
+    });
+
     test("async writes new code to file", async () => {
       const rewriter = new Rewriter(
         "snippet group",
@@ -87,6 +108,27 @@ describe("static register", () => {
       mock({ "code.js": input });
       await rewriter.process();
       expect(await promisesFs.readFile("code.js", "utf8")).toBe(output);
+    });
+
+    test("does not async write new code to large file", async () => {
+      const rewriter = new Rewriter(
+        "snippet group",
+        "snippet name",
+        async function () {
+          await this.withinFiles("*.js", function () {
+            this.withNode(
+              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              () => {
+                this.replace("id", { with: "Synvert" });
+              }
+            );
+          });
+        }
+      );
+      const input = `class FooBar {} //` + 'a'.repeat(10240);
+      mock({ "code.js": input });
+      await rewriter.process();
+      expect(await promisesFs.readFile("code.js", "utf8")).toBe(input);
     });
   });
 
