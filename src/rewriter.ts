@@ -346,7 +346,7 @@ class Rewriter {
     }
   }
 
-  withFileSync = this.withinFilesSync.bind(this);
+  withinFileSync = this.withinFilesSync.bind(this);
 
   /**
    * Async to find specified files.
@@ -404,7 +404,7 @@ class Rewriter {
     }
   }
 
-  withFiles = this.withinFiles.bind(this);
+  withinFile = this.withinFiles.bind(this);
 
   /**
    * Sync to add a new file.
