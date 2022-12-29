@@ -90,5 +90,6 @@ Others:
 
 Properties:
 * [filePath](./Instance.html#filePath) - get the file path
+* [currentNode](./Instance.html#currentNode) - current ast node
 * [queryAdapter](./Instance.html#queryAdapter) - get a [query adapter](https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts) to get some helper methods
 * [mutationAdapter](./Instance.html#mutationAdapter) - get a [mutation adapter](https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts) to get some helper methods
