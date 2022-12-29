@@ -95,10 +95,10 @@ class Instance {
     while (true) {
       const source = fs.readFileSync(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<Node>(source);
+      this.mutationAdapter = NodeMutation.getAdapter();
+      this.queryAdapter = NodeQuery.getAdapter();
       try {
-        const node = this.parseCode(currentFilePath, source);
-        this.mutationAdapter = NodeMutation.getAdapter();
-        this.queryAdapter = NodeQuery.getAdapter();
+        const node = this.parseCode(this.filePath, source);
 
         this.processWithNodeSync(node, this.func);
 
@@ -135,10 +135,10 @@ class Instance {
     while (true) {
       const source = await promisesFs.readFile(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<Node>(source);
+      this.mutationAdapter = NodeMutation.getAdapter();
+      this.queryAdapter = NodeQuery.getAdapter();
       try {
         const node = this.parseCode(currentFilePath, source);
-        this.mutationAdapter = NodeMutation.getAdapter();
-        this.queryAdapter = NodeQuery.getAdapter();
 
         await this.processWithNode(node, this.func);
 
@@ -180,6 +180,8 @@ class Instance {
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = fs.readFileSync(currentFilePath, "utf-8");
     this.currentMutation = new NodeMutation<Node>(source);
+    this.mutationAdapter = NodeMutation.getAdapter();
+    this.queryAdapter = NodeQuery.getAdapter();
     const node = this.parseCode(currentFilePath, source);
 
     this.processWithNodeSync(node, this.func);
@@ -205,6 +207,8 @@ class Instance {
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = await promisesFs.readFile(currentFilePath, "utf-8");
     this.currentMutation = new NodeMutation<Node>(source);
+    this.mutationAdapter = NodeMutation.getAdapter();
+    this.queryAdapter = NodeQuery.getAdapter();
     const node = this.parseCode(currentFilePath, source);
 
     await this.processWithNode(node, this.func);
