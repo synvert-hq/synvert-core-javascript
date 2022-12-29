@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.4.2 (2022-12-29)
+
+* Add `Instance#mutationAdapter` and `Instance#queryAdapter` when test
+
 ## 2.4.1 (2022-12-18)
 
 * Fix typo
