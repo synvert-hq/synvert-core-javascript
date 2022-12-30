@@ -49,7 +49,10 @@ describe("Instance", () => {
         this.withNodeSync(
           {
             nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
           },
           () => {
             this.replace("expression.name", { with: "trimEnd" });
@@ -118,7 +121,10 @@ describe("Instance", () => {
         await this.withNode(
           {
             nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
           },
           () => {
             this.replace("expression.name", { with: "trimEnd" });
@@ -184,7 +190,10 @@ describe("Instance", () => {
         this.withNodeSync(
           {
             nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
           },
           () => {
             this.noop();
@@ -217,7 +226,10 @@ describe("Instance", () => {
         this.withNodeSync(
           {
             nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
           },
           () => {
             this.noop();
@@ -250,7 +262,10 @@ describe("Instance", () => {
         await this.withNode(
           {
             nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
           },
           () => {
             this.noop();
@@ -283,7 +298,10 @@ describe("Instance", () => {
         await this.withNode(
           {
             nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
           },
           () => {
             this.noop();
