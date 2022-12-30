@@ -16,19 +16,15 @@ import {
 import { loadSnippet, loadSnippetSync } from "./utils";
 import NodeQuery, {
   QueryOptions,
-  TypescriptAdapter as TypescriptQueryAdapter,
   Adapter as QueryAdapter,
 } from "@xinminlabs/node-query";
 import NodeMutation, {
   Strategy as NodeMutationStrategy,
-  TypescriptAdapter as TypescriptMutationAdapter,
   InsertOptions,
   ReplaceWithOptions,
   ReplaceOptions,
   Adapter as MutationAdapter,
 } from "@xinminlabs/node-mutation";
-import EspreeMutationAdapter from "./node-mutation/espree-adapter";
-import EspreeQueryAdapter from "./node-query/espree-adapter";
 import { Parser, Strategy } from "./types/options";
 import { TestResultExt } from "./types/result";
 
@@ -961,11 +957,11 @@ class Instance {
    * @returns {Node} ast node
    */
   private parseCode(filePath: string, source: string) {
-    if (this.rewriter.options.parser === Parser.TYPESCRIPT) {
-      return this.parseByTypescript(filePath, source);
+    if (this.rewriter.options.parser === Parser.ESPREE) {
+      return this.parseByEspree(filePath, source);
     }
 
-    return this.parseByEspree(filePath, source);
+    return this.parseByTypescript(filePath, source);
   }
 
   /**
@@ -976,8 +972,6 @@ class Instance {
    * @returns {Node} ast node
    */
   private parseByTypescript(filePath: string, source: string) {
-    NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-    NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
     const scriptKind = ["js", "jsx"].includes(path.extname(filePath))
       ? ts.ScriptKind.JSX
       : ts.ScriptKind.TSX;
@@ -998,8 +992,6 @@ class Instance {
    * @returns {Node} ast node
    */
   private parseByEspree(filePath: string, source: string) {
-    NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
-    NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
     return espree.parse(source, {
       ecmaVersion: "latest",
       loc: true,

@@ -14,6 +14,10 @@ import {
   isValidFileSync,
 } from "./utils";
 import Configuration from "./configuration";
+import NodeQuery, { TypescriptAdapter as TypescriptQueryAdapter } from "@xinminlabs/node-query";
+import NodeMutation, { TypescriptAdapter as TypescriptMutationAdapter } from "@xinminlabs/node-mutation";
+import EspreeMutationAdapter from "./node-mutation/espree-adapter";
+import EspreeQueryAdapter from "./node-query/espree-adapter";
 
 /**
  * Rewriter is the top level namespace in a synvert snippet.
@@ -29,7 +33,7 @@ class Rewriter {
   public npmVersion?: NpmVersion;
   public options: RewriterOptions = {
     sourceType: SourceType.MODULE,
-    parser: Parser.ESPREE,
+    parser: Parser.TYPESCRIPT,
     runInstance: true,
     writeToFile: true,
   };
@@ -107,6 +111,7 @@ class Rewriter {
    * @async
    */
   async process(): Promise<void> {
+    this.prepare();
     this.affectedFiles = new Set<string>();
     await this.func.call(this, this);
   }
@@ -116,6 +121,7 @@ class Rewriter {
    * It will run the func but doesn't change any file.
    */
   processWithSandboxSync(): void {
+    this.prepare();
     this.options.runInstance = false;
     this.func.call(this, this);
   }
@@ -126,6 +132,7 @@ class Rewriter {
    * @async
    */
   async processWithSandbox(): Promise<void> {
+    this.prepare();
     this.options.runInstance = false;
     await this.func.call(this, this);
   }
@@ -135,6 +142,7 @@ class Rewriter {
    * @returns {TestResultExt[]} test results
    */
   testSync(): TestResultExt[] {
+    this.prepare();
     this.options.writeToFile = false;
     this.func.call(this, this);
     return this.testResults;
@@ -146,6 +154,7 @@ class Rewriter {
    * @returns {TestResultExt[]} test results
    */
   async test(): Promise<TestResultExt[]> {
+    this.prepare();
     this.options.writeToFile = false;
     await this.func.call(this, this);
     return this.testResults;
@@ -178,6 +187,13 @@ class Rewriter {
     }
     if (options.parser) {
       this.options.parser = options.parser;
+      if (this.options.parser === Parser.ESPREE) {
+        NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
+        NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
+      } else {
+        NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
+        NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
+      }
     }
     if (options.strategy) {
       this.options.strategy = options.strategy;
@@ -466,6 +482,18 @@ class Rewriter {
     }
   }
 
+  /**
+   * Prepare to run or test a rewriter.
+   */
+  private prepare() {
+    NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
+    NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
+  }
+
+  /**
+   * Merge test results.
+   * @param {TestResultExt[]} results test results to be mreged
+   */
   private mergeTestResults(results: TestResultExt[]): void {
     this.testResults = [
       ...this.testResults,

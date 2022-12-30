@@ -52,9 +52,9 @@ describe("static register", () => {
         function () {
           this.withinFilesSync("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration",  name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
@@ -74,9 +74,9 @@ describe("static register", () => {
         function () {
           this.withinFilesSync("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
@@ -95,9 +95,9 @@ describe("static register", () => {
         async function () {
           await this.withinFiles("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
@@ -117,9 +117,9 @@ describe("static register", () => {
         async function () {
           await this.withinFiles("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
@@ -144,9 +144,9 @@ describe("static register", () => {
         function () {
           this.withinFiles("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
@@ -165,9 +165,9 @@ describe("static register", () => {
         async function () {
           await this.withinFiles("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
@@ -192,9 +192,9 @@ describe("static register", () => {
         function () {
           this.withinFilesSync("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
@@ -220,9 +220,9 @@ describe("static register", () => {
         async function () {
           await this.withinFiles("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
-                this.replace("id", { with: "Synvert" });
+                this.replace("name", { with: "Synvert" });
               }
             );
           });
