@@ -52,7 +52,7 @@ describe("static register", () => {
         function () {
           this.withinFilesSync("*.js", function () {
             this.withNode(
-              { nodeType: "ClassDeclaration",  name: "FooBar" },
+              { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
               }

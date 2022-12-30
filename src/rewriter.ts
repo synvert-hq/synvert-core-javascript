@@ -14,8 +14,12 @@ import {
   isValidFileSync,
 } from "./utils";
 import Configuration from "./configuration";
-import NodeQuery, { TypescriptAdapter as TypescriptQueryAdapter } from "@xinminlabs/node-query";
-import NodeMutation, { TypescriptAdapter as TypescriptMutationAdapter } from "@xinminlabs/node-mutation";
+import NodeQuery, {
+  TypescriptAdapter as TypescriptQueryAdapter,
+} from "@xinminlabs/node-query";
+import NodeMutation, {
+  TypescriptAdapter as TypescriptMutationAdapter,
+} from "@xinminlabs/node-mutation";
 import EspreeMutationAdapter from "./node-mutation/espree-adapter";
 import EspreeQueryAdapter from "./node-query/espree-adapter";
 
