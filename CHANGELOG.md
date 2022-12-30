@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.4.3 (2022-12-30)
+
+* Use Typescript instead of Espree by default
+
 ## 2.4.2 (2022-12-29)
 
 * Add `Instance#mutationAdapter` and `Instance#queryAdapter` when test
