@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.4.4 (2023-01-01)
+
+* Heredoc for `description`
+
 ## 2.4.3 (2022-12-30)
 
 * Use Typescript instead of Espree by default
