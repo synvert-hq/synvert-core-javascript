@@ -342,11 +342,15 @@ describe("static register", () => {
         "snippet group",
         "snippet name",
         function () {
-          this.description("this is a snippet description.");
+          this.description(`
+          this is a snippet description.
+
+          foo.bar
+          `);
         }
       );
       rewriter.process();
-      expect(rewriter.description()).toBe(`this is a snippet description.`);
+      expect(rewriter.description()).toBe(`this is a snippet description.\n\nfoo.bar\n`);
     });
   });
 

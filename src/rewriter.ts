@@ -217,7 +217,7 @@ class Rewriter {
   description(description: string): void;
   description(description?: string): void | string {
     if (description) {
-      this.desc = description;
+      this.desc = this.heredoc(description);
     } else {
       return this.desc;
     }
@@ -543,6 +543,20 @@ class Rewriter {
     return fsStats
       .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
       .map((fsStat) => fsStat.path);
+  }
+
+  private heredoc(text: string): string {
+    let addNewLine = false;
+    const lines = text.split("\n");
+    if (lines.length > 0 && lines[0] === '') {
+      lines.shift();
+    }
+    if (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+      lines.pop();
+      addNewLine = true;
+    }
+    const indent = lines[0].search(/[^ ]/);
+    return lines.map((line) => line.slice(indent)).join('\n') + (addNewLine ? '\n' : '');
   }
 }
 
