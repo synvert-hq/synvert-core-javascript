@@ -350,7 +350,9 @@ describe("static register", () => {
         }
       );
       rewriter.process();
-      expect(rewriter.description()).toBe(`this is a snippet description.\n\nfoo.bar\n`);
+      expect(rewriter.description()).toBe(
+        `this is a snippet description.\n\nfoo.bar\n`
+      );
     });
   });
 

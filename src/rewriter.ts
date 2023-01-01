@@ -548,15 +548,18 @@ class Rewriter {
   private heredoc(text: string): string {
     let addNewLine = false;
     const lines = text.split("\n");
-    if (lines.length > 0 && lines[0] === '') {
+    if (lines.length > 0 && lines[0] === "") {
       lines.shift();
     }
-    if (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+    if (lines.length > 0 && lines[lines.length - 1].trim() === "") {
       lines.pop();
       addNewLine = true;
     }
     const indent = lines[0].search(/[^ ]/);
-    return lines.map((line) => line.slice(indent)).join('\n') + (addNewLine ? '\n' : '');
+    return (
+      lines.map((line) => line.slice(indent)).join("\n") +
+      (addNewLine ? "\n" : "")
+    );
   }
 }
 
