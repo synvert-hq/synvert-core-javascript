@@ -46,50 +46,50 @@ Want to use the CLI, check out [synvert-javascript](https://github.com/xinminlab
 
 DSL are as follows
 
-* [configure](./Rewriter.html#configure) - configure the rewriter, set sourceTyep and parser
-* [description](./Rewriter.html#description) - set description of the rewriter
-* [ifNode](./Rewriter.html#ifNode) - check if node version is greater than or equal to the specified node version
-* [ifNpm](./Rewriter.html#ifNpm) - check the version of the specifid npm package
-* [addFile](./Rewriter.html#addFile) - add a new file
-* [removeFile](./Rewriter.html#removeFile) - remove a file
-* [withinFiles](./Rewriter.html#withinFiles) - find specified files
-* [withinFile](./Rewriter.html#withinFile) - alias to withinFiles
-* [addSnippet](./Rewriter.html#addSnippet) - call another snippet
+* [configure](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#configure) - configure the rewriter, set sourceTyep and parser
+* [description](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#description) - set description of the rewriter
+* [ifNode](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNode) - check if node version is greater than or equal to the specified node version
+* [ifNpm](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNpm) - check the version of the specifid npm package
+* [addFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addFile) - add a new file
+* [removeFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFile) - remove a file
+* [withinFiles](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFiles) - find specified files
+* [withinFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFile) - alias to withinFiles
+* [addSnippet](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addSnippet) - call another snippet
 
 Scopes:
 
-* [withNodes](./Instance.html#withNodes) - recursively find matching ast nodes
-* [withNode](./Instance.html#withNode) - alias to withNode
-* [findNode](./Instance.html#findNode) - alias to withNode
-* [gotoNode](./Instance.html#gotoNode) - go to a child node
+* [withNodes](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNodes) - recursively find matching ast nodes
+* [withNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNode) - alias to withNode
+* [findNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNode) - alias to withNode
+* [gotoNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNode) - go to a child node
 
 Conditions:
 
-* [ifExistNode](./Instance.html#ifExistNode) - check if matching node exist in the child nodes
-* [unlessExistNode](./Instance.html#unlessExistNode) - check if matching node does not exist in the child nodes
-* [ifOnlyExistNode](./Instance.html#ifOnlyExistNode) - check if current node has only one child node and the child node matches
-* [ifAllNodes](./Instance.html#ifAlNodes) - check if all nodes match or not
+* [ifExistNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifExistNode) - check if matching node exist in the child nodes
+* [unlessExistNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#unlessExistNode) - check if matching node does not exist in the child nodes
+* [ifOnlyExistNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifOnlyExistNode) - check if current node has only one child node and the child node matches
+* [ifAllNodes](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifAlNodes) - check if all nodes match or not
 
 Actions:
 
-* [append](./Instance.html#append) - append the code to the bottom of the current node body
-* [prepend](./Instance.html#prepend) - prepend the code to the top of the current node body
-* [insert](./Instance.html#insert) - insert code
-* [insertAfter](./Instance.html#insertAfter) - insert the code next to the current node
-* [insertBefore](./Instance.html#insertBefore) - insert the code previous to the current node
-* [replace](./Instance.html#replace) - replace the code of specified child nodes
-* [deleteNode](./Instance#deleteNode) - delete code the code of specified child nodes
-* [remove](./Instance.html#remove) - remove the whole code of current node
-* [replaceWith](./Instance.html#replaceWith) - replace the whole code of current node
-* [noop](./Instance.html#noop) - no operation
+* [append](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#append) - append the code to the bottom of the current node body
+* [prepend](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#prepend) - prepend the code to the top of the current node body
+* [insert](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insert) - insert code
+* [insertAfter](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertAfter) - insert the code next to the current node
+* [insertBefore](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertBefore) - insert the code previous to the current node
+* [replace](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replace) - replace the code of specified child nodes
+* [deleteNode](https://xinminlabs.github.io/synvert-core-javascript/Instance#deleteNode) - delete code the code of specified child nodes
+* [remove](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#remove) - remove the whole code of current node
+* [replaceWith](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replaceWith) - replace the whole code of current node
+* [noop](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#noop) - no operation
 
 Others:
 
-* [callHelper](./Instance.html#callHelper) - call a helper to run shared code
-* [indent](./Instance#indent) - set proper indent of a string code
+* [callHelper](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelper) - call a helper to run shared code
+* [indent](https://xinminlabs.github.io/synvert-core-javascript/Instance#indent) - set proper indent of a string code
 
 Properties:
-* [filePath](./Instance.html#filePath) - get the file path
-* [currentNode](./Instance.html#currentNode) - current ast node
-* [queryAdapter](./Instance.html#queryAdapter) - get a [query adapter](https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts) to get some helper methods
-* [mutationAdapter](./Instance.html#mutationAdapter) - get a [mutation adapter](https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts) to get some helper methods
+* [filePath](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#filePath) - get the file path
+* [currentNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#currentNode) - current ast node
+* [queryAdapter](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#queryAdapter) - get a [query adapter](https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts) to get some helper methods
+* [mutationAdapter](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#mutationAdapter) - get a [mutation adapter](https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts) to get some helper methods
