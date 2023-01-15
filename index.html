@@ -88,54 +88,54 @@ new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, 
 <p>Want to use the CLI, check out <a href="https://github.com/xinminlabs/synvert-javascript">synvert-javascript</a>.</p>
 <p>DSL are as follows</p>
 <ul>
-<li><a href="./Rewriter.html#configure">configure</a> - configure the rewriter, set sourceTyep and parser</li>
-<li><a href="./Rewriter.html#description">description</a> - set description of the rewriter</li>
-<li><a href="./Rewriter.html#ifNode">ifNode</a> - check if node version is greater than or equal to the specified node version</li>
-<li><a href="./Rewriter.html#ifNpm">ifNpm</a> - check the version of the specifid npm package</li>
-<li><a href="./Rewriter.html#addFile">addFile</a> - add a new file</li>
-<li><a href="./Rewriter.html#removeFile">removeFile</a> - remove a file</li>
-<li><a href="./Rewriter.html#withinFiles">withinFiles</a> - find specified files</li>
-<li><a href="./Rewriter.html#withinFile">withinFile</a> - alias to withinFiles</li>
-<li><a href="./Rewriter.html#addSnippet">addSnippet</a> - call another snippet</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#configure">configure</a> - configure the rewriter, set sourceTyep and parser</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#description">description</a> - set description of the rewriter</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNode">ifNode</a> - check if node version is greater than or equal to the specified node version</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNpm">ifNpm</a> - check the version of the specifid npm package</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addFile">addFile</a> - add a new file</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFile">removeFile</a> - remove a file</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFiles">withinFiles</a> - find specified files</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFile">withinFile</a> - alias to withinFiles</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addSnippet">addSnippet</a> - call another snippet</li>
 </ul>
 <p>Scopes:</p>
 <ul>
-<li><a href="./Instance.html#withNodes">withNodes</a> - recursively find matching ast nodes</li>
-<li><a href="./Instance.html#withNode">withNode</a> - alias to withNode</li>
-<li><a href="./Instance.html#findNode">findNode</a> - alias to withNode</li>
-<li><a href="./Instance.html#gotoNode">gotoNode</a> - go to a child node</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNodes">withNodes</a> - recursively find matching ast nodes</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNode">withNode</a> - alias to withNode</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNode">findNode</a> - alias to withNode</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNode">gotoNode</a> - go to a child node</li>
 </ul>
 <p>Conditions:</p>
 <ul>
-<li><a href="./Instance.html#ifExistNode">ifExistNode</a> - check if matching node exist in the child nodes</li>
-<li><a href="./Instance.html#unlessExistNode">unlessExistNode</a> - check if matching node does not exist in the child nodes</li>
-<li><a href="./Instance.html#ifOnlyExistNode">ifOnlyExistNode</a> - check if current node has only one child node and the child node matches</li>
-<li><a href="./Instance.html#ifAlNodes">ifAllNodes</a> - check if all nodes match or not</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifExistNode">ifExistNode</a> - check if matching node exist in the child nodes</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#unlessExistNode">unlessExistNode</a> - check if matching node does not exist in the child nodes</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifOnlyExistNode">ifOnlyExistNode</a> - check if current node has only one child node and the child node matches</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifAlNodes">ifAllNodes</a> - check if all nodes match or not</li>
 </ul>
 <p>Actions:</p>
 <ul>
-<li><a href="./Instance.html#append">append</a> - append the code to the bottom of the current node body</li>
-<li><a href="./Instance.html#prepend">prepend</a> - prepend the code to the top of the current node body</li>
-<li><a href="./Instance.html#insert">insert</a> - insert code</li>
-<li><a href="./Instance.html#insertAfter">insertAfter</a> - insert the code next to the current node</li>
-<li><a href="./Instance.html#insertBefore">insertBefore</a> - insert the code previous to the current node</li>
-<li><a href="./Instance.html#replace">replace</a> - replace the code of specified child nodes</li>
-<li><a href="./Instance#deleteNode">deleteNode</a> - delete code the code of specified child nodes</li>
-<li><a href="./Instance.html#remove">remove</a> - remove the whole code of current node</li>
-<li><a href="./Instance.html#replaceWith">replaceWith</a> - replace the whole code of current node</li>
-<li><a href="./Instance.html#noop">noop</a> - no operation</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#append">append</a> - append the code to the bottom of the current node body</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#prepend">prepend</a> - prepend the code to the top of the current node body</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insert">insert</a> - insert code</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertAfter">insertAfter</a> - insert the code next to the current node</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertBefore">insertBefore</a> - insert the code previous to the current node</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replace">replace</a> - replace the code of specified child nodes</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance#deleteNode">deleteNode</a> - delete code the code of specified child nodes</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#remove">remove</a> - remove the whole code of current node</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replaceWith">replaceWith</a> - replace the whole code of current node</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#noop">noop</a> - no operation</li>
 </ul>
 <p>Others:</p>
 <ul>
-<li><a href="./Instance.html#callHelper">callHelper</a> - call a helper to run shared code</li>
-<li><a href="./Instance#indent">indent</a> - set proper indent of a string code</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelper">callHelper</a> - call a helper to run shared code</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance#indent">indent</a> - set proper indent of a string code</li>
 </ul>
 <p>Properties:</p>
 <ul>
-<li><a href="./Instance.html#filePath">filePath</a> - get the file path</li>
-<li><a href="./Instance.html#currentNode">currentNode</a> - current ast node</li>
-<li><a href="./Instance.html#queryAdapter">queryAdapter</a> - get a <a href="https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts">query adapter</a> to get some helper methods</li>
-<li><a href="./Instance.html#mutationAdapter">mutationAdapter</a> - get a <a href="https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts">mutation adapter</a> to get some helper methods</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#filePath">filePath</a> - get the file path</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#currentNode">currentNode</a> - current ast node</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#queryAdapter">queryAdapter</a> - get a <a href="https://github.com/xinminlabs/node-query-javascript/blob/main/src/adapter.ts">query adapter</a> to get some helper methods</li>
+<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#mutationAdapter">mutationAdapter</a> - get a <a href="https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts">mutation adapter</a> to get some helper methods</li>
 </ul></article>
     </section>
 
@@ -149,7 +149,7 @@ new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, 
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Jan 01 2023 13:30:03 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Jan 15 2023 22:46:40 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
