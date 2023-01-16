@@ -248,11 +248,11 @@ class Rewriter {
    * Sync to call anther snippet.
    * @example
    * new Synvert.Rewriter("jquery", "migrate", () => {
-   *   addSnippet("jquery", "deprecate-event-shorthand");
-   *   addSnippet("jquery", "deprecate-ready-event");
-   *   addSnippet("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
-   *   addSnippet("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
-   *   addSnippet("javascript/no-useless-constructor")
+   *   this.addSnippetSync("jquery", "deprecate-event-shorthand");
+   *   this.addSnippetSync("jquery", "deprecate-ready-event");
+   *   this.addSnippetSync("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
+   *   this.addSnippetSync("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
+   *   this.addSnippetSync("javascript/no-useless-constructor")
    * });
    * @param {string} group - group of another rewriter, if there's no name parameter, the group can be http url, file path or snippet name.
    * @param {string} name - name of another rewriter.
@@ -283,12 +283,12 @@ class Rewriter {
    * Async to call anther snippet.
    * @async
    * @example
-   * new Synvert.Rewriter("jquery", "migrate", () => {
-   *   addSnippet("jquery", "deprecate-event-shorthand");
-   *   addSnippet("jquery", "deprecate-ready-event");
-   *   addSnippet("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
-   *   addSnippet("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
-   *   addSnippet("javascript/no-useless-constructor")
+   * new Synvert.Rewriter("jquery", "migrate", async () => {
+   *   await this.addSnippet("jquery", "deprecate-event-shorthand");
+   *   await this.addSnippet("jquery", "deprecate-ready-event");
+   *   await this.addSnippet("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
+   *   await this.addSnippet("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
+   *   await this.addSnippet("javascript/no-useless-constructor")
    * });
    * @param {string} group - group of another rewriter, if there's no name parameter, the group can be http url, file path or snippet name.
    * @param {string} name - name of another rewriter.
@@ -321,7 +321,7 @@ class Rewriter {
    * It creates an Instance to rewrite code.
    * @example
    * new Synvert.Rewriter("javascript", "no-unused-imports", () => {
-   *   withinFiles('**\/*.js', function () {
+   *   this.withinFilesSync('**\/*.js', function () {
    *   })
    * })
    * @param {string} filePattern - pattern to find files, e.g. lib/*.js
@@ -373,8 +373,8 @@ class Rewriter {
    * It creates an Instance to rewrite code.
    * @async
    * @example
-   * new Synvert.Rewriter("javascript", "no-unused-imports", () => {
-   *   withinFiles('**\/*.js', function () {
+   * new Synvert.Rewriter("javascript", "no-unused-imports", async () => {
+   *   await this.withinFiles('**\/*.js', async function () {
    *   })
    * })
    * @param {string} filePattern - pattern to find files, e.g. lib/*.js

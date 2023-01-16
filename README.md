@@ -51,24 +51,37 @@ DSL are as follows
 * [ifNode](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNode) - check if node version is greater than or equal to the specified node version
 * [ifNpm](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNpm) - check the version of the specifid npm package
 * [addFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addFile) - add a new file
+* [addFileSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addFileSync) - add a new file
 * [removeFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFile) - remove a file
+* [removeFileSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFileSync) - remove a file
 * [withinFiles](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFiles) - find specified files
+* [withinFilesSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFilesSync) - find specified files
 * [withinFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFile) - alias to withinFiles
+* [withinFileSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFileSync) - alias to withinFilesSync
 * [addSnippet](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addSnippet) - call another snippet
+* [addSnippetSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addSnippetSync) - call another snippet
 
 Scopes:
 
 * [withinNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withinNode) - recursively find matching ast nodes
+* [withinNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withinNodeSync) - recursively find matching ast nodes
 * [withNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNode) - alias to withNode
+* [withNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNodeSync) - alias to withNodeSync
 * [findNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNode) - alias to withNode
+* [findNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNodeSync) - alias to withNodeSync
 * [gotoNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNode) - go to a child node
+* [gotoNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNodeSync) - go to a child node
 
 Conditions:
 
 * [ifExistNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifExistNode) - check if matching node exist in the child nodes
+* [ifExistNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifExistNodeSync) - check if matching node exist in the child nodes
 * [unlessExistNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#unlessExistNode) - check if matching node does not exist in the child nodes
+* [unlessExistNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#unlessExistNodeSync) - check if matching node does not exist in the child nodes
 * [ifOnlyExistNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifOnlyExistNode) - check if current node has only one child node and the child node matches
+* [ifOnlyExistNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifOnlyExistNodeSync) - check if current node has only one child node and the child node matches
 * [ifAllNodes](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifAlNodes) - check if all nodes match or not
+* [ifAllNodesSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifAlNodesSync) - check if all nodes match or not
 
 Actions:
 
@@ -86,6 +99,7 @@ Actions:
 Others:
 
 * [callHelper](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelper) - call a helper to run shared code
+* [callHelperSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelperSync) - call a helper to run shared code
 * [indent](https://xinminlabs.github.io/synvert-core-javascript/Instance#indent) - set proper indent of a string code
 
 Properties:

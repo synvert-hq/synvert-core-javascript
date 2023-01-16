@@ -117,6 +117,10 @@ class Instance {
     }
   }
 
+  /**
+   * Process one file.
+   * @async
+   */
   async process(): Promise<void> {
     if (
       this.rewriter.options.parser === Parser.ESPREE &&
@@ -188,6 +192,11 @@ class Instance {
     return result;
   }
 
+  /**
+   * Test one file.
+   * @async
+   * @returns {Promise<TestResultExt>}
+   */
   async test(): Promise<TestResultExt> {
     if (
       this.rewriter.options.parser === Parser.ESPREE &&
@@ -226,6 +235,12 @@ class Instance {
     this.currentNode = node;
   }
 
+  /**
+   * Set currentNode to node and process.
+   * @async
+   * @param {Node} node - set to current node
+   * @param {Function} func
+   */
   async processWithNode(node: Node, func: (instance: Instance) => void) {
     this.currentNode = node;
     await func.call(this, this);
@@ -244,6 +259,12 @@ class Instance {
     this.currentNode = originalNode;
   }
 
+  /**
+   * Set currentNode properly, process and set currentNode back to original currentNode.
+   * @async
+   * @param {Node} node - set to other node
+   * @param {Function} func
+   */
   async processWithOtherNode(node: Node, func: (instance: Instance) => void) {
     const originalNode = this.currentNode;
     this.currentNode = node;
@@ -269,8 +290,8 @@ class Instance {
    * then continue operating on each matching ast node.
    * @example
    * // `$.ajax({ ... })` matches and call `foobar`
-   * withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })
-   * withinNode(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", () => { foobar });
+   * withinNodeSync({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })
+   * withinNodeSync(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", () => { foobar });
    * @param {string|Object} nqlOrRules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
@@ -298,6 +319,17 @@ class Instance {
     options: QueryOptions,
     func: (instance: Instance) => void
   ): Promise<void>;
+  /**
+   * Create a {@link WithinScope} to recursively find matching ast nodes,
+   * then continue operating on each matching ast node.
+   * @async
+   * @example
+   * // `$.ajax({ ... })` matches and call `foobar`
+   * await withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, async () => { foobar })
+   * await withinNode(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", async () => { foobar });
+   * @param {string|Object} nqlOrRules - to find mathing ast nodes.
+   * @param {Function} func - to be called on the matching nodes.
+   */
   async withinNode(
     nqlOrRules: string | object,
     options: QueryOptions | ((instance: Instance) => void),
@@ -318,7 +350,7 @@ class Instance {
    * then continue operating on the child node.
    * @example
    * // `$.ajax({ ... })` goes to `$.ajax`
-   * gotoNode('callee')
+   * gotoNodeSync('callee')
    * @param {string} child_node_name - the name of the child nodes.
    * @param {Function} func - to continue operating on the matching nodes.
    */
@@ -326,6 +358,16 @@ class Instance {
     new GotoScope(this, childNodeName, func).processSync();
   }
 
+  /**
+   * Create a {@link GotoScope} to go to a child node,
+   * then continue operating on the child node.
+   * @async
+   * @example
+   * // `$.ajax({ ... })` goes to `$.ajax`
+   * await gotoNode('callee')
+   * @param {string} child_node_name - the name of the child nodes.
+   * @param {Function} func - to continue operating on the matching nodes.
+   */
   async gotoNode(childNodeName: string, func: (instance: Instance) => void) {
     await new GotoScope(this, childNodeName, func).process();
   }
@@ -355,7 +397,7 @@ class Instance {
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar extends React.Component` matches and call `foobar`.
-   * ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
+   * ifExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
@@ -405,6 +447,18 @@ class Instance {
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): Promise<void>;
+  /**
+   * Create a {@link IfExistCondition} to check if matching nodes exist in the child nodes,
+   * if so, then continue operating on each matching ast node.
+   * @async
+   * @example
+   * // `class Foobar extends React.Component` matches and call `foobar`.
+   * await ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => { foobar })
+   * @param {string|Object} nqlOrRules - to check mathing ast nodes.
+   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {Function} func - call the function if the matching nodes exist in the child nodes.
+   * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
+   */
   async ifExistNode(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
@@ -454,7 +508,7 @@ class Instance {
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar extends Component` matches and call `foobar`.
-   * unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})
+   * unlessExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if no matching node exists in the child nodes.
@@ -504,6 +558,18 @@ class Instance {
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): Promise<void>;
+  /**
+   * Create a {@link UnlessExistCondition} to check if matching nodes does not exist in the child nodes,
+   * if so, then continue operating on each matching ast node.
+   * @async
+   * @example
+   * // `class Foobar extends Component` matches and call `foobar`.
+   * await unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => {})
+   * @param {string|Object} nqlOrRules - to check mathing ast nodes.
+   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {Function} func - call the function if no matching node exists in the child nodes.
+   * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
+   */
   async unlessExistNode(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
@@ -553,7 +619,7 @@ class Instance {
    * if so, then continue operating on each matching ast node.
    * @example
    * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
-   * ifOnlyExistNode({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })
+   * ifOnlyExistNodeSync({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
@@ -603,6 +669,18 @@ class Instance {
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): Promise<void>;
+  /**
+   * Create a {@link IfOnlyExistCondition} to check if current node has only one child node and the child node matches rules,
+   * if so, then continue operating on each matching ast node.
+   * @async
+   * @example
+   * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
+   * await ifOnlyExistNode({ nodeType: "MethodDefinition", key: "foo" }, async () => { foobar })
+   * @param {string|Object} nqlOrRules - to check mathing ast nodes.
+   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {Function} func - call the function if the matching nodes exist in the child nodes.
+   * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
+   */
   async ifOnlyExistNode(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
@@ -652,7 +730,7 @@ class Instance {
    * if so, then call the func, else call the elseFunc.
    * @example
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
-   * IfAllNodes({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
+   * ifAllNodesSync({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
    * @param {Object} options - { match: nqlOrRules, in: 'callee' }
    * @param {Function} func - call the function if the matching nodes match options.match.
@@ -702,6 +780,18 @@ class Instance {
     func: (instance: Instance) => void,
     elseFunc: (instance: Instance) => void
   ): Promise<void>;
+  /**
+   * Create a {@link IfAllCondition} to check if all matching nodes match options.match,
+   * if so, then call the func, else call the elseFunc.
+   * @async
+   * @example
+   * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
+   * await ifAllNodes({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, async () => { bar });
+   * @param {string|Object} nqlOrRules - to check mathing ast nodes.
+   * @param {Object} options - { match: nqlOrRules, in: 'callee' }
+   * @param {Function} func - call the function if the matching nodes match options.match.
+   * @param {Function} elseFunc - call the else function if no matching node matches options.match.
+   */
   async ifAllNodes(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
