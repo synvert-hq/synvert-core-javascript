@@ -255,6 +255,15 @@ class Instance {
    * DSL *
    *******/
 
+  withinNodeSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void;
+  withinNodeSync(
+    nqlOrRules: string | object,
+    options: QueryOptions,
+    func: (instance: Instance) => void
+  ): void;
   /**
    * Create a {@link WithinScope} to recursively find matching ast nodes,
    * then continue operating on each matching ast node.
@@ -265,15 +274,6 @@ class Instance {
    * @param {string|Object} nqlOrRules - to find mathing ast nodes.
    * @param {Function} func - to be called on the matching nodes.
    */
-  withinNodeSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void
-  ): void;
-  withinNodeSync(
-    nqlOrRules: string | object,
-    options: QueryOptions,
-    func: (instance: Instance) => void
-  ): void;
   withinNodeSync(
     nqlOrRules: string | object,
     options: QueryOptions | ((instance: Instance) => void),
@@ -330,6 +330,26 @@ class Instance {
     await new GotoScope(this, childNodeName, func).process();
   }
 
+  ifExistNodeSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void;
+  ifExistNodeSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifExistNodeSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  ifExistNodeSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
   /**
    * Create a {@link IfExistCondition} to check if matching nodes exist in the child nodes,
    * if so, then continue operating on each matching ast node.
@@ -341,26 +361,6 @@ class Instance {
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
-  ifExistNodeSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void
-  ): void;
-  ifExistNodeSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
-  ifExistNodeSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
-  ): void;
-  ifExistNodeSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
   ifExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
@@ -429,6 +429,26 @@ class Instance {
     ).process();
   }
 
+  unlessExistNodeSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void;
+  unlessExistNodeSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  unlessExistNodeSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  unlessExistNodeSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
   /**
    * Create a {@link UnlessExistCondition} to check if matching nodes does not exist in the child nodes,
    * if so, then continue operating on each matching ast node.
@@ -440,26 +460,6 @@ class Instance {
    * @param {Function} func - call the function if no matching node exists in the child nodes.
    * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
    */
-  unlessExistNodeSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void
-  ): void;
-  unlessExistNodeSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
-  unlessExistNodeSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
-  ): void;
-  unlessExistNodeSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
   unlessExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
@@ -528,6 +528,26 @@ class Instance {
     ).process();
   }
 
+  ifOnlyExistNodeSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void;
+  ifOnlyExistNodeSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifOnlyExistNodeSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  ifOnlyExistNodeSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
   /**
    * Create a {@link IfOnlyExistCondition} to check if current node has only one child node and the child node matches rules,
    * if so, then continue operating on each matching ast node.
@@ -539,26 +559,6 @@ class Instance {
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
-  ifOnlyExistNodeSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void
-  ): void;
-  ifOnlyExistNodeSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
-  ifOnlyExistNodeSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
-  ): void;
-  ifOnlyExistNodeSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
   ifOnlyExistNodeSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),
@@ -627,6 +627,26 @@ class Instance {
     ).process();
   }
 
+  ifAllNodesSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void
+  ): void;
+  ifAllNodesSync(
+    nqlOrRules: string | object,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
+  ifAllNodesSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void
+  ): void;
+  ifAllNodesSync(
+    nqlOrRules: string | object,
+    options: ConditionOptions,
+    func: (instance: Instance) => void,
+    elseFunc: (instance: Instance) => void
+  ): void;
   /**
    * Create a {@link IfAllCondition} to check if all matching nodes match options.match,
    * if so, then call the func, else call the elseFunc.
@@ -638,26 +658,6 @@ class Instance {
    * @param {Function} func - call the function if the matching nodes match options.match.
    * @param {Function} elseFunc - call the else function if no matching node matches options.match.
    */
-  ifAllNodesSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void
-  ): void;
-  ifAllNodesSync(
-    nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
-  ifAllNodesSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
-  ): void;
-  ifAllNodesSync(
-    nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
-  ): void;
   ifAllNodesSync(
     nqlOrRules: string | object,
     options: ConditionOptions | ((instance: Instance) => void),

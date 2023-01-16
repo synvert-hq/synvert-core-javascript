@@ -58,7 +58,7 @@ DSL are as follows
 
 Scopes:
 
-* [withNodes](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNodes) - recursively find matching ast nodes
+* [withinNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withinNode) - recursively find matching ast nodes
 * [withNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNode) - alias to withNode
 * [findNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNode) - alias to withNode
 * [gotoNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNode) - go to a child node
