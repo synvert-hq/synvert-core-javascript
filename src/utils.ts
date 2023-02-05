@@ -2,6 +2,7 @@ import ts from "typescript";
 import { Node } from "acorn";
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
+import fg from "fast-glob";
 import fetchSync from "sync-fetch";
 import { URL } from "url";
 import NodeQuery, {
@@ -13,6 +14,7 @@ import NodeMutation, {
 
 import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
+import Configuration from "./configuration";
 
 const REWRITER_METHODS = "addFile removeFile withinFiles withinFile addSnippet";
 const SCOPE_METHODS = "withinNode withNode findNode gotoNode";
@@ -153,6 +155,53 @@ const makeSureTypescriptAdapter = (func: () => string): string => {
     NodeMutation.configure({ adapter: originalMutationAdapter });
   }
 };
+
+/**
+ * Sync to glob matching files.
+ * @param {string} filePattern file pattern
+ * @returns {string[]} matching files
+ */
+export const globSync = (filePattern: string): string[] => {
+  const onlyPaths =
+    Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
+  const fsStats = fg.sync(
+    onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
+    {
+      ignore: Configuration.skipPaths,
+      cwd: Configuration.rootPath,
+      onlyFiles: true,
+      unique: true,
+      stats: true,
+    }
+  );
+  return fsStats
+    .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
+    .map((fsStat) => fsStat.path);
+}
+
+/**
+ * Async to glob matching files.
+ * @async
+ * @param {string} filePattern file pattern
+ * @returns {Promise<string[]>} matching files
+ */
+export const glob = async (filePattern: string): Promise<string[]> => {
+  const onlyPaths =
+    Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
+  const fsStats = await fg(
+    onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
+    {
+      ignore: Configuration.skipPaths,
+      cwd: Configuration.rootPath,
+      onlyFiles: true,
+      unique: true,
+      stats: true,
+    }
+  );
+  return fsStats
+    .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
+    .map((fsStat) => fsStat.path);
+}
 
 /**
  * Sync to eval the snippet by name.

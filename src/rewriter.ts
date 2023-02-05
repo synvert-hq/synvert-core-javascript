@@ -1,6 +1,5 @@
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
-import fg from "fast-glob";
 import minimatch from "minimatch";
 import { RewriterOptions, Parser, SourceType } from "./types/options";
 import Instance from "./instance";
@@ -12,6 +11,8 @@ import {
   evalSnippetSync,
   isValidFile,
   isValidFileSync,
+  glob,
+  globSync,
 } from "./utils";
 import Configuration from "./configuration";
 import NodeQuery, {
@@ -343,7 +344,7 @@ class Rewriter {
         const instance = new Instance(this, filePattern, func);
         return instance.processSync();
       }
-      this.matchFilesInPathsSync(filePattern).forEach((filePath) => {
+      globSync(filePattern).forEach((filePath) => {
         const instance = new Instance(this, filePath, func);
         instance.processSync();
       });
@@ -357,7 +358,7 @@ class Rewriter {
         this.mergeTestResults([result]);
         return;
       }
-      const filePaths = this.matchFilesInPathsSync(filePattern);
+      const filePaths = globSync(filePattern);
       const results = filePaths.map((filePath) => {
         const instance = new Instance(this, filePath, func);
         return instance.testSync();
@@ -396,7 +397,7 @@ class Rewriter {
         const instance = new Instance(this, filePattern, func);
         return await instance.process();
       }
-      const filePaths = await this.matchFilesInPaths(filePattern);
+      const filePaths = await glob(filePattern);
       await Promise.all(
         filePaths.map((filePath) => {
           const instance = new Instance(this, filePath, func);
@@ -413,7 +414,7 @@ class Rewriter {
         this.mergeTestResults([result]);
         return;
       }
-      const filePaths = await this.matchFilesInPaths(filePattern);
+      const filePaths = await glob(filePattern);
       const results = await Promise.all(
         filePaths.map((filePath) => {
           const instance = new Instance(this, filePath, func);
@@ -503,46 +504,6 @@ class Rewriter {
       ...this.testResults,
       ...results.filter((result) => result.affected),
     ];
-  }
-
-  /**
-   * Return matching files.
-   * @returns {string[]} matching files
-   */
-  private matchFilesInPathsSync(filePattern: string): string[] {
-    const onlyPaths =
-      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    const fsStats = fg.sync(
-      onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
-      {
-        ignore: Configuration.skipPaths,
-        cwd: Configuration.rootPath,
-        onlyFiles: true,
-        unique: true,
-        stats: true,
-      }
-    );
-    return fsStats
-      .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
-      .map((fsStat) => fsStat.path);
-  }
-
-  private async matchFilesInPaths(filePattern: string): Promise<string[]> {
-    const onlyPaths =
-      Configuration.onlyPaths.length > 0 ? Configuration.onlyPaths : [""];
-    const fsStats = await fg(
-      onlyPaths.map((onlyPath) => path.join(onlyPath, filePattern)),
-      {
-        ignore: Configuration.skipPaths,
-        cwd: Configuration.rootPath,
-        onlyFiles: true,
-        unique: true,
-        stats: true,
-      }
-    );
-    return fsStats
-      .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
-      .map((fsStat) => fsStat.path);
   }
 
   private heredoc(text: string): string {
