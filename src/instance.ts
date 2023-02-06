@@ -14,10 +14,7 @@ import {
   ConditionOptions,
 } from "./condition";
 import { loadSnippet, loadSnippetSync } from "./utils";
-import NodeQuery, {
-  QueryOptions,
-  Adapter as QueryAdapter,
-} from "@xinminlabs/node-query";
+import { QueryOptions } from "@xinminlabs/node-query";
 import NodeMutation, {
   Strategy as NodeMutationStrategy,
   InsertOptions,
@@ -36,7 +33,6 @@ const espree = require("@xinminlabs/espree");
  * One instance can contains one or many Scope and Condition.
  * @property {string} filePath - file path to run instance
  * @property {MutationAdapter} mutationAdapter - mutation adapter
- * @property {QueryAdapter} queryAdapter - query adapter
  * @borrows Instance#withinNodeSync as Instance#withNodeSync
  * @borrows Instance#findNodeSync as Instance#withNodeSync
  * @borrows Instance#withinNode as Instance#withNode
@@ -44,7 +40,6 @@ const espree = require("@xinminlabs/espree");
  */
 class Instance {
   public mutationAdapter: MutationAdapter<any>;
-  public queryAdapter: QueryAdapter<any>;
   public currentNode!: Node;
   private currentMutation!: NodeMutation<Node>;
   public options: any;
@@ -66,7 +61,6 @@ class Instance {
     private func: (instance: Instance) => void
   ) {
     this.mutationAdapter = NodeMutation.getAdapter();
-    this.queryAdapter = NodeQuery.getAdapter();
     let strategy = NodeMutationStrategy.KEEP_RUNNING;
     if (rewriter.options.strategy === Strategy.ALLOW_INSERT_AT_SAME_POSITION) {
       strategy = strategy | NodeMutationStrategy.ALLOW_INSERT_AT_SAME_POSITION;
@@ -92,7 +86,6 @@ class Instance {
       const source = fs.readFileSync(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<Node>(source);
       this.mutationAdapter = NodeMutation.getAdapter();
-      this.queryAdapter = NodeQuery.getAdapter();
       try {
         const node = this.parseCode(this.filePath, source);
 
@@ -136,7 +129,6 @@ class Instance {
       const source = await promisesFs.readFile(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<Node>(source);
       this.mutationAdapter = NodeMutation.getAdapter();
-      this.queryAdapter = NodeQuery.getAdapter();
       try {
         const node = this.parseCode(currentFilePath, source);
 
@@ -181,7 +173,6 @@ class Instance {
     const source = fs.readFileSync(currentFilePath, "utf-8");
     this.currentMutation = new NodeMutation<Node>(source);
     this.mutationAdapter = NodeMutation.getAdapter();
-    this.queryAdapter = NodeQuery.getAdapter();
     const node = this.parseCode(currentFilePath, source);
 
     this.processWithNodeSync(node, this.func);
@@ -213,7 +204,6 @@ class Instance {
     const source = await promisesFs.readFile(currentFilePath, "utf-8");
     this.currentMutation = new NodeMutation<Node>(source);
     this.mutationAdapter = NodeMutation.getAdapter();
-    this.queryAdapter = NodeQuery.getAdapter();
     const node = this.parseCode(currentFilePath, source);
 
     await this.processWithNode(node, this.func);

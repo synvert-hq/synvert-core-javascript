@@ -28,13 +28,6 @@ describe("Instance", () => {
     });
   });
 
-  describe("#queryAdapter", () => {
-    test("get query adapter", () => {
-      const instance = new Instance(rewriter, "code.ts", function () {});
-      expect(instance.queryAdapter).not.toBeNull();
-    });
-  });
-
   describe("processSync", () => {
     let instance: Instance;
 
