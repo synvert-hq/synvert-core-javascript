@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.5.0 (2023-02-06)
+
+* Remove `Instance#queryAdapter`
+
 ## 2.4.4 (2023-01-01)
 
 * Heredoc for `description`
