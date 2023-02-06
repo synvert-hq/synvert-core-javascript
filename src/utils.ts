@@ -177,7 +177,7 @@ export const globSync = (filePattern: string): string[] => {
   return fsStats
     .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
     .map((fsStat) => fsStat.path);
-}
+};
 
 /**
  * Async to glob matching files.
@@ -201,7 +201,7 @@ export const glob = async (filePattern: string): Promise<string[]> => {
   return fsStats
     .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
     .map((fsStat) => fsStat.path);
-}
+};
 
 /**
  * Sync to eval the snippet by name.
