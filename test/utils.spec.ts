@@ -1,3 +1,4 @@
+import dedent from "dedent";
 import {
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
@@ -5,7 +6,7 @@ import {
 
 describe("rewriteSnippetToAsyncVersion", () => {
   test("rewrites snippet", () => {
-    const originalSnippet = `
+    const originalSnippet = dedent`
       const Synvert = require("synvert-core");
 
       new Synvert.Rewriter("group", "name1", () => {
@@ -42,7 +43,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
         });
       });
     `;
-    const newSnippet = `
+    const newSnippet = dedent`
       const Synvert = require("synvert-core");
 
       new Synvert.Rewriter("group", "name1", async function () {
@@ -90,9 +91,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
 
 describe("rewriteSnippetToSyncVersion", () => {
   test("rewrites snippet", () => {
-    const originalSnippet = `
-      const Synvert = require("synvert-core");
-
+    const originalSnippet = dedent`
       new Synvert.Rewriter("group", "name", () => {
         description("foobar");
 
@@ -110,9 +109,8 @@ describe("rewriteSnippetToSyncVersion", () => {
         });
       });
     `;
-    const newSnippet = `
+    const newSnippet = dedent`
       const Synvert = require("synvert-core");
-
       new Synvert.Rewriter("group", "name", function () {
         this.description("foobar");
 

@@ -58,9 +58,12 @@ const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
 /**
  * Rewrite javascript snippet to async version.
  */
-export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
+export const rewriteSnippetToAsyncVersion = (snippet: string, insertRequire: boolean = true): string => {
   return makeSureTypescriptAdapter(() => {
-    const newSnippet = addProperScopeToSnippet(snippet);
+    let newSnippet = addProperScopeToSnippet(snippet);
+    if (insertRequire) {
+      newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
+    }
     const node = parseCode(newSnippet);
     const mutation = new NodeMutation<ts.Node>(newSnippet);
     NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
@@ -92,9 +95,12 @@ const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
 /**
  * Rewrite javascript snippet to sync version.
  */
-export const rewriteSnippetToSyncVersion = (snippet: string): string => {
+export const rewriteSnippetToSyncVersion = (snippet: string, insertRequire: boolean = true): string => {
   return makeSureTypescriptAdapter(() => {
-    const newSnippet = addProperScopeToSnippet(snippet);
+    let newSnippet = addProperScopeToSnippet(snippet);
+    if (insertRequire) {
+      newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
+    }
     const node = parseCode(newSnippet);
     const mutation = new NodeMutation<ts.Node>(newSnippet);
     SYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
@@ -103,6 +109,20 @@ export const rewriteSnippetToSyncVersion = (snippet: string): string => {
     const { affected, newSource } = mutation.process();
     return affected ? newSource! : newSnippet;
   });
+};
+
+const NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY = new NodeQuery<ts.Node>(
+  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="synvert-core"]]]]])`
+);
+
+const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
+  const node = parseCode(snippet);
+  const mutation = new NodeMutation<ts.Node>(snippet);
+  NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY.queryNodes(node).forEach((node) => {
+    mutation.insert(node, `const Synvert = require("synvert-core");\n`, { at: "beginning" });
+  });
+  const { affected, newSource } = mutation.process();
+  return affected ? newSource! : snippet;
 };
 
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
@@ -225,62 +245,26 @@ export const evalSnippet = async (snippetName: string): Promise<Rewriter> => {
 /**
  * Sync to load snippet by snippet name.
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
+ * @param {boolean} insertRequire - insert require statement or not
  * @returns {string} snippet helper content
+ * @throws {SnippetNotFoundError} snippet not found
  */
-export const loadSnippetSync = (snippetName: string): string => {
-  if (isValidUrl(snippetName)) {
-    const snippetUrl = formatUrl(snippetName);
-    if (remoteSnippetExistsSync(snippetUrl)) {
-      return rewriteSnippetToSyncVersion(fetchSync(snippetUrl).text());
-    }
-    throw new SnippetNotFoundError(`${snippetName} not found`);
-  } else if (isValidFileSync(snippetName)) {
-    return rewriteSnippetToSyncVersion(fs.readFileSync(snippetName, "utf-8"));
-  } else {
-    const snippetPath = snippetExpandPath(snippetName);
-    if (isValidFileSync(snippetPath)) {
-      return rewriteSnippetToSyncVersion(fs.readFileSync(snippetPath, "utf-8"));
-    }
-    const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
-    if (remoteSnippetExistsSync(snippetUrl)) {
-      return rewriteSnippetToSyncVersion(fetchSync(snippetUrl).text());
-    }
-    throw new SnippetNotFoundError(`${snippetName} not found`);
-  }
+export const loadSnippetSync = (snippetName: string, insertRequire: boolean = true): string => {
+  const snippetContent = loadSnippetContentSync(snippetName);
+  return rewriteSnippetToSyncVersion(snippetContent, insertRequire);
 };
 
 /**
  * Sync to load snippet by snippet name.
  * @async
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
+ * @param {boolean} insertRequire - insert require statement or not
  * @returns {Promise<string>} snippet helper content
+ * @throws {SnippetNotFoundError} snippet not found
  */
-export const loadSnippet = async (snippetName: string): Promise<string> => {
-  if (isValidUrl(snippetName)) {
-    const snippetUrl = formatUrl(snippetName);
-    if (await remoteSnippetExists(snippetUrl)) {
-      const response = await fetch(snippetUrl);
-      return rewriteSnippetToAsyncVersion(await response.text());
-    }
-    throw new SnippetNotFoundError(`${snippetName} not found`);
-  } else if (await isValidFile(snippetName)) {
-    return rewriteSnippetToAsyncVersion(
-      await promisesFs.readFile(snippetName, "utf-8")
-    );
-  } else {
-    const snippetPath = snippetExpandPath(snippetName);
-    if (await isValidFile(snippetPath)) {
-      return rewriteSnippetToAsyncVersion(
-        await promisesFs.readFile(snippetPath, "utf-8")
-      );
-    }
-    const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
-    if (await remoteSnippetExists(snippetUrl)) {
-      const response = await fetch(snippetUrl);
-      return rewriteSnippetToAsyncVersion(await response.text());
-    }
-    throw new SnippetNotFoundError(`${snippetName} not found`);
-  }
+export const loadSnippet = async (snippetName: string, insertRequire: boolean = true): Promise<string> => {
+  const snippetContent = await loadSnippetContent(snippetName);
+  return rewriteSnippetToAsyncVersion(snippetContent, insertRequire);
 };
 
 /**
@@ -351,4 +335,50 @@ const convertToGithubRawUrl = (url: string): string => {
   return url
     .replace("//github.com/", "//raw.githubusercontent.com/")
     .replace("/blob/", "/");
+};
+
+const loadSnippetContent = async (snippetName: string): Promise<string> => {
+  if (isValidUrl(snippetName)) {
+    const snippetUrl = formatUrl(snippetName);
+    if (await remoteSnippetExists(snippetUrl)) {
+      const response = await fetch(snippetUrl);
+      return await response.text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
+  } else if (await isValidFile(snippetName)) {
+    return await promisesFs.readFile(snippetName, "utf-8");
+  } else {
+    const snippetPath = snippetExpandPath(snippetName);
+    if (await isValidFile(snippetPath)) {
+      return await promisesFs.readFile(snippetPath, "utf-8");
+    }
+    const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
+    if (await remoteSnippetExists(snippetUrl)) {
+      const response = await fetch(snippetUrl);
+      return await response.text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
+  }
+}
+
+const loadSnippetContentSync = (snippetName: string): string => {
+  if (isValidUrl(snippetName)) {
+    const snippetUrl = formatUrl(snippetName);
+    if (remoteSnippetExistsSync(snippetUrl)) {
+      return fetchSync(snippetUrl).text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
+  } else if (isValidFileSync(snippetName)) {
+    return fs.readFileSync(snippetName, "utf-8");
+  } else {
+    const snippetPath = snippetExpandPath(snippetName);
+    if (isValidFileSync(snippetPath)) {
+      return fs.readFileSync(snippetPath, "utf-8");
+    }
+    const snippetUrl = formatUrl(remoteSnippetUrl(snippetName));
+    if (remoteSnippetExistsSync(snippetUrl)) {
+      return fetchSync(snippetUrl).text();
+    }
+    throw new SnippetNotFoundError(`${snippetName} not found`);
+  }
 };

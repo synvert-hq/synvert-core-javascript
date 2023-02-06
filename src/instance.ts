@@ -986,7 +986,7 @@ class Instance {
    * @param options - options can be anything it needs to be passed to the helper
    */
   callHelperSync(helperName: string, options: any): void {
-    const helperContent = loadSnippetSync(helperName);
+    const helperContent = loadSnippetSync(helperName, false);
     this.options = options;
     Function(helperContent).call(this, this);
     this.options = undefined;
@@ -999,7 +999,7 @@ class Instance {
    * @param options - options can be anything it needs to be passed to the helper
    */
   async callHelper(helperName: string, options: any): Promise<void> {
-    const helperContent = await loadSnippet(helperName);
+    const helperContent = await loadSnippet(helperName, false);
     this.options = options;
     // await Function(`(async () => { ${helperContent} })()`).call(this, this);
     // is not working
