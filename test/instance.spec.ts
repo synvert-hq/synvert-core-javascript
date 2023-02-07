@@ -411,48 +411,44 @@ describe("Instance", () => {
   });
 
   describe("wrapWithQuotes", () => {
+    const instance = new Instance(rewriter, "code.ts", function () {});
 
-  });
+    describe("Configuration.singleQuote is true", () => {
+      beforeEach(() => {
+        Configuration.singleQuote = true;
+      });
 
-describe("wrapWithQuotes", () => {
-  const instance = new Instance(rewriter, "code.ts", function () {});
+      afterEach(() => {
+        Configuration.singleQuote = false;
+      });
 
-  describe("Configuration.singleQuote is true", () => {
-    beforeEach(() => {
-      Configuration.singleQuote = true;
+      test("wraps with single quotes", () => {
+        expect(instance.wrapWithQuotes("foobar")).toEqual("'foobar'");
+      });
+
+      test("wraps with double quotes if it contains single quote", () => {
+        expect(instance.wrapWithQuotes("foo'bar")).toEqual(`"foo'bar"`);
+      });
+
+      test("wraps with single quotes and escapes single quote", () => {
+        expect(instance.wrapWithQuotes("foo'\"bar")).toEqual(`'foo\\'"bar'`);
+      });
     });
 
-    afterEach(() => {
-      Configuration.singleQuote = false;
-    });
+    describe("Configuration.singleQuote is false", () => {
+      test("wraps with double quotes", () => {
+        expect(instance.wrapWithQuotes("foobar")).toEqual('"foobar"');
+      });
 
-    test("wraps with single quotes", () => {
-      expect(instance.wrapWithQuotes("foobar")).toEqual("'foobar'");
-    });
+      test("wraps with single quotes if it contains double quote", () => {
+        expect(instance.wrapWithQuotes('foo"bar')).toEqual(`'foo"bar'`);
+      });
 
-    test("wraps with double quotes if it contains single quote", () => {
-      expect(instance.wrapWithQuotes("foo'bar")).toEqual(`"foo'bar"`);
-    });
-
-    test("wraps with single quotes and escapes single quote", () => {
-      expect(instance.wrapWithQuotes("foo'\"bar")).toEqual(`'foo\\'"bar'`);
-    });
-  });
-
-  describe("Configuration.singleQuote is false", () => {
-    test("wraps with double quotes", () => {
-      expect(instance.wrapWithQuotes("foobar")).toEqual('"foobar"');
-    });
-
-    test("wraps with single quotes if it contains double quote", () => {
-      expect(instance.wrapWithQuotes('foo"bar')).toEqual(`'foo"bar'`);
-    });
-
-    test("wraps with double quotes and escapes double quote", () => {
-      expect(instance.wrapWithQuotes("foo'\"bar")).toEqual(`"foo'\\"bar"`);
+      test("wraps with double quotes and escapes double quote", () => {
+        expect(instance.wrapWithQuotes("foo'\"bar")).toEqual(`"foo'\\"bar"`);
+      });
     });
   });
-});
 
   describe("indent", () => {
     const oldCode = `
