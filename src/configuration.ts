@@ -8,6 +8,7 @@ class Configuration {
   static showRunProcess: boolean = false;
   static maxFileSize: number = 10 * 1024; // 10K
   static singleQuote = false;
+  static semi = true;
 }
 
 export default Configuration;

@@ -36,4 +36,10 @@ describe("Configuration", () => {
     Configuration.singleQuote = true;
     expect(Configuration.singleQuote).toEqual(true);
   });
+
+  it("semi", () => {
+    expect(Configuration.semi).toEqual(true);
+    Configuration.semi = false;
+    expect(Configuration.semi).toEqual(false);
+  });
 });
