@@ -185,10 +185,19 @@ const makeSureTypescriptAdapter = (func: () => string): string => {
 };
 
 /**
- * Get the single or double quote based on Configuration.singleQuote.
- * @returns {string} quote
+ * Wrap str string with single or double quotes based on Configuration.singleQuote.
+ * @param {string} str string
+ * @returns {string} quoted string
  */
-export const quote = (): string => (Configuration.singleQuote ? "'" : '"');
+export const wrapWithQuotes = (str: string): string => {
+  const quote = Configuration.singleQuote ? "'" : '"';
+  const anotherQuote = Configuration.singleQuote ? '"' : "'";
+  if (str.indexOf(quote) !== -1 && str.indexOf(anotherQuote) === -1) {
+    return `${anotherQuote}${str}${anotherQuote}`;
+  }
+  const escapedStr = str.replace(new RegExp(quote, "g"), `\\${quote}`);
+  return `${quote}${escapedStr}${quote}`;
+};
 
 /**
  * Sync to glob matching files.
