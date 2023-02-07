@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.9.0 (2023-02-08)
+
+* Add `Configuration#semi`
+* Add `Instance#appendSemicolon`
+
 ## 2.8.0 (2023-02-07)
 
 * Add `Instance#wrapWithQuotes`
