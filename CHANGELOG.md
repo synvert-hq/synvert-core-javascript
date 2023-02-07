@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.6.0 (2023-02-07)
+
+* Insert `require("synvert-core")` if missing in snippet
+
 ## 2.5.0 (2023-02-06)
 
 * Remove `Instance#queryAdapter`
