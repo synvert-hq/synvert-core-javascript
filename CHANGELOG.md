@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.8.0 (2023-02-07)
+
+* Add `Instance#wrapWithQuotes`
+
 ## 2.7.0 (2023-02-07)
 
 * Add `Configuration#singleQuote`
