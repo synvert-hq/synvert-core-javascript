@@ -58,7 +58,10 @@ const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
 /**
  * Rewrite javascript snippet to async version.
  */
-export const rewriteSnippetToAsyncVersion = (snippet: string, insertRequire: boolean = true): string => {
+export const rewriteSnippetToAsyncVersion = (
+  snippet: string,
+  insertRequire: boolean = true
+): string => {
   return makeSureTypescriptAdapter(() => {
     let newSnippet = addProperScopeToSnippet(snippet);
     if (insertRequire) {
@@ -95,7 +98,10 @@ const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
 /**
  * Rewrite javascript snippet to sync version.
  */
-export const rewriteSnippetToSyncVersion = (snippet: string, insertRequire: boolean = true): string => {
+export const rewriteSnippetToSyncVersion = (
+  snippet: string,
+  insertRequire: boolean = true
+): string => {
   return makeSureTypescriptAdapter(() => {
     let newSnippet = addProperScopeToSnippet(snippet);
     if (insertRequire) {
@@ -119,7 +125,9 @@ const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
   const node = parseCode(snippet);
   const mutation = new NodeMutation<ts.Node>(snippet);
   NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY.queryNodes(node).forEach((node) => {
-    mutation.insert(node, `const Synvert = require("synvert-core");\n`, { at: "beginning" });
+    mutation.insert(node, `const Synvert = require("synvert-core");\n`, {
+      at: "beginning",
+    });
   });
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : snippet;
@@ -249,7 +257,10 @@ export const evalSnippet = async (snippetName: string): Promise<Rewriter> => {
  * @returns {string} snippet helper content
  * @throws {SnippetNotFoundError} snippet not found
  */
-export const loadSnippetSync = (snippetName: string, insertRequire: boolean = true): string => {
+export const loadSnippetSync = (
+  snippetName: string,
+  insertRequire: boolean = true
+): string => {
   const snippetContent = loadSnippetContentSync(snippetName);
   return rewriteSnippetToSyncVersion(snippetContent, insertRequire);
 };
@@ -262,7 +273,10 @@ export const loadSnippetSync = (snippetName: string, insertRequire: boolean = tr
  * @returns {Promise<string>} snippet helper content
  * @throws {SnippetNotFoundError} snippet not found
  */
-export const loadSnippet = async (snippetName: string, insertRequire: boolean = true): Promise<string> => {
+export const loadSnippet = async (
+  snippetName: string,
+  insertRequire: boolean = true
+): Promise<string> => {
   const snippetContent = await loadSnippetContent(snippetName);
   return rewriteSnippetToAsyncVersion(snippetContent, insertRequire);
 };
@@ -359,7 +373,7 @@ const loadSnippetContent = async (snippetName: string): Promise<string> => {
     }
     throw new SnippetNotFoundError(`${snippetName} not found`);
   }
-}
+};
 
 const loadSnippetContentSync = (snippetName: string): string => {
   if (isValidUrl(snippetName)) {
