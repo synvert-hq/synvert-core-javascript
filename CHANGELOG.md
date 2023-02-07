@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.7.0 (2023-02-07)
+
+* Add `Configuration#singleQuote`
+* Add `quote` util
+
 ## 2.6.0 (2023-02-07)
 
 * Insert `require("synvert-core")` if missing in snippet
