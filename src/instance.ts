@@ -1008,6 +1008,21 @@ class Instance {
   }
 
   /**
+   * Wrap str string with single or double quotes based on Configuration.singleQuote.
+   * @param {string} str string
+   * @returns {string} quoted string
+   */
+  wrapWithQuotes(str: string): string {
+    const quote = Configuration.singleQuote ? "'" : '"';
+    const anotherQuote = Configuration.singleQuote ? '"' : "'";
+    if (str.indexOf(quote) !== -1 && str.indexOf(anotherQuote) === -1) {
+      return `${anotherQuote}${str}${anotherQuote}`;
+    }
+    const escapedStr = str.replace(new RegExp(quote, "g"), `\\${quote}`);
+    return `${quote}${escapedStr}${quote}`;
+  };
+
+  /**
    * Add `count` spaces to `str`.
    * @example
    * //   foo

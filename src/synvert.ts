@@ -5,7 +5,6 @@ import {
   evalSnippetSync,
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
-  wrapWithQuotes,
 } from "./utils";
 import { SnippetNotFoundError } from "./errors";
 import { Parser, Strategy } from "./types/options";
@@ -29,7 +28,6 @@ export {
   evalSnippetSync,
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
-  wrapWithQuotes,
   SnippetNotFoundError,
   Parser,
   Strategy,

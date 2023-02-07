@@ -10,6 +10,7 @@ import NodeMutation, {
   TypescriptAdapter as TypescriptMutationAdapter,
 } from "@xinminlabs/node-mutation";
 import { Parser } from "../src/types/options";
+import Configuration from "../src/configuration";
 
 describe("Instance", () => {
   const rewriter = new Rewriter("snippet group", "snippet name", () => {});
@@ -408,6 +409,50 @@ describe("Instance", () => {
       expect(await promisesFs.readFile("code.ts", "utf8")).toEqual(output);
     });
   });
+
+  describe("wrapWithQuotes", () => {
+
+  });
+
+describe("wrapWithQuotes", () => {
+  const instance = new Instance(rewriter, "code.ts", function () {});
+
+  describe("Configuration.singleQuote is true", () => {
+    beforeEach(() => {
+      Configuration.singleQuote = true;
+    });
+
+    afterEach(() => {
+      Configuration.singleQuote = false;
+    });
+
+    test("wraps with single quotes", () => {
+      expect(instance.wrapWithQuotes("foobar")).toEqual("'foobar'");
+    });
+
+    test("wraps with double quotes if it contains single quote", () => {
+      expect(instance.wrapWithQuotes("foo'bar")).toEqual(`"foo'bar"`);
+    });
+
+    test("wraps with single quotes and escapes single quote", () => {
+      expect(instance.wrapWithQuotes("foo'\"bar")).toEqual(`'foo\\'"bar'`);
+    });
+  });
+
+  describe("Configuration.singleQuote is false", () => {
+    test("wraps with double quotes", () => {
+      expect(instance.wrapWithQuotes("foobar")).toEqual('"foobar"');
+    });
+
+    test("wraps with single quotes if it contains double quote", () => {
+      expect(instance.wrapWithQuotes('foo"bar')).toEqual(`'foo"bar'`);
+    });
+
+    test("wraps with double quotes and escapes double quote", () => {
+      expect(instance.wrapWithQuotes("foo'\"bar")).toEqual(`"foo'\\"bar"`);
+    });
+  });
+});
 
   describe("indent", () => {
     const oldCode = `

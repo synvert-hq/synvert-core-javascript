@@ -1,9 +1,7 @@
 import dedent from "dedent";
-import Configuration from "../src/configuration";
 import {
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
-  wrapWithQuotes,
 } from "../src/utils";
 
 describe("rewriteSnippetToAsyncVersion", () => {
@@ -134,43 +132,5 @@ describe("rewriteSnippetToSyncVersion", () => {
     expect(
       rewriteSnippetToSyncVersion(rewriteSnippetToSyncVersion(originalSnippet))
     ).toEqual(newSnippet);
-  });
-});
-
-describe("wrapWithQuotes", () => {
-  describe("Configuration.singleQuote is true", () => {
-    beforeEach(() => {
-      Configuration.singleQuote = true;
-    });
-
-    afterEach(() => {
-      Configuration.singleQuote = false;
-    });
-
-    test("wraps with single quotes", () => {
-      expect(wrapWithQuotes("foobar")).toEqual("'foobar'");
-    });
-
-    test("wraps with double quotes if it contains single quote", () => {
-      expect(wrapWithQuotes("foo'bar")).toEqual(`"foo'bar"`);
-    });
-
-    test("wraps with single quotes and escapes single quote", () => {
-      expect(wrapWithQuotes("foo'\"bar")).toEqual(`'foo\\'"bar'`);
-    });
-  });
-
-  describe("Configuration.singleQuote is false", () => {
-    test("wraps with double quotes", () => {
-      expect(wrapWithQuotes("foobar")).toEqual('"foobar"');
-    });
-
-    test("wraps with single quotes if it contains double quote", () => {
-      expect(wrapWithQuotes('foo"bar')).toEqual(`'foo"bar'`);
-    });
-
-    test("wraps with double quotes and escapes double quote", () => {
-      expect(wrapWithQuotes("foo'\"bar")).toEqual(`"foo'\\"bar"`);
-    });
   });
 });
