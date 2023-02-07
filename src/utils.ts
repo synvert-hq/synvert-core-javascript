@@ -22,7 +22,7 @@ const CONDITION_METHODS =
   "ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes";
 const ACTION_METHODS =
   "append prepend insert insertAfter insertBefore deleteNode remove replace replaceWith noop";
-const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper indent`;
+const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes indent`;
 
 export const arrayBody = (node: any): Node[] => {
   switch (node.type) {
