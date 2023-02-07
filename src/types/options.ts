@@ -1,3 +1,4 @@
+// This is for espree
 export enum SourceType {
   MODULE = "module",
   SCRIPT = "script",

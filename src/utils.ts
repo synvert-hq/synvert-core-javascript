@@ -185,6 +185,12 @@ const makeSureTypescriptAdapter = (func: () => string): string => {
 };
 
 /**
+ * Get the single or double quote based on Configuration.singleQuote.
+ * @returns {string} quote
+ */
+export const quote = (): string => Configuration.singleQuote ? "'" : '"';
+
+/**
  * Sync to glob matching files.
  * @param {string} filePattern file pattern
  * @returns {string[]} matching files

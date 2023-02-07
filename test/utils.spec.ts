@@ -1,7 +1,9 @@
 import dedent from "dedent";
+import Configuration from "../src/configuration";
 import {
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
+  quote,
 } from "../src/utils";
 
 describe("rewriteSnippetToAsyncVersion", () => {
@@ -132,5 +134,17 @@ describe("rewriteSnippetToSyncVersion", () => {
     expect(
       rewriteSnippetToSyncVersion(rewriteSnippetToSyncVersion(originalSnippet))
     ).toEqual(newSnippet);
+  });
+});
+
+describe("quote", () => {
+  test("gets single quote if Configuration.singleQuote is true", () => {
+    Configuration.singleQuote = true;
+    expect(quote()).toEqual("'");
+  });
+
+  test("gets double quote if Configuration.singleQuote is false", () => {
+    Configuration.singleQuote = false;
+    expect(quote()).toEqual('"');
   });
 });
