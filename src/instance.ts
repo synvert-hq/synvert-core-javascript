@@ -1020,7 +1020,7 @@ class Instance {
     }
     const escapedStr = str.replace(new RegExp(quote, "g"), `\\${quote}`);
     return `${quote}${escapedStr}${quote}`;
-  };
+  }
 
   /**
    * Add `count` spaces to `str`.
