@@ -30,4 +30,10 @@ describe("Configuration", () => {
     Configuration.maxFileSize = 1000;
     expect(Configuration.maxFileSize).toEqual(1000);
   });
+
+  it("singleQuote", () => {
+    expect(Configuration.singleQuote).toEqual(false);
+    Configuration.singleQuote = true;
+    expect(Configuration.singleQuote).toEqual(true);
+  });
 });
