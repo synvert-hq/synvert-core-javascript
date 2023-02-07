@@ -1023,6 +1023,18 @@ class Instance {
   }
 
   /**
+   * Append semicolon to str if Configuration.semi is true.
+   * @param {string} str string
+   * @returns {string}
+   */
+  appendSemicolon(str: string): string {
+    if (Configuration.semi && !str.endsWith(";")) {
+      return `${str};`;
+    }
+    return str;
+  }
+
+  /**
    * Add `count` spaces to `str`.
    * @example
    * //   foo

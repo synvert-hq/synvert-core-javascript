@@ -450,6 +450,34 @@ describe("Instance", () => {
     });
   });
 
+  describe("appendSemicolon", () => {
+    const instance = new Instance(rewriter, "code.ts", function () {});
+
+    describe("Configuration.semi is true", () => {
+      test("appends semicolon", () => {
+        expect(instance.appendSemicolon("foo")).toEqual("foo;");
+      });
+
+      test("do not append semicolon if it already ends with semicolon", () => {
+        expect(instance.appendSemicolon("foo;")).toEqual("foo;");
+      });
+    });
+
+    describe("Configuration.semi is false", () => {
+      beforeEach(() => {
+        Configuration.semi = false;
+      });
+
+      afterEach(() => {
+        Configuration.semi = true;
+      });
+
+      test("do not append semicolon", () => {
+        expect(instance.appendSemicolon("foo")).toEqual("foo");
+      });
+    });
+  });
+
   describe("indent", () => {
     const oldCode = `
     class Foo {
