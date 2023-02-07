@@ -100,7 +100,8 @@ Others:
 
 * [callHelper](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelper) - call a helper to run shared code
 * [callHelperSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelperSync) - call a helper to run shared code
-* [indent](https://xinminlabs.github.io/synvert-core-javascript/Instance#indent) - set proper indent of a string code
+* [wrapWithQuotes](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#wrapWithQuotes) - wrap string code with single or double quotes
+* [indent](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#indent) - set proper indent of a string code
 
 Properties:
 * [filePath](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#filePath) - get the file path
