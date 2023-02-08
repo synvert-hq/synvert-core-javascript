@@ -65,7 +65,7 @@ class Instance {
     if (rewriter.options.strategy === Strategy.ALLOW_INSERT_AT_SAME_POSITION) {
       strategy = strategy | NodeMutationStrategy.ALLOW_INSERT_AT_SAME_POSITION;
     }
-    NodeMutation.configure({ strategy });
+    NodeMutation.configure({ strategy, tabWidth: Configuration.tabWidth });
   }
 
   /**
