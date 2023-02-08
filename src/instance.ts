@@ -1035,6 +1035,15 @@ class Instance {
   }
 
   /**
+   * Add leading spaces before the str according to Configuration.tabWidth.
+   * @param {string} str string
+   * @returns {string}
+   */
+  addLeadingSpaces(str: string): string {
+    return " ".repeat(Configuration.tabWidth) + str;
+  }
+
+  /**
    * Add `count` spaces to `str`.
    * @example
    * //   foo

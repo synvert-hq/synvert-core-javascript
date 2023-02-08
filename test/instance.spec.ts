@@ -478,6 +478,14 @@ describe("Instance", () => {
     });
   });
 
+  describe("addLeadingSpaces", () => {
+    const instance = new Instance(rewriter, "code.ts", function () {});
+
+    test("add leading spaces", () => {
+      expect(instance.addLeadingSpaces("foo")).toEqual("  foo");
+    });
+  });
+
   describe("indent", () => {
     const oldCode = `
     class Foo {
