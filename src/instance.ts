@@ -1035,7 +1035,7 @@ class Instance {
   }
 
   /**
-   * Add leading spaces before the str according to Configuration.tabWidth.
+   * Add leading spaces to the str according to Configuration.tabWidth.
    * @param {string} str string
    * @returns {string}
    */

@@ -102,6 +102,7 @@ Others:
 * [callHelperSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelperSync) - call a helper to run shared code
 * [wrapWithQuotes](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#wrapWithQuotes) - wrap string code with single or double quotes
 * [appendSemicolon](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#appendSemicolon) - append semicolon to the end of the code
+* [addLeadingSpaces](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#addLeadingSpaces) - add leading spaces to the code
 * [indent](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#indent) - set proper indent of a string code
 
 Properties:
