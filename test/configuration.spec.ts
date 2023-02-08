@@ -42,4 +42,10 @@ describe("Configuration", () => {
     Configuration.semi = false;
     expect(Configuration.semi).toEqual(false);
   });
+
+  it("tabWidth", () => {
+    expect(Configuration.tabWidth).toEqual(2);
+    Configuration.tabWidth = 4;
+    expect(Configuration.tabWidth).toEqual(4);
+  });
 });

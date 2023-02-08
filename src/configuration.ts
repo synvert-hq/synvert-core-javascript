@@ -9,6 +9,7 @@ class Configuration {
   static maxFileSize: number = 10 * 1024; // 10K
   static singleQuote = false;
   static semi = true;
+  static tabWidth = 2;
 }
 
 export default Configuration;
