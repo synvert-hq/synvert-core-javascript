@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.10.0 (2023-02-08)
+
+* Add `Configuration#tabWidth`
+* Add `Instance#addLeadingSpaces`
+
 ## 2.9.0 (2023-02-08)
 
 * Add `Configuration#semi`
