@@ -911,11 +911,11 @@ class Instance {
    * // const someObject = { cat, dog, bird }
    * // after executing
    * withNode({ nodeType: "Property", key: { nodeType: "Identifier" }, value: { nodeType: "Identifier" } }, () => {
-   *   deleteNode(["semicolon", "value"]);
+   *   delete(["semicolon", "value"]);
    * });
    * @param {string} selectors - name of child nodes
    */
-  deleteNode(selectors: string | string[]): void {
+  delete(selectors: string | string[]): void {
     this.currentMutation.delete(this.currentNode, selectors);
   }
 

@@ -21,7 +21,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             replace("expresion.name", { with: "foobar" });
-            deleteNode("expression.expression");
+            delete("expression.expression");
           });
         });
       });
@@ -38,7 +38,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             replace("expresion.name", { with: "foobar" });
-            deleteNode("expression.expression");
+            delete("expression.expression");
           });
         });
       });
@@ -58,7 +58,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
             this.replace("expresion.name", { with: "foobar" });
-            this.deleteNode("expression.expression");
+            this.delete("expression.expression");
           });
         });
       });
@@ -75,7 +75,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
             this.replace("expresion.name", { with: "foobar" });
-            this.deleteNode("expression.expression");
+            this.delete("expression.expression");
           });
         });
       });
@@ -104,7 +104,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             replace("expresion.name", { with: "foobar" });
-            deleteNode("expression.expression");
+            delete("expression.expression");
           });
         });
       });
@@ -123,7 +123,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           this.callHelperSync("helper/foobar")
           this.findNodeSync(".CallExpression", () => {
             this.replace("expresion.name", { with: "foobar" });
-            this.deleteNode("expression.expression");
+            this.delete("expression.expression");
           });
         });
       });
