@@ -1037,10 +1037,12 @@ class Instance {
   /**
    * Add leading spaces to the str according to Configuration.tabWidth.
    * @param {string} str string
+   * @param {object} options
+   * @param {number} options.tabSize tab size, default is 1
    * @returns {string}
    */
-  addLeadingSpaces(str: string): string {
-    return " ".repeat(Configuration.tabWidth) + str;
+  addLeadingSpaces(str: string, { tabSize }: { tabSize: number } = { tabSize: 1}): string {
+    return " ".repeat(Configuration.tabWidth * tabSize) + str;
   }
 
   /**

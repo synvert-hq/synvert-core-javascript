@@ -483,6 +483,7 @@ describe("Instance", () => {
 
     test("add leading spaces", () => {
       expect(instance.addLeadingSpaces("foo")).toEqual("  foo");
+      expect(instance.addLeadingSpaces("foo", { tabSize: 2 })).toEqual("    foo");
     });
   });
 
