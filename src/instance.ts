@@ -1041,7 +1041,10 @@ class Instance {
    * @param {number} options.tabSize tab size, default is 1
    * @returns {string}
    */
-  addLeadingSpaces(str: string, { tabSize }: { tabSize: number } = { tabSize: 1}): string {
+  addLeadingSpaces(
+    str: string,
+    { tabSize }: { tabSize: number } = { tabSize: 1 }
+  ): string {
     return " ".repeat(Configuration.tabWidth * tabSize) + str;
   }
 
