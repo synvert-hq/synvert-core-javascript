@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.11.1 (2023-02-09)
+
+* Fix typo `ArrayLiteralExpression`
+
 ## 2.11.0 (2023-02-09)
 
 * Add `tabSize` option to `addLeadingSpaces`
