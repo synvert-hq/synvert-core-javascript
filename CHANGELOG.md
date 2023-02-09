@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.11.0 (2023-02-09)
+
+* Add `tabSize` option to `addLeadingSpaces`
+* Rename `deleteNode` dsl to `delete`
+
 ## 2.10.0 (2023-02-08)
 
 * Add `Configuration#tabWidth`
