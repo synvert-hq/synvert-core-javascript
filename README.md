@@ -91,7 +91,7 @@ Actions:
 * [insertAfter](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertAfter) - insert the code next to the current node
 * [insertBefore](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertBefore) - insert the code previous to the current node
 * [replace](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replace) - replace the code of specified child nodes
-* [deleteNode](https://xinminlabs.github.io/synvert-core-javascript/Instance#deleteNode) - delete code the code of specified child nodes
+* [delete](https://xinminlabs.github.io/synvert-core-javascript/Instance#delete) - delete code the code of specified child nodes
 * [remove](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#remove) - remove the whole code of current node
 * [replaceWith](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replaceWith) - replace the whole code of current node
 * [noop](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#noop) - no operation
