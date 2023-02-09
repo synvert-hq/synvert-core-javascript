@@ -141,7 +141,7 @@ const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
 );
 const GLOBAL_DSL_QUERY = new NodeQuery<ts.Node>(
-  `.CallExpression[expression IN (${ALL_METHODS})], .DeleteExpression[expression=.ParenthesizedExpression[expression.nodeType IN (StringLiteral ArrayLitralExpression)]]`
+  `.CallExpression[expression IN (${ALL_METHODS})], .DeleteExpression[expression=.ParenthesizedExpression[expression.nodeType IN (StringLiteral ArrayLiteralExpression)]]`
 );
 
 const addProperScopeToSnippet = (snippet: string): string => {
