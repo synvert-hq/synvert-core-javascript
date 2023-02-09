@@ -262,6 +262,21 @@ class Instance {
     this.currentNode = originalNode;
   }
 
+  /**
+   * Query options
+   * @typedef {Object} QueryOptions
+   * @property {boolean} [includingSelf = true] - whether to include self node
+   * @property {boolean} [stopAtFirstMatch = false] - whether to stop at first match
+   * @property {boolean} [recursive = true] - whether to recursively find matching nodes
+   */
+
+  /**
+   * Condition options
+   * @typedef {Object} ConditionOptions
+   * @property {string} [in] - to do find in specific child node, e.g. `{ in: 'callee' }`
+   * @property {Function|string|Object} [match] - It can a function, nql or rules to be matched.
+   */
+
   /*******
    * DSL *
    *******/
@@ -282,8 +297,9 @@ class Instance {
    * // `$.ajax({ ... })` matches and call `foobar`
    * withinNodeSync({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, () => { foobar })
    * withinNodeSync(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", () => { foobar });
-   * @param {string|Object} nqlOrRules - to find mathing ast nodes.
-   * @param {Function} func - to be called on the matching nodes.
+   * @param nqlOrRules {string|Object} - to find mathing ast nodes.
+   * @param options {QueryOptions|Function} - query options.
+   * @param func {Function} - to be called on the matching nodes.
    */
   withinNodeSync(
     nqlOrRules: string | object,
@@ -317,8 +333,9 @@ class Instance {
    * // `$.ajax({ ... })` matches and call `foobar`
    * await withinNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: "$", property: "ajax" } }, async () => { foobar })
    * await withinNode(".CallExpression[callee=.MemberExpression[object=$][property=ajax]]", async () => { foobar });
-   * @param {string|Object} nqlOrRules - to find mathing ast nodes.
-   * @param {Function} func - to be called on the matching nodes.
+   * @param nqlOrRules {string|Object} - to find mathing ast nodes.
+   * @param options {QueryOptions|Function} - query options.
+   * @param func {Function} - to be called on the matching nodes.
    */
   async withinNode(
     nqlOrRules: string | object,
@@ -340,7 +357,7 @@ class Instance {
    * then continue operating on the child node.
    * @example
    * // `$.ajax({ ... })` goes to `$.ajax`
-   * gotoNodeSync('callee')
+   * gotoNodeSync('callee', () => { })
    * @param {string} child_node_name - the name of the child nodes.
    * @param {Function} func - to continue operating on the matching nodes.
    */
@@ -354,7 +371,7 @@ class Instance {
    * @async
    * @example
    * // `$.ajax({ ... })` goes to `$.ajax`
-   * await gotoNode('callee')
+   * await gotoNode('callee', async () => {})
    * @param {string} child_node_name - the name of the child nodes.
    * @param {Function} func - to continue operating on the matching nodes.
    */
@@ -389,7 +406,7 @@ class Instance {
    * // `class Foobar extends React.Component` matches and call `foobar`.
    * ifExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
@@ -445,7 +462,7 @@ class Instance {
    * // `class Foobar extends React.Component` matches and call `foobar`.
    * await ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
@@ -500,7 +517,7 @@ class Instance {
    * // `class Foobar extends Component` matches and call `foobar`.
    * unlessExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if no matching node exists in the child nodes.
    * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
    */
@@ -556,7 +573,7 @@ class Instance {
    * // `class Foobar extends Component` matches and call `foobar`.
    * await unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => {})
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if no matching node exists in the child nodes.
    * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
    */
@@ -611,7 +628,7 @@ class Instance {
    * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
    * ifOnlyExistNodeSync({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
@@ -667,7 +684,7 @@ class Instance {
    * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
    * await ifOnlyExistNode({ nodeType: "MethodDefinition", key: "foo" }, async () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOption|Function} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
@@ -722,7 +739,7 @@ class Instance {
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
    * ifAllNodesSync({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - { match: nqlOrRules, in: 'callee' }
+   * @param {ConditionOptions|Function} options - { match: nqlOrRules, in: 'callee' }
    * @param {Function} func - call the function if the matching nodes match options.match.
    * @param {Function} elseFunc - call the else function if no matching node matches options.match.
    */
@@ -778,7 +795,7 @@ class Instance {
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
    * await ifAllNodes({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, async () => { bar });
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {Object} options - { match: nqlOrRules, in: 'callee' }
+   * @param {ConditionOptions|Function} options - { match: nqlOrRules, in: 'callee' }
    * @param {Function} func - call the function if the matching nodes match options.match.
    * @param {Function} elseFunc - call the else function if no matching node matches options.match.
    */
@@ -849,7 +866,9 @@ class Instance {
    *   insert(", useState", { at: "end" });
    * });
    * @param {string} code - code need to be inserted
-   * @param {Object} options - insert position, beginning or end, end is the default
+   * @param {Object} options
+   * @param {string} [options.at = "end"] - insert position, beginning or end
+   * @param {string} [option.to] - selector to find the child ast node
    */
   insert(code: string, options: InsertOptions): void {
     this.currentMutation.insert(this.currentNode, code, options);
@@ -867,7 +886,8 @@ class Instance {
    *   insertAfter("import PropTypes from 'prop-types'");
    * });
    * @param {string} code - code need to be inserted
-   * @param {Object} options - insert options, default is `{ at: "end" }`
+   * @param {Object} options
+   * @param {string} [options.to] - selector to find the child ast node
    */
   insertAfter(code: string, options: InsertOptions): void {
     const column = " ".repeat(
@@ -891,7 +911,8 @@ class Instance {
    *   insertBefore("import PropTypes from 'prop-types'");
    * });
    * @param {string} code - code need to be inserted
-   * @param {Object} options - insert options, default is `{ at: "beginning" }`
+   * @param {Object} options
+   * @param {string} [options.to] - selector to find the child ast node
    */
   insertBefore(code: string, options: InsertOptions): void {
     const column = " ".repeat(
@@ -913,7 +934,7 @@ class Instance {
    * withNode({ nodeType: "Property", key: { nodeType: "Identifier" }, value: { nodeType: "Identifier" } }, () => {
    *   delete(["semicolon", "value"]);
    * });
-   * @param {string} selectors - name of child nodes
+   * @param {string|string[]} selectors - name of child nodes
    */
   delete(selectors: string | string[]): void {
     this.currentMutation.delete(this.currentNode, selectors);
@@ -949,8 +970,9 @@ class Instance {
    * withNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", object: /^\$/, property: 'submit' }, arguments: { length: 0 } }, () => {
    *   replace(["callee.property", "arguments"], { with: "trigger('submit')" });
    * });
-   * @param {string|array} selectors - name of child nodes.
-   * @param {Object} options - code need to be replaced with.
+   * @param {string|string[]} selectors - name of child nodes.
+   * @param {Object} options
+   * @param {string} options.with - new code to replace with
    */
   replace(selectors: string | string[], options: ReplaceOptions): void {
     this.currentMutation.replace(this.currentNode, selectors, options);
@@ -967,7 +989,8 @@ class Instance {
    *   replaceWith("export default {{expression.right}}");
    * });
    * @param {string} code - code need to be replaced.
-   * @param {Object} options - { autoIndent: true } if auto fix indent
+   * @param {Object} options
+   * @param {boolean} [options.autoIndent = true] - if true, auto indent the new code
    */
   replaceWith(code: string, options: ReplaceWithOptions): void {
     this.currentMutation.replaceWith(this.currentNode, code, options);

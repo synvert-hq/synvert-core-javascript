@@ -182,9 +182,9 @@ class Rewriter {
    * @example
    * configure({ parser: "typescript" })
    * @param {RewriterOptions} options
-   * @param {string} options.sourceType - script or module
-   * @param {string} options.parser - typescript or espree
-   * @param {string} options.strategy - allow_insert_at_same_position
+   * @param {string} [options.sourceType] - script or module
+   * @param {string} [options.parser] - typescript or espree
+   * @param {string} [options.strategy] - allow_insert_at_same_position
    */
   configure(options: RewriterOptions) {
     if (options.sourceType) {

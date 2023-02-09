@@ -23,7 +23,7 @@ abstract class Condition {
    * Create a Condition
    * @param {Instance} instance
    * @param {string|Object} nqlOrRules - nql or rules to find nodes
-   * @param {Object} options - to do find in specific child node, e.g. `{ in: 'callee' }`
+   * @param {ConditionOptions} options - to do find in specific child node, e.g. `{ in: 'callee' }`
    * @param {Function} func - a function to be called if nql or rules are matched.
    * @param {Function} elseFunc - a fucntion to be called if nql or rules are not matched.
    */
