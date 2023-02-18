@@ -240,25 +240,25 @@ describe("Instance", () => {
         );
       });
       const input = `
-      <html>
-        <body>
-          <script type="text/javascript">
-            const foo1 = bar.trimLeft();
-            const foo2 = bar.trimRight();
-          </script>
-        </body>
-      </html>
-    `;
-    const output = `
-      <html>
-        <body>
-          <script type="text/javascript">
-            const foo1 = bar.trimStart();
-            const foo2 = bar.trimEnd();
-          </script>
-        </body>
-      </html>
-    `;
+        <html>
+          <body>
+            <script type="text/javascript">
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            </script>
+          </body>
+        </html>
+      `;
+      const output = `
+        <html>
+          <body>
+            <script type="text/javascript">
+              const foo1 = bar.trimStart();
+              const foo2 = bar.trimEnd();
+            </script>
+          </body>
+        </html>
+      `;
       mock({ "code.html": input });
       await instance.process();
       expect(await promisesFs.readFile("code.html", "utf8")).toEqual(output);
@@ -335,6 +335,47 @@ describe("Instance", () => {
         filePath: "code.ts",
       });
     });
+
+    test("gets actions for html file", () => {
+      const instance = new Instance(new Rewriter("group", "name", function () {}), "code.html", function () {
+        this.withNodeSync(
+          {
+            nodeType: "CallExpression",
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
+          },
+          () => {
+            this.noop();
+          }
+        );
+      });
+      const input = `
+        <html>
+          <body>
+            <script type="text/javascript">
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            </script>
+          </body>
+        </html>
+      `;
+      mock({ "code.html": input });
+      const results = instance.testSync();
+      expect(results).toEqual({
+        actions: [
+          {
+            end: 162,
+            newCode: undefined,
+            start: 147,
+          },
+        ],
+        affected: true,
+        conflicted: false,
+        filePath: "code.html",
+      });
+    });
   });
 
   describe("#test", () => {
@@ -405,6 +446,47 @@ describe("Instance", () => {
         affected: false,
         conflicted: false,
         filePath: "code.ts",
+      });
+    });
+
+    test("gets actions for html", async () => {
+      const instance = new Instance(rewriter, "code.html", async function () {
+        await this.withNode(
+          {
+            nodeType: "CallExpression",
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
+          },
+          () => {
+            this.noop();
+          }
+        );
+      });
+      const input = `
+        <html>
+          <body>
+            <script type="text/javascript">
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            </script>
+          </body>
+        </html>
+      `;
+      mock({ "code.html": input });
+      const results = await instance.test();
+      expect(results).toEqual({
+        actions: [
+          {
+            end: 162,
+            newCode: undefined,
+            start: 147,
+          },
+        ],
+        affected: true,
+        conflicted: false,
+        filePath: "code.html",
       });
     });
   });

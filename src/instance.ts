@@ -75,7 +75,7 @@ class Instance {
   processSync(): void {
     if (
       this.rewriter.options.parser === Parser.ESPREE &&
-      [".ts", ".tsx", ".html"].includes(path.extname(this.filePath))
+      [".ts", ".tsx"].includes(path.extname(this.filePath))
     ) {
       return;
     }
