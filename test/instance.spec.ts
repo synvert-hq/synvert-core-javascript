@@ -101,26 +101,30 @@ describe("Instance", () => {
     });
 
     test("writes new code to html file", () => {
-      instance = new Instance(new Rewriter("grup", "name", function () {}), "code.html", function () {
-        this.findNodeSync(
-          ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
-          () => {
-            this.replace("expression.name", { with: "trimStart" });
-          }
-        );
-        this.withNodeSync(
-          {
-            nodeType: "CallExpression",
-            expression: {
-              nodeType: "PropertyAccessExpression",
-              name: "trimRight",
+      instance = new Instance(
+        new Rewriter("grup", "name", function () {}),
+        "code.html",
+        function () {
+          this.findNodeSync(
+            ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+            () => {
+              this.replace("expression.name", { with: "trimStart" });
+            }
+          );
+          this.withNodeSync(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
             },
-          },
-          () => {
-            this.replace("expression.name", { with: "trimEnd" });
-          }
-        );
-      });
+            () => {
+              this.replace("expression.name", { with: "trimEnd" });
+            }
+          );
+        }
+      );
       const input = `
         <html>
           <body>
@@ -219,26 +223,30 @@ describe("Instance", () => {
     });
 
     test("writes new code to html file", async () => {
-      instance = new Instance(new Rewriter("group", "name", function () {}), "code.html", async function () {
-        await this.findNode(
-          ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
-          () => {
-            this.replace("expression.name", { with: "trimStart" });
-          }
-        );
-        await this.withNode(
-          {
-            nodeType: "CallExpression",
-            expression: {
-              nodeType: "PropertyAccessExpression",
-              name: "trimRight",
+      instance = new Instance(
+        new Rewriter("group", "name", function () {}),
+        "code.html",
+        async function () {
+          await this.findNode(
+            ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+            () => {
+              this.replace("expression.name", { with: "trimStart" });
+            }
+          );
+          await this.withNode(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
             },
-          },
-          () => {
-            this.replace("expression.name", { with: "trimEnd" });
-          }
-        );
-      });
+            () => {
+              this.replace("expression.name", { with: "trimEnd" });
+            }
+          );
+        }
+      );
       const input = `
         <html>
           <body>
@@ -337,20 +345,24 @@ describe("Instance", () => {
     });
 
     test("gets actions for html file", () => {
-      const instance = new Instance(new Rewriter("group", "name", function () {}), "code.html", function () {
-        this.withNodeSync(
-          {
-            nodeType: "CallExpression",
-            expression: {
-              nodeType: "PropertyAccessExpression",
-              name: "trimRight",
+      const instance = new Instance(
+        new Rewriter("group", "name", function () {}),
+        "code.html",
+        function () {
+          this.withNodeSync(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
             },
-          },
-          () => {
-            this.noop();
-          }
-        );
-      });
+            () => {
+              this.noop();
+            }
+          );
+        }
+      );
       const input = `
         <html>
           <body>

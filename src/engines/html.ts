@@ -6,7 +6,8 @@ const convertMatchToSpaces = (match: string) => " ".repeat(match.length);
  * @returns {string} encoded string
  */
 export function encode(str: string): string {
-  return str.replace(/<\/script>.*?<script.*?>/gsi, convertMatchToSpaces)
-            .replace(/^.*?<script.*?>/si, convertMatchToSpaces)
-            .replace(/<\/script>.*?$/si, convertMatchToSpaces);
+  return str
+    .replace(/<\/script>.*?<script.*?>/gis, convertMatchToSpaces)
+    .replace(/^.*?<script.*?>/is, convertMatchToSpaces)
+    .replace(/<\/script>.*?$/is, convertMatchToSpaces);
 }
