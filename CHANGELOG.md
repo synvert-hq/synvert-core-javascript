@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.12.0 (2023-02-18)
+
+* Support Html files
+* Support Rails Erb files
+
 ## 2.11.1 (2023-02-09)
 
 * Fix typo `ArrayLiteralExpression`
