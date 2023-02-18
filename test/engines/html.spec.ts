@@ -1,6 +1,4 @@
-import { encode } from "punycode";
-
-const Html = require('../../src/engines/html');
+import * as Html from "../../src/engines/html";
 
 describe("Html", () => {
   describe("encode", () => {

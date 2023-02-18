@@ -24,6 +24,7 @@ import NodeMutation, {
 } from "@xinminlabs/node-mutation";
 import { Parser, Strategy } from "./types/options";
 import { TestResultExt } from "./types/result";
+import * as Html from "./engines/html";
 
 const espree = require("@xinminlabs/espree");
 
@@ -74,7 +75,7 @@ class Instance {
   processSync(): void {
     if (
       this.rewriter.options.parser === Parser.ESPREE &&
-      [".ts", ".tsx"].includes(path.extname(this.filePath))
+      [".ts", ".tsx", ".html"].includes(path.extname(this.filePath))
     ) {
       return;
     }
@@ -1116,12 +1117,12 @@ class Instance {
    * @returns {Node} ast node
    */
   private parseByTypescript(filePath: string, source: string) {
-    const scriptKind = ["js", "jsx"].includes(path.extname(filePath))
+    const scriptKind = [".js", ".jsx", ".html"].includes(path.extname(filePath))
       ? ts.ScriptKind.JSX
       : ts.ScriptKind.TSX;
     return ts.createSourceFile(
       filePath,
-      source,
+      this.sourceToParse(filePath, source),
       ts.ScriptTarget.Latest,
       true,
       scriptKind
@@ -1136,13 +1137,17 @@ class Instance {
    * @returns {Node} ast node
    */
   private parseByEspree(filePath: string, source: string) {
-    return espree.parse(source, {
+    return espree.parse(this.sourceToParse(filePath, source), {
       ecmaVersion: "latest",
       loc: true,
       sourceType: this.rewriter.options.sourceType,
       sourceFile: filePath,
       ecmaFeatures: { jsx: true },
     });
+  }
+
+  private sourceToParse(filePath: string, source: string) {
+    return path.extname(filePath) === ".html" ? Html.encode(source) : source;
   }
 }
 

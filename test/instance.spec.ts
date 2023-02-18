@@ -99,6 +99,52 @@ describe("Instance", () => {
       instance.processSync();
       expect(rewriter.affectedFiles).toEqual(new Set<string>(["code.ts"]));
     });
+
+    test("writes new code to html file", () => {
+      instance = new Instance(new Rewriter("grup", "name", function () {}), "code.html", function () {
+        this.findNodeSync(
+          ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+          () => {
+            this.replace("expression.name", { with: "trimStart" });
+          }
+        );
+        this.withNodeSync(
+          {
+            nodeType: "CallExpression",
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
+          },
+          () => {
+            this.replace("expression.name", { with: "trimEnd" });
+          }
+        );
+      });
+      const input = `
+        <html>
+          <body>
+            <script type="text/javascript">
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            </script>
+          </body>
+        </html>
+      `;
+      const output = `
+        <html>
+          <body>
+            <script type="text/javascript">
+              const foo1 = bar.trimStart();
+              const foo2 = bar.trimEnd();
+            </script>
+          </body>
+        </html>
+      `;
+      mock({ "code.html": input });
+      instance.processSync();
+      expect(fs.readFileSync("code.html", "utf8")).toEqual(output);
+    });
   });
 
   describe("process", () => {
@@ -170,6 +216,52 @@ describe("Instance", () => {
       await instance.process();
       await instance.process();
       expect(rewriter.affectedFiles).toEqual(new Set<string>(["code.ts"]));
+    });
+
+    test("writes new code to html file", async () => {
+      instance = new Instance(new Rewriter("group", "name", function () {}), "code.html", async function () {
+        await this.findNode(
+          ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+          () => {
+            this.replace("expression.name", { with: "trimStart" });
+          }
+        );
+        await this.withNode(
+          {
+            nodeType: "CallExpression",
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
+          },
+          () => {
+            this.replace("expression.name", { with: "trimEnd" });
+          }
+        );
+      });
+      const input = `
+      <html>
+        <body>
+          <script type="text/javascript">
+            const foo1 = bar.trimLeft();
+            const foo2 = bar.trimRight();
+          </script>
+        </body>
+      </html>
+    `;
+    const output = `
+      <html>
+        <body>
+          <script type="text/javascript">
+            const foo1 = bar.trimStart();
+            const foo2 = bar.trimEnd();
+          </script>
+        </body>
+      </html>
+    `;
+      mock({ "code.html": input });
+      await instance.process();
+      expect(await promisesFs.readFile("code.html", "utf8")).toEqual(output);
     });
   });
 
