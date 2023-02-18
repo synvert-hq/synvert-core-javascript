@@ -21,9 +21,9 @@ describe("Html", () => {
       const encodedHtml = Html.encode(html);
       expect(encodedHtml).toContain('var foo = "bar";');
       expect(encodedHtml).toContain('var bar = "foo";');
-      expect(encodedHtml).not.toContain('script');
-      expect(html.indexOf("var foo")).toEqual(encodedHtml.indexOf("var foo"))
-      expect(html.indexOf("var bar")).toEqual(encodedHtml.indexOf("var bar"))
+      expect(encodedHtml).not.toContain("script");
+      expect(html.indexOf("var foo")).toEqual(encodedHtml.indexOf("var foo"));
+      expect(html.indexOf("var bar")).toEqual(encodedHtml.indexOf("var bar"));
     });
   });
 });
