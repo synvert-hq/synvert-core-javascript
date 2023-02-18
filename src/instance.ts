@@ -34,7 +34,7 @@ interface Engine {
 const DEFAULT_ENGINES: { [extname: string]: Engine } = {
   ".html": HtmlEngine,
   ".erb": RailsErbEngine,
-}
+};
 
 const espree = require("@xinminlabs/espree");
 

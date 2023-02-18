@@ -369,7 +369,9 @@ describe("Instance", () => {
       `;
       mock({ "code.html.erb": input });
       await instance.process();
-      expect(await promisesFs.readFile("code.html.erb", "utf8")).toEqual(output);
+      expect(await promisesFs.readFile("code.html.erb", "utf8")).toEqual(
+        output
+      );
     });
   });
 
@@ -648,20 +650,24 @@ describe("Instance", () => {
     });
 
     test("gets actions for erb", async () => {
-      const instance = new Instance(rewriter, "code.html.erb", async function () {
-        await this.withNode(
-          {
-            nodeType: "CallExpression",
-            expression: {
-              nodeType: "PropertyAccessExpression",
-              name: "trimRight",
+      const instance = new Instance(
+        rewriter,
+        "code.html.erb",
+        async function () {
+          await this.withNode(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
             },
-          },
-          () => {
-            this.noop();
-          }
-        );
-      });
+            () => {
+              this.noop();
+            }
+          );
+        }
+      );
       const input = `
         <html>
           <body>
