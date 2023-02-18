@@ -149,6 +149,56 @@ describe("Instance", () => {
       instance.processSync();
       expect(fs.readFileSync("code.html", "utf8")).toEqual(output);
     });
+
+    test("writes new code to erb file", () => {
+      instance = new Instance(
+        new Rewriter("grup", "name", function () {}),
+        "code.html.erb",
+        function () {
+          this.findNodeSync(
+            ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+            () => {
+              this.replace("expression.name", { with: "trimStart" });
+            }
+          );
+          this.withNodeSync(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
+            },
+            () => {
+              this.replace("expression.name", { with: "trimEnd" });
+            }
+          );
+        }
+      );
+      const input = `
+        <html>
+          <body>
+            <%= javascript_tag do %>
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            <% end %>
+          </body>
+        </html>
+      `;
+      const output = `
+        <html>
+          <body>
+            <%= javascript_tag do %>
+              const foo1 = bar.trimStart();
+              const foo2 = bar.trimEnd();
+            <% end %>
+          </body>
+        </html>
+      `;
+      mock({ "code.html.erb": input });
+      instance.processSync();
+      expect(fs.readFileSync("code.html.erb", "utf8")).toEqual(output);
+    });
   });
 
   describe("process", () => {
@@ -271,6 +321,56 @@ describe("Instance", () => {
       await instance.process();
       expect(await promisesFs.readFile("code.html", "utf8")).toEqual(output);
     });
+
+    test("writes new code to erb file", async () => {
+      instance = new Instance(
+        new Rewriter("group", "name", function () {}),
+        "code.html.erb",
+        async function () {
+          await this.findNode(
+            ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+            () => {
+              this.replace("expression.name", { with: "trimStart" });
+            }
+          );
+          await this.withNode(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
+            },
+            () => {
+              this.replace("expression.name", { with: "trimEnd" });
+            }
+          );
+        }
+      );
+      const input = `
+        <html>
+          <body>
+            <%= javascript_tag do %>
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            <% end %>
+          </body>
+        </html>
+      `;
+      const output = `
+        <html>
+          <body>
+            <%= javascript_tag do %>
+              const foo1 = bar.trimStart();
+              const foo2 = bar.trimEnd();
+            <% end %>
+          </body>
+        </html>
+      `;
+      mock({ "code.html.erb": input });
+      await instance.process();
+      expect(await promisesFs.readFile("code.html.erb", "utf8")).toEqual(output);
+    });
   });
 
   describe("#testSync", () => {
@@ -388,6 +488,51 @@ describe("Instance", () => {
         filePath: "code.html",
       });
     });
+
+    test("gets actions for erb file", () => {
+      const instance = new Instance(
+        new Rewriter("group", "name", function () {}),
+        "code.html.erb",
+        function () {
+          this.withNodeSync(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
+            },
+            () => {
+              this.noop();
+            }
+          );
+        }
+      );
+      const input = `
+        <html>
+          <body>
+            <%= javascript_tag do %>
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            <% end %>
+          </body>
+        </html>
+      `;
+      mock({ "code.html.erb": input });
+      const results = instance.testSync();
+      expect(results).toEqual({
+        actions: [
+          {
+            end: 155,
+            newCode: undefined,
+            start: 140,
+          },
+        ],
+        affected: true,
+        conflicted: false,
+        filePath: "code.html.erb",
+      });
+    });
   });
 
   describe("#test", () => {
@@ -499,6 +644,47 @@ describe("Instance", () => {
         affected: true,
         conflicted: false,
         filePath: "code.html",
+      });
+    });
+
+    test("gets actions for erb", async () => {
+      const instance = new Instance(rewriter, "code.html.erb", async function () {
+        await this.withNode(
+          {
+            nodeType: "CallExpression",
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
+            },
+          },
+          () => {
+            this.noop();
+          }
+        );
+      });
+      const input = `
+        <html>
+          <body>
+            <%= javascript_tag do %>
+              const foo1 = bar.trimLeft();
+              const foo2 = bar.trimRight();
+            <% end %>
+          </body>
+        </html>
+      `;
+      mock({ "code.html.erb": input });
+      const results = await instance.test();
+      expect(results).toEqual({
+        actions: [
+          {
+            end: 155,
+            newCode: undefined,
+            start: 140,
+          },
+        ],
+        affected: true,
+        conflicted: false,
+        filePath: "code.html.erb",
       });
     });
   });
