@@ -10,9 +10,10 @@ import { SnippetNotFoundError } from "./errors";
 import { Parser, Strategy } from "./types/options";
 import type { TestResultExt } from "./types/result";
 
-const ALL_FILES = "**/*.{js,jsx,ts,tsx}";
+const ALL_FILES = "**/*.{js,jsx,ts,tsx,html}";
 const ALL_JS_FILES = "**/*.{js,jsx}";
 const ALL_TS_FILES = "**/*.{ts,tsx}";
+const ALL_HTML_FILES = "**/*.html";
 
 const pjson = require("../package.json");
 const version = pjson.version;
