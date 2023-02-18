@@ -24,7 +24,17 @@ import NodeMutation, {
 } from "@xinminlabs/node-mutation";
 import { Parser, Strategy } from "./types/options";
 import { TestResultExt } from "./types/result";
-import * as Html from "./engines/html";
+import * as HtmlEngine from "./engines/html";
+import * as RailsErbEngine from "./engines/rails_erb";
+
+interface Engine {
+  encode: (code: string) => string;
+}
+
+const DEFAULT_ENGINES: { [extname: string]: Engine } = {
+  ".html": HtmlEngine,
+  ".erb": RailsErbEngine,
+}
 
 const espree = require("@xinminlabs/espree");
 
@@ -1147,7 +1157,8 @@ class Instance {
   }
 
   private sourceToParse(filePath: string, source: string) {
-    return path.extname(filePath) === ".html" ? Html.encode(source) : source;
+    const engine = DEFAULT_ENGINES[path.extname(filePath)];
+    return engine ? engine.encode(source) : source;
   }
 }
 
