@@ -868,21 +868,42 @@ describe("Instance", () => {
   });
 
   describe("indent", () => {
-    const oldCode = `
-    class Foo {
-      bar() {
-        test()
-      }
-    }
-    `;
-    const newCode = `
+    describe("not skipFirstLine", () => {
+      const oldCode = `
       class Foo {
         bar() {
           test()
         }
       }
-    `;
-    const instance = new Instance(rewriter, "code.ts", function () {});
-    expect(instance.indent(oldCode, 2)).toEqual(newCode);
+      `;
+      const newCode = `
+        class Foo {
+          bar() {
+            test()
+          }
+        }
+      `;
+      const instance = new Instance(rewriter, "code.ts", function () {});
+      expect(instance.indent(oldCode, 2)).toEqual(newCode);
+    });
+
+    describe("skipFirstLine", () => {
+      const oldCode = `
+      class Foo {
+        bar() {
+          test()
+        }
+      }
+      `;
+      const newCode = `
+      class Foo {
+          bar() {
+            test()
+          }
+        }
+      `;
+      const instance = new Instance(rewriter, "code.ts", function () {});
+      expect(instance.indent(oldCode, 2, { skipFirstLine: true })).toEqual(newCode);
+    });
   });
 });

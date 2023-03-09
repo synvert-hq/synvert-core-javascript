@@ -1087,13 +1087,20 @@ class Instance {
    * indent("foo\nbar", 2)
    * @param {string} str
    * @param {number} spaceCount
+   * @param {object} options
+   * @param {number} options.skipFirstLine skip first line, default is false
    * @returns {string} indented str
    */
-  indent(str: string, spaceCount: number): string {
+  indent(str: string, spaceCount: number, { skipFirstLine }: { skipFirstLine: boolean } = { skipFirstLine: false}): string {
+    let firstLine = true;
     return str
       .split("\n")
-      .map((line) => {
+      .map((line, index) => {
         if (/^\s*$/.test(line)) {
+          return line;
+        }
+        if (firstLine && skipFirstLine) {
+          firstLine = !firstLine;
           return line;
         }
         return " ".repeat(spaceCount) + line;
