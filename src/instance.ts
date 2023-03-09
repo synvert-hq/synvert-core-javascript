@@ -1091,7 +1091,11 @@ class Instance {
    * @param {number} options.skipFirstLine skip first line, default is false
    * @returns {string} indented str
    */
-  indent(str: string, spaceCount: number, { skipFirstLine }: { skipFirstLine: boolean } = { skipFirstLine: false}): string {
+  indent(
+    str: string,
+    spaceCount: number,
+    { skipFirstLine }: { skipFirstLine: boolean } = { skipFirstLine: false }
+  ): string {
     let firstLine = true;
     return str
       .split("\n")
