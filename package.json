@@ -22,7 +22,7 @@
   "homepage": "https://github.com/xinminlabs/synvert-core-javascript#readme",
   "dependencies": {
     "@xinminlabs/espree": "^9.3.2",
-    "@xinminlabs/node-mutation": "^1.6.1",
+    "@xinminlabs/node-mutation": "^1.6.2",
     "@xinminlabs/node-query": "^1.16.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "acorn": "^8.4.1",

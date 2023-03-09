@@ -18,7 +18,6 @@ import { QueryOptions } from "@xinminlabs/node-query";
 import NodeMutation, {
   Strategy as NodeMutationStrategy,
   InsertOptions,
-  ReplaceWithOptions,
   ReplaceOptions,
   Adapter as MutationAdapter,
 } from "@xinminlabs/node-mutation";
@@ -1000,11 +999,9 @@ class Instance {
    *   replaceWith("export default {{expression.right}}");
    * });
    * @param {string} code - code need to be replaced.
-   * @param {Object} options
-   * @param {boolean} [options.autoIndent = true] - if true, auto indent the new code
    */
-  replaceWith(code: string, options: ReplaceWithOptions): void {
-    this.currentMutation.replaceWith(this.currentNode, code, options);
+  replaceWith(code: string): void {
+    this.currentMutation.replaceWith(this.currentNode, code);
   }
 
   /**
