@@ -903,7 +903,9 @@ describe("Instance", () => {
         }
       `;
       const instance = new Instance(rewriter, "code.ts", function () {});
-      expect(instance.indent(oldCode, 2, { skipFirstLine: true })).toEqual(newCode);
+      expect(instance.indent(oldCode, 2, { skipFirstLine: true })).toEqual(
+        newCode
+      );
     });
   });
 });
