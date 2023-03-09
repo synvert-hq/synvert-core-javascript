@@ -363,7 +363,7 @@ One instance can contains one or many Scope and Condition.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line702">line 702</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line700">line 700</a>
     </li></ul></dd>
     
 
@@ -745,7 +745,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line689">line 689</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line687">line 687</a>
     </li></ul></dd>
     
 
@@ -901,7 +901,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line660">line 660</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line658">line 658</a>
     </li></ul></dd>
     
 
@@ -1057,7 +1057,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line648">line 648</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line646">line 646</a>
     </li></ul></dd>
     
 
@@ -3029,7 +3029,7 @@ ifOnlyExistNodeSync({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar
 
     
 
-    <h4 class="name" id="indent"><span class="type-signature"></span>indent<span class="signature">(str, spaceCount)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="indent"><span class="type-signature"></span>indent<span class="signature">(str, spaceCount, options)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -3160,6 +3160,83 @@ ifOnlyExistNodeSync({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar
 
             <td class="description last">
                 
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+                    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>skipFirstLine</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                skip first line, default is false
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
                 
             </td>
         </tr>
@@ -4042,7 +4119,7 @@ withNode({ nodeType: "ImportClause", name: "React" }, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line640">line 640</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line638">line 638</a>
     </li></ul></dd>
     
 
@@ -5368,7 +5445,7 @@ withNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", o
 
     
 
-    <h4 class="name" id="replaceWith"><span class="type-signature"></span>replaceWith<span class="signature">(code, options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="replaceWith"><span class="type-signature"></span>replaceWith<span class="signature">(code)</span><span class="type-signature"></span></h4>
 
     
 
@@ -5411,7 +5488,7 @@ withNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", o
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line634">line 634</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line632">line 632</a>
     </li></ul></dd>
     
 
@@ -5473,103 +5550,6 @@ withNode({ nodeType: "CallExpression", callee: { nodeType: "MemberExpression", o
 
             <td class="description last">
                 code need to be replaced.
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-                    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>autoIndent</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>boolean</code></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last">
-                if true, auto indent the new code
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
                 
             </td>
         </tr>
@@ -7532,7 +7512,7 @@ withinNodeSync(".CallExpression[callee=.MemberExpression[object=$][property=ajax
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line675">line 675</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line673">line 673</a>
     </li></ul></dd>
     
 
@@ -7661,7 +7641,7 @@ withinNodeSync(".CallExpression[callee=.MemberExpression[object=$][property=ajax
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sat Feb 18 2023 11:03:06 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Mar 09 2023 14:27:06 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
