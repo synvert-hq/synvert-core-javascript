@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.12.1 (2023-03-09)
+
+* Add `skipFirstLine` option to `indent` api
+* Update `@xinminlabs/node-mutation` to 1.6.2
+
 ## 2.12.0 (2023-02-18)
 
 * Support Html files
