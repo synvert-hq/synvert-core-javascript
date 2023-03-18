@@ -77,6 +77,7 @@ var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typescript_1 = __importDefault(require("typescript"));
+const espree = __importStar(require("@xinminlabs/espree"));
 const fs_1 = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
 const debug_1 = __importDefault(require("debug"));
@@ -92,7 +93,6 @@ const DEFAULT_ENGINES = {
     ".html": HtmlEngine,
     ".erb": RailsErbEngine,
 };
-const espree = require("@xinminlabs/espree");
 /**
  * Instance is an execution unit, it finds specified ast nodes,
  * checks if the nodes match some conditions, then insert, replace or delete code.
@@ -259,7 +259,7 @@ class Instance {
     }
     /**
      * Set currentNode to node and process.
-     * @param {Node} node - set to current node
+     * @param {T} node - set to current node
      * @param {Function} func
      */
     processWithNodeSync(node, func) {
@@ -270,7 +270,7 @@ class Instance {
     /**
      * Set currentNode to node and process.
      * @async
-     * @param {Node} node - set to current node
+     * @param {T} node - set to current node
      * @param {Function} func
      */
     processWithNode(node, func) {
@@ -282,7 +282,7 @@ class Instance {
     }
     /**
      * Set currentNode properly, process and set currentNode back to original currentNode.
-     * @param {Node} node - set to other node
+     * @param {T} node - set to other node
      * @param {Function} func
      */
     processWithOtherNodeSync(node, func) {
@@ -294,7 +294,7 @@ class Instance {
     /**
      * Set currentNode properly, process and set currentNode back to original currentNode.
      * @async
-     * @param {Node} node - set to other node
+     * @param {T} node - set to other node
      * @param {Function} func
      */
     processWithOtherNode(node, func) {
@@ -380,7 +380,7 @@ class Instance {
      * // `class Foobar extends React.Component` matches and call `foobar`.
      * ifExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
      * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-     * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
+     * @param {ConditionOptions&lt;T>|Function} options - to do find in specific child node, e.g. { in: 'callee' }
      * @param {Function} func - call the function if the matching nodes exist in the child nodes.
      * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
      */
@@ -398,7 +398,7 @@ class Instance {
      * // `class Foobar extends React.Component` matches and call `foobar`.
      * await ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => { foobar })
      * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-     * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
+     * @param {ConditionOptions&lt;T>|Function} options - to do find in specific child node, e.g. { in: 'callee' }
      * @param {Function} func - call the function if the matching nodes exist in the child nodes.
      * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
      */
@@ -417,7 +417,7 @@ class Instance {
      * // `class Foobar extends Component` matches and call `foobar`.
      * unlessExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})
      * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-     * @param {ConditionOptions} options - to do find in specific child node, e.g. { in: 'callee' }
+     * @param {ConditionOptions&lt;T>} options - to do find in specific child node, e.g. { in: 'callee' }
      * @param {Function} func - call the function if no matching node exists in the child nodes.
      * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
      */
@@ -435,7 +435,7 @@ class Instance {
      * // `class Foobar extends Component` matches and call `foobar`.
      * await unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => {})
      * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-     * @param {ConditionOptions} options - to do find in specific child node, e.g. { in: 'callee' }
+     * @param {ConditionOptions&lt;T>} options - to do find in specific child node, e.g. { in: 'callee' }
      * @param {Function} func - call the function if no matching node exists in the child nodes.
      * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
      */
@@ -454,7 +454,7 @@ class Instance {
      * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
      * ifOnlyExistNodeSync({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })
      * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-     * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
+     * @param {ConditionOptions&lt;T>|Function} options - to do find in specific child node, e.g. { in: 'callee' }
      * @param {Function} func - call the function if the matching nodes exist in the child nodes.
      * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
      */
@@ -491,7 +491,7 @@ class Instance {
      * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
      * ifAllNodesSync({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
      * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-     * @param {ConditionOptions|Function} options - { match: nqlOrRules, in: 'callee' }
+     * @param {ConditionOptions&lt;T>|Function} options - { match: nqlOrRules, in: 'callee' }
      * @param {Function} func - call the function if the matching nodes match options.match.
      * @param {Function} elseFunc - call the else function if no matching node matches options.match.
      */
@@ -509,7 +509,7 @@ class Instance {
      * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
      * await ifAllNodes({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, async () => { bar });
      * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-     * @param {ConditionOptions|Function} options - { match: nqlOrRules, in: 'callee' }
+     * @param {ConditionOptions&lt;T>|Function} options - { match: nqlOrRules, in: 'callee' }
      * @param {Function} func - call the function if the matching nodes match options.match.
      * @param {Function} elseFunc - call the else function if no matching node matches options.match.
      */
@@ -829,7 +829,7 @@ exports.default = Instance;
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Mar 09 2023 14:28:47 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sat Mar 18 2023 03:12:42 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
