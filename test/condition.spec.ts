@@ -11,7 +11,11 @@ import { parse } from "./helper";
 import mock from "mock-fs";
 
 describe("Condition", () => {
-  const rewriter = new Rewriter<Node>("snippet group", "snippet name", () => {});
+  const rewriter = new Rewriter<Node>(
+    "snippet group",
+    "snippet name",
+    () => {}
+  );
   const instance = new Instance<Node>(rewriter, "", function () {});
 
   describe("IfExistCondition", () => {
@@ -33,7 +37,11 @@ describe("Condition", () => {
         let run = false;
         new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "jQuery",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -46,7 +54,11 @@ describe("Condition", () => {
         let run = false;
         new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -59,7 +71,11 @@ describe("Condition", () => {
         let run = false;
         new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           { in: "expression" },
           function () {
             run = true;
@@ -72,7 +88,11 @@ describe("Condition", () => {
         let run = false;
         new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "jQuery",
+            name: "ajax",
+          },
           {},
           function () {
             run = false;
@@ -99,7 +119,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "jQuery",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -113,7 +137,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -127,7 +155,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           { in: "expression" },
           function () {
             run = true;
@@ -141,7 +173,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "jQuery",
+            name: "ajax",
+          },
           {},
           function () {
             run = false;
@@ -176,7 +212,11 @@ describe("Condition", () => {
         let run = false;
         new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "jQuery",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -189,7 +229,11 @@ describe("Condition", () => {
         let run = false;
         new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -202,7 +246,11 @@ describe("Condition", () => {
         let run = false;
         new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           { in: "expression.expression" },
           function () {
             run = true;
@@ -215,7 +263,11 @@ describe("Condition", () => {
         let run = false;
         new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           {},
           function () {
             run = false;
@@ -242,7 +294,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "jQuery",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -256,7 +312,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           {},
           function () {
             run = true;
@@ -270,7 +330,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           { in: "expression.expression" },
           function () {
             run = true;
@@ -284,7 +348,11 @@ describe("Condition", () => {
         let run = false;
         const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          {
+            nodeType: "PropertyAccessExpression",
+            expression: "$",
+            name: "ajax",
+          },
           {},
           function () {
             run = false;

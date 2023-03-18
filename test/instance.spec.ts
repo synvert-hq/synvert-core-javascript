@@ -14,7 +14,11 @@ import { Parser } from "../src/types/options";
 import Configuration from "../src/configuration";
 
 describe("Instance", () => {
-  const rewriter = new Rewriter<Node>("snippet group", "snippet name", () => {});
+  const rewriter = new Rewriter<Node>(
+    "snippet group",
+    "snippet name",
+    () => {}
+  );
 
   describe("#filePath", () => {
     test("get file path", () => {
@@ -545,20 +549,24 @@ describe("Instance", () => {
     });
 
     test("gets actions", async () => {
-      const instance = new Instance<Node>(rewriter, "code.ts", async function () {
-        await this.withNode(
-          {
-            nodeType: "CallExpression",
-            expression: {
-              nodeType: "PropertyAccessExpression",
-              name: "trimRight",
+      const instance = new Instance<Node>(
+        rewriter,
+        "code.ts",
+        async function () {
+          await this.withNode(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
             },
-          },
-          () => {
-            this.noop();
-          }
-        );
-      });
+            () => {
+              this.noop();
+            }
+          );
+        }
+      );
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -581,20 +589,24 @@ describe("Instance", () => {
 
     test("gets no actions if parser is espree and file extension is ts", async () => {
       rewriter.options.parser = Parser.ESPREE;
-      const instance = new Instance<Node>(rewriter, "code.ts", async function () {
-        await this.withNode(
-          {
-            nodeType: "CallExpression",
-            expression: {
-              nodeType: "PropertyAccessExpression",
-              name: "trimRight",
+      const instance = new Instance<Node>(
+        rewriter,
+        "code.ts",
+        async function () {
+          await this.withNode(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
             },
-          },
-          () => {
-            this.noop();
-          }
-        );
-      });
+            () => {
+              this.noop();
+            }
+          );
+        }
+      );
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
@@ -610,20 +622,24 @@ describe("Instance", () => {
     });
 
     test("gets actions for html", async () => {
-      const instance = new Instance<Node>(rewriter, "code.html", async function () {
-        await this.withNode(
-          {
-            nodeType: "CallExpression",
-            expression: {
-              nodeType: "PropertyAccessExpression",
-              name: "trimRight",
+      const instance = new Instance<Node>(
+        rewriter,
+        "code.html",
+        async function () {
+          await this.withNode(
+            {
+              nodeType: "CallExpression",
+              expression: {
+                nodeType: "PropertyAccessExpression",
+                name: "trimRight",
+              },
             },
-          },
-          () => {
-            this.noop();
-          }
-        );
-      });
+            () => {
+              this.noop();
+            }
+          );
+        }
+      );
       const input = `
         <html>
           <body>
@@ -768,9 +784,13 @@ describe("Instance", () => {
         );
       `;
       rewriter.options.parser = Parser.TYPESCRIPT;
-      const instance = new Instance<Node>(rewriter, "code.ts", async function () {
-        await this.callHelper("helpers/helper");
-      });
+      const instance = new Instance<Node>(
+        rewriter,
+        "code.ts",
+        async function () {
+          await this.callHelper("helpers/helper");
+        }
+      );
       const input = `
         const foo1 = bar.trimLeft();
         const foo2 = bar.trimRight();
