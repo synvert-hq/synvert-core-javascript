@@ -250,7 +250,9 @@ export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Promise<Rewriter>} a Rewriter object
  */
-export const evalSnippet = async <T>(snippetName: string): Promise<Rewriter<T>> => {
+export const evalSnippet = async <T>(
+  snippetName: string
+): Promise<Rewriter<T>> => {
   return eval(await loadSnippet(snippetName));
 };
 

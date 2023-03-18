@@ -5,7 +5,11 @@ import { WithinScope, GotoScope } from "../src/scope";
 import { parse } from "./helper";
 
 describe("Scope", () => {
-  const rewriter = new Rewriter<Node>("snippet group", "snippet name", () => {});
+  const rewriter = new Rewriter<Node>(
+    "snippet group",
+    "snippet name",
+    () => {}
+  );
   const instance = new Instance<Node>(rewriter, "", function () {});
 
   describe("WithinScope", () => {
