@@ -1,5 +1,4 @@
 import ts from "typescript";
-import { Node } from "acorn";
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import fg from "fast-glob";
@@ -25,14 +24,18 @@ const ACTION_METHODS =
   "append prepend insert insertAfter insertBefore remove replace replaceWith noop";
 const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
 
-export const arrayBody = (node: any): Node[] => {
-  switch (node.type) {
+export const arrayBody = <T>(node: T): T[] => {
+  switch (NodeQuery.getAdapter().getNodeType(node)) {
+    case "SourceFile":
+      return (node as any)["statements"];
+    case "ClassDeclaration":
+      return (node as any)["members"];
     case "ClassDefinition":
-      return node.body.body;
+      return (node as any)["body"]["body"];
     case "MethodDefinition":
-      return node.value.body.body;
+      return (node as any)["value"]["body"]["body"];
     default:
-      return node.body;
+      return (node as any)["body"];
   }
 };
 
@@ -237,7 +240,7 @@ export const glob = async (filePattern: string): Promise<string[]> => {
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Rewriter} a Rewriter object
  */
-export const evalSnippetSync = (snippetName: string): Rewriter => {
+export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
   return eval(loadSnippetSync(snippetName));
 };
 
@@ -247,7 +250,7 @@ export const evalSnippetSync = (snippetName: string): Rewriter => {
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Promise<Rewriter>} a Rewriter object
  */
-export const evalSnippet = async (snippetName: string): Promise<Rewriter> => {
+export const evalSnippet = async <T>(snippetName: string): Promise<Rewriter<T>> => {
   return eval(await loadSnippet(snippetName));
 };
 

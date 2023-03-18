@@ -1,24 +1,12 @@
-import NodeQuery from "@xinminlabs/node-query";
-import NodeMutation from "@xinminlabs/node-mutation";
-import MutationAdapter from "../src/node-mutation/espree-adapter";
-import QueryAdapter from "../src/node-query/espree-adapter";
-const espree = require("@xinminlabs/espree");
+import ts from "typescript";
 
 export const parse = (
   code: string,
   { firstStatement }: { firstStatement: boolean } = { firstStatement: true }
-): any => {
-  NodeQuery.configure({ adapter: new QueryAdapter() });
-  NodeMutation.configure({ adapter: new MutationAdapter() });
-
-  const node = espree.parse(code, {
-    ecmaVersion: "latest",
-    loc: true,
-    sourceType: "module",
-    sourceFile: "code.js",
-  });
+): ts.Node => {
+  const node = ts.createSourceFile("code.js", code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
   if (firstStatement) {
-    return node.body[0];
+    return node.statements[0];
   }
   return node;
 };

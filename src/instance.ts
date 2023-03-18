@@ -1,8 +1,8 @@
 import ts from "typescript";
+import * as espree from "@xinminlabs/espree";
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import debug from "debug";
-import { Node } from "acorn";
 import Configuration from "./configuration";
 import Rewriter from "./rewriter";
 import { WithinScope, GotoScope } from "./scope";
@@ -35,8 +35,6 @@ const DEFAULT_ENGINES: { [extname: string]: Engine } = {
   ".erb": RailsErbEngine,
 };
 
-const espree = require("@xinminlabs/espree");
-
 /**
  * Instance is an execution unit, it finds specified ast nodes,
  * checks if the nodes match some conditions, then insert, replace or delete code.
@@ -48,17 +46,17 @@ const espree = require("@xinminlabs/espree");
  * @borrows Instance#withinNode as Instance#withNode
  * @borrows Instance#findNode as Instance#withNode
  */
-class Instance {
+class Instance<T> {
   public mutationAdapter: MutationAdapter<any>;
-  public currentNode!: Node;
-  private currentMutation!: NodeMutation<Node>;
+  public currentNode!: T;
+  private currentMutation!: NodeMutation<T>;
   public options: any;
 
   /**
    * Current instance.
    * @static
    */
-  static current: Instance;
+  static current: Instance<any>;
 
   /**
    * Create an Instance
@@ -66,9 +64,9 @@ class Instance {
    * @param {Function} func - a function to find nodes, match conditions and rewrite code.
    */
   constructor(
-    private rewriter: Rewriter,
+    private rewriter: Rewriter<T>,
     public filePath: string,
-    private func: (instance: Instance) => void
+    private func: (instance: Instance<T>) => void
   ) {
     this.mutationAdapter = NodeMutation.getAdapter();
     let strategy = NodeMutationStrategy.KEEP_RUNNING;
@@ -94,7 +92,7 @@ class Instance {
     }
     while (true) {
       const source = fs.readFileSync(currentFilePath, "utf-8");
-      this.currentMutation = new NodeMutation<Node>(source);
+      this.currentMutation = new NodeMutation<T>(source);
       this.mutationAdapter = NodeMutation.getAdapter();
       try {
         const node = this.parseCode(this.filePath, source);
@@ -137,7 +135,7 @@ class Instance {
     }
     while (true) {
       const source = await promisesFs.readFile(currentFilePath, "utf-8");
-      this.currentMutation = new NodeMutation<Node>(source);
+      this.currentMutation = new NodeMutation<T>(source);
       this.mutationAdapter = NodeMutation.getAdapter();
       try {
         const node = this.parseCode(currentFilePath, source);
@@ -181,7 +179,7 @@ class Instance {
     }
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = fs.readFileSync(currentFilePath, "utf-8");
-    this.currentMutation = new NodeMutation<Node>(source);
+    this.currentMutation = new NodeMutation<T>(source);
     this.mutationAdapter = NodeMutation.getAdapter();
     const node = this.parseCode(currentFilePath, source);
 
@@ -212,7 +210,7 @@ class Instance {
     }
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = await promisesFs.readFile(currentFilePath, "utf-8");
-    this.currentMutation = new NodeMutation<Node>(source);
+    this.currentMutation = new NodeMutation<T>(source);
     this.mutationAdapter = NodeMutation.getAdapter();
     const node = this.parseCode(currentFilePath, source);
 
@@ -226,10 +224,10 @@ class Instance {
 
   /**
    * Set currentNode to node and process.
-   * @param {Node} node - set to current node
+   * @param {T} node - set to current node
    * @param {Function} func
    */
-  processWithNodeSync(node: Node, func: (instance: Instance) => void) {
+  processWithNodeSync(node: T, func: (instance: Instance<T>) => void) {
     this.currentNode = node;
     func.call(this, this);
     this.currentNode = node;
@@ -238,10 +236,10 @@ class Instance {
   /**
    * Set currentNode to node and process.
    * @async
-   * @param {Node} node - set to current node
+   * @param {T} node - set to current node
    * @param {Function} func
    */
-  async processWithNode(node: Node, func: (instance: Instance) => void) {
+  async processWithNode(node: T, func: (instance: Instance<T>) => void) {
     this.currentNode = node;
     await func.call(this, this);
     this.currentNode = node;
@@ -249,10 +247,10 @@ class Instance {
 
   /**
    * Set currentNode properly, process and set currentNode back to original currentNode.
-   * @param {Node} node - set to other node
+   * @param {T} node - set to other node
    * @param {Function} func
    */
-  processWithOtherNodeSync(node: Node, func: (instance: Instance) => void) {
+  processWithOtherNodeSync(node: T, func: (instance: Instance<T>) => void) {
     const originalNode = this.currentNode;
     this.currentNode = node;
     func.call(this, this);
@@ -262,10 +260,10 @@ class Instance {
   /**
    * Set currentNode properly, process and set currentNode back to original currentNode.
    * @async
-   * @param {Node} node - set to other node
+   * @param {T} node - set to other node
    * @param {Function} func
    */
-  async processWithOtherNode(node: Node, func: (instance: Instance) => void) {
+  async processWithOtherNode(node: T, func: (instance: Instance<T>) => void) {
     const originalNode = this.currentNode;
     this.currentNode = node;
     await func.call(this, this);
@@ -282,7 +280,7 @@ class Instance {
 
   /**
    * Condition options
-   * @typedef {Object} ConditionOptions
+   * @typedef {Object} ConditionOptions<T>
    * @property {string} [in] - to do find in specific child node, e.g. `{ in: 'callee' }`
    * @property {Function|string|Object} [match] - It can a function, nql or rules to be matched.
    */
@@ -293,12 +291,12 @@ class Instance {
 
   withinNodeSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): void;
   withinNodeSync(
     nqlOrRules: string | object,
     options: QueryOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): void;
   /**
    * Create a {@link WithinScope} to recursively find matching ast nodes,
@@ -313,13 +311,13 @@ class Instance {
    */
   withinNodeSync(
     nqlOrRules: string | object,
-    options: QueryOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void
+    options: QueryOptions | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      new WithinScope(this, nqlOrRules, {}, options).processSync();
+      new WithinScope<T>(this, nqlOrRules, {}, options).processSync();
     } else {
-      new WithinScope(this, nqlOrRules, options, func!).processSync();
+      new WithinScope<T>(this, nqlOrRules, options, func!).processSync();
     }
   }
 
@@ -328,12 +326,12 @@ class Instance {
 
   async withinNode(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async withinNode(
     nqlOrRules: string | object,
     options: QueryOptions,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   /**
    * Create a {@link WithinScope} to recursively find matching ast nodes,
@@ -349,13 +347,13 @@ class Instance {
    */
   async withinNode(
     nqlOrRules: string | object,
-    options: QueryOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void
+    options: QueryOptions | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      await new WithinScope(this, nqlOrRules, {}, options).process();
+      await new WithinScope<T>(this, nqlOrRules, {}, options).process();
     } else {
-      await new WithinScope(this, nqlOrRules, options, func!).process();
+      await new WithinScope<T>(this, nqlOrRules, options, func!).process();
     }
   }
 
@@ -371,8 +369,8 @@ class Instance {
    * @param {string} child_node_name - the name of the child nodes.
    * @param {Function} func - to continue operating on the matching nodes.
    */
-  gotoNodeSync(childNodeName: string, func: (instance: Instance) => void) {
-    new GotoScope(this, childNodeName, func).processSync();
+  gotoNodeSync(childNodeName: string, func: (instance: Instance<T>) => void) {
+    new GotoScope<T>(this, childNodeName, func).processSync();
   }
 
   /**
@@ -385,29 +383,29 @@ class Instance {
    * @param {string} child_node_name - the name of the child nodes.
    * @param {Function} func - to continue operating on the matching nodes.
    */
-  async gotoNode(childNodeName: string, func: (instance: Instance) => void) {
-    await new GotoScope(this, childNodeName, func).process();
+  async gotoNode(childNodeName: string, func: (instance: Instance<T>) => void) {
+    await new GotoScope<T>(this, childNodeName, func).process();
   }
 
   ifExistNodeSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): void;
   ifExistNodeSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   ifExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): void;
   ifExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   /**
    * Create a {@link IfExistCondition} to check if matching nodes exist in the child nodes,
@@ -416,18 +414,18 @@ class Instance {
    * // `class Foobar extends React.Component` matches and call `foobar`.
    * ifExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions<T>|Function} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
   ifExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return new IfExistCondition(
+      return new IfExistCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -435,7 +433,7 @@ class Instance {
         func
       ).processSync();
     }
-    return new IfExistCondition(
+    return new IfExistCondition<T>(
       this,
       nqlOrRules,
       options,
@@ -446,23 +444,23 @@ class Instance {
 
   async ifExistNode(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifExistNode(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   /**
    * Create a {@link IfExistCondition} to check if matching nodes exist in the child nodes,
@@ -472,18 +470,18 @@ class Instance {
    * // `class Foobar extends React.Component` matches and call `foobar`.
    * await ifExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions<T>|Function} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
   async ifExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return await new IfExistCondition(
+      return await new IfExistCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -491,7 +489,7 @@ class Instance {
         func
       ).process();
     }
-    await new IfExistCondition(
+    await new IfExistCondition<T>(
       this,
       nqlOrRules,
       options,
@@ -502,23 +500,23 @@ class Instance {
 
   unlessExistNodeSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): void;
   unlessExistNodeSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   unlessExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): void;
   unlessExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   /**
    * Create a {@link UnlessExistCondition} to check if matching nodes does not exist in the child nodes,
@@ -527,18 +525,18 @@ class Instance {
    * // `class Foobar extends Component` matches and call `foobar`.
    * unlessExistNodeSync({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, () => {})
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {ConditionOptions} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions<T>} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if no matching node exists in the child nodes.
    * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
    */
   unlessExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return new UnlessExistCondition(
+      return new UnlessExistCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -546,7 +544,7 @@ class Instance {
         func
       ).processSync();
     }
-    return new UnlessExistCondition(
+    return new UnlessExistCondition<T>(
       this,
       nqlOrRules,
       options,
@@ -557,23 +555,23 @@ class Instance {
 
   async unlessExistNode(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async unlessExistNode(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   async unlessExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async unlessExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   /**
    * Create a {@link UnlessExistCondition} to check if matching nodes does not exist in the child nodes,
@@ -583,18 +581,18 @@ class Instance {
    * // `class Foobar extends Component` matches and call `foobar`.
    * await unlessExistNode({ nodeType: "ClassDeclaration", superClass: { nodeType: "MemberExpression", object: "React", property: "Component" } }, async () => {})
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {ConditionOptions} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions<T>} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if no matching node exists in the child nodes.
    * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
    */
   async unlessExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return await new UnlessExistCondition(
+      return await new UnlessExistCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -602,7 +600,7 @@ class Instance {
         func
       ).process();
     }
-    await new UnlessExistCondition(
+    await new UnlessExistCondition<T>(
       this,
       nqlOrRules,
       options,
@@ -613,23 +611,23 @@ class Instance {
 
   ifOnlyExistNodeSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): void;
   ifOnlyExistNodeSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   ifOnlyExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): void;
   ifOnlyExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   /**
    * Create a {@link IfOnlyExistCondition} to check if current node has only one child node and the child node matches rules,
@@ -638,18 +636,18 @@ class Instance {
    * // `class Foobar { foo() {} }` matches and call foobar, `class Foobar { foo() {}; bar() {}; }` does not match
    * ifOnlyExistNodeSync({ nodeType: "MethodDefinition", key: "foo" }, () => { foobar })
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {ConditionOptions|Function} options - to do find in specific child node, e.g. { in: 'callee' }
+   * @param {ConditionOptions<T>|Function} options - to do find in specific child node, e.g. { in: 'callee' }
    * @param {Function} func - call the function if the matching nodes exist in the child nodes.
    * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
    */
   ifOnlyExistNodeSync(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return new IfOnlyExistCondition(
+      return new IfOnlyExistCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -657,7 +655,7 @@ class Instance {
         func
       ).processSync();
     }
-    return new IfOnlyExistCondition(
+    return new IfOnlyExistCondition<T>(
       this,
       nqlOrRules,
       options,
@@ -668,23 +666,23 @@ class Instance {
 
   async ifOnlyExistNode(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifOnlyExistNode(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifOnlyExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifOnlyExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   /**
    * Create a {@link IfOnlyExistCondition} to check if current node has only one child node and the child node matches rules,
@@ -700,12 +698,12 @@ class Instance {
    */
   async ifOnlyExistNode(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return await new IfOnlyExistCondition(
+      return await new IfOnlyExistCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -713,7 +711,7 @@ class Instance {
         func
       ).process();
     }
-    await new IfOnlyExistCondition(
+    await new IfOnlyExistCondition<T>(
       this,
       nqlOrRules,
       options,
@@ -724,23 +722,23 @@ class Instance {
 
   ifAllNodesSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): void;
   ifAllNodesSync(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   ifAllNodesSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): void;
   ifAllNodesSync(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): void;
   /**
    * Create a {@link IfAllCondition} to check if all matching nodes match options.match,
@@ -749,18 +747,18 @@ class Instance {
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
    * ifAllNodesSync({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, () => { bar });
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {ConditionOptions|Function} options - { match: nqlOrRules, in: 'callee' }
+   * @param {ConditionOptions<T>|Function} options - { match: nqlOrRules, in: 'callee' }
    * @param {Function} func - call the function if the matching nodes match options.match.
    * @param {Function} elseFunc - call the else function if no matching node matches options.match.
    */
   ifAllNodesSync(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return new IfAllCondition(
+      return new IfAllCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -768,7 +766,7 @@ class Instance {
         func
       ).processSync();
     }
-    return new IfAllCondition(
+    return new IfAllCondition<T>(
       this,
       nqlOrRules,
       options,
@@ -779,23 +777,23 @@ class Instance {
 
   async ifAllNodes(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifAllNodes(
     nqlOrRules: string | object,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifAllNodes(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void
   ): Promise<void>;
   async ifAllNodes(
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc: (instance: Instance<T>) => void
   ): Promise<void>;
   /**
    * Create a {@link IfAllCondition} to check if all matching nodes match options.match,
@@ -805,18 +803,18 @@ class Instance {
    * // `class Foobar { foo() {}; bar() {}; }` matches and call foobar
    * await ifAllNodes({ nodeType: "MethodDefinition" }, { match: { key: { in: ["foo", "bar"] } } }, () => { foo }, async () => { bar });
    * @param {string|Object} nqlOrRules - to check mathing ast nodes.
-   * @param {ConditionOptions|Function} options - { match: nqlOrRules, in: 'callee' }
+   * @param {ConditionOptions<T>|Function} options - { match: nqlOrRules, in: 'callee' }
    * @param {Function} func - call the function if the matching nodes match options.match.
    * @param {Function} elseFunc - call the else function if no matching node matches options.match.
    */
   async ifAllNodes(
     nqlOrRules: string | object,
-    options: ConditionOptions | ((instance: Instance) => void),
-    func?: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T> | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
     if (typeof options === "function") {
-      return await new IfAllCondition(
+      return await new IfAllCondition<T>(
         this,
         nqlOrRules,
         {},
@@ -824,7 +822,7 @@ class Instance {
         func
       ).process();
     }
-    await new IfAllCondition(
+    await new IfAllCondition<T>(
       this,
       nqlOrRules,
       options,

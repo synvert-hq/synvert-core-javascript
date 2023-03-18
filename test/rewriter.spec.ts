@@ -1,3 +1,4 @@
+import { Node } from "typescript";
 import fs, { promises as promisesFs } from "fs";
 import mock from "mock-fs";
 import { resolve } from "path";
@@ -9,7 +10,7 @@ import { isValidFile, isValidFileSync } from "../src/utils";
 
 describe("static register", () => {
   it("registers and fetches", () => {
-    const rewriter = new Rewriter("group", "name", function () {});
+    const rewriter = new Rewriter<Node>("group", "name", function () {});
     expect(Rewriter.fetch("group", "name")).toBe(rewriter);
 
     expect(Rewriter.fetch("new group", "name")).toBeUndefined();
@@ -17,7 +18,7 @@ describe("static register", () => {
   });
 
   it("clears all rewriters", () => {
-    const rewriter = new Rewriter("group", "name", function () {});
+    const rewriter = new Rewriter<Node>("group", "name", function () {});
     expect(Rewriter.fetch("group", "name")).toBe(rewriter);
 
     Rewriter.clear();
@@ -27,7 +28,7 @@ describe("static register", () => {
 
   describe("configure", () => {
     it("sets sourceType option", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -46,7 +47,7 @@ describe("static register", () => {
     });
 
     test("writes new code to file", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -68,7 +69,7 @@ describe("static register", () => {
     });
 
     test("does not write new code to large file", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -89,7 +90,7 @@ describe("static register", () => {
     });
 
     test("async writes new code to file", async () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         async function () {
@@ -111,7 +112,7 @@ describe("static register", () => {
     });
 
     test("does not async write new code to large file", async () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         async function () {
@@ -138,7 +139,7 @@ describe("static register", () => {
     });
 
     test("does not write code to file", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -159,7 +160,7 @@ describe("static register", () => {
     });
 
     test("async does not write code to file", async () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         async function () {
@@ -186,7 +187,7 @@ describe("static register", () => {
     });
 
     test("gets test results", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -214,7 +215,7 @@ describe("static register", () => {
     });
 
     test("async gets test results", async () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         async function () {
@@ -244,7 +245,7 @@ describe("static register", () => {
 
   describe("addFile", () => {
     test("adds a file", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -258,7 +259,7 @@ describe("static register", () => {
 
     test("does nothing if file exists", () => {
       fs.writeFileSync("foobar.js", "old");
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -271,7 +272,7 @@ describe("static register", () => {
     });
 
     test("async adds a file", async () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         async function () {
@@ -287,7 +288,7 @@ describe("static register", () => {
   describe("removeFile", () => {
     test("removes a file", () => {
       fs.writeFileSync("foobar.js", "foobar");
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -299,7 +300,7 @@ describe("static register", () => {
     });
 
     test("does nothing if file not exist", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -312,7 +313,7 @@ describe("static register", () => {
 
     test("async removes a file", async () => {
       await promisesFs.writeFile("foobar.js", "foobar");
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         async function () {
@@ -326,7 +327,7 @@ describe("static register", () => {
 
   describe("group and name", () => {
     test("get group and name", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {}
@@ -338,7 +339,7 @@ describe("static register", () => {
 
   describe("description", () => {
     test("set and get description", () => {
-      const rewriter = new Rewriter(
+      const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
         function () {
@@ -358,9 +359,9 @@ describe("static register", () => {
 
   describe("addSnippet", () => {
     test("adds and gets sub snippet", () => {
-      new Rewriter("group1", "name1", function () {});
-      new Rewriter("group2", "name2", function () {});
-      const rewriter = new Rewriter("group3", "name3", function () {
+      new Rewriter<Node>("group1", "name1", function () {});
+      new Rewriter<Node>("group2", "name2", function () {});
+      const rewriter = new Rewriter<Node>("group3", "name3", function () {
         this.addSnippetSync("group1", "name1");
         this.addSnippetSync("group2", "name2");
       });
@@ -374,9 +375,9 @@ describe("static register", () => {
     });
 
     test("async adds and gets sub snippet", async () => {
-      new Rewriter("group1", "name1", () => {});
-      new Rewriter("group2", "name2", () => {});
-      const rewriter = new Rewriter("group3", "name3", async function () {
+      new Rewriter<Node>("group1", "name1", () => {});
+      new Rewriter<Node>("group2", "name2", () => {});
+      const rewriter = new Rewriter<Node>("group3", "name3", async function () {
         await this.addSnippet("group1", "name1");
         await this.addSnippet("group2", "name2");
       });
@@ -392,7 +393,7 @@ describe("static register", () => {
 
   describe("nodeVersion", () => {
     test("set and get nodeVersion", () => {
-      const rewriter = new Rewriter("group", "name", function () {
+      const rewriter = new Rewriter<Node>("group", "name", function () {
         this.ifNode("10.14.0");
       });
       expect(rewriter.nodeVersion).toBe(undefined);
@@ -403,7 +404,7 @@ describe("static register", () => {
 
   describe("npmVersion", () => {
     test("set and get npmVersion", () => {
-      const rewriter = new Rewriter("group", "name", function () {
+      const rewriter = new Rewriter<Node>("group", "name", function () {
         this.ifNpm("compare-versions", ">= 1.0.0");
       });
       expect(rewriter.npmVersion).toBe(undefined);

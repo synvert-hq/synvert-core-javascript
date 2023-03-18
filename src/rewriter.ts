@@ -16,13 +16,13 @@ import {
 } from "./utils";
 import Configuration from "./configuration";
 import NodeQuery, {
+  EspreeAdapter as EspreeQueryAdapter,
   TypescriptAdapter as TypescriptQueryAdapter,
 } from "@xinminlabs/node-query";
 import NodeMutation, {
+  EspreeAdapter as EspreeMutationAdapter,
   TypescriptAdapter as TypescriptMutationAdapter,
 } from "@xinminlabs/node-mutation";
-import EspreeMutationAdapter from "./node-mutation/espree-adapter";
-import EspreeQueryAdapter from "./node-query/espree-adapter";
 
 /**
  * Rewriter is the top level namespace in a synvert snippet.
@@ -31,8 +31,8 @@ import EspreeQueryAdapter from "./node-query/espree-adapter";
  * which define the behavior what files need to find and what codes need to rewrite.
  * @borrows Rewriter#withinFiles as Rewriter#withinFile
  */
-class Rewriter {
-  public subSnippets: Rewriter[] = [];
+class Rewriter<T> {
+  public subSnippets: Rewriter<T>[] = [];
   public affectedFiles: Set<string> = new Set<string>();
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
@@ -49,13 +49,13 @@ class Rewriter {
    * Store all rewriters grouped by group name, e.g.  `{ jquery: { 'deprecate-event-shorthand': <Rewriter> } }`
    * @static
    */
-  static rewriters: { [group: string]: { [name: string]: Rewriter } } = {};
+  static rewriters: { [group: string]: { [name: string]: Rewriter<any> } } = {};
 
   /**
    * Current rewriters
    * @static
    */
-  static current: Rewriter;
+  static current: Rewriter<any>;
 
   /**
    * Register a rewriter with its group and name.
@@ -64,7 +64,7 @@ class Rewriter {
    * @param {string} name - the unique rewriter name.
    * @param {Rewirter} rewriter - the rewriter to register.
    */
-  static register(group: string, name: string, rewriter: Rewriter) {
+  static register(group: string, name: string, rewriter: Rewriter<any>) {
     this.rewriters[group] = this.rewriters[group] || {};
     this.rewriters[group][name] = rewriter;
   }
@@ -76,7 +76,7 @@ class Rewriter {
    * @param {string} name rewrtier name.
    * @returns {Rewriter} the matching rewriter.
    */
-  static fetch(group: string, name: string): Rewriter | undefined {
+  static fetch(group: string, name: string): Rewriter<any> | undefined {
     if (this.rewriters[group] && this.rewriters[group][name]) {
       return this.rewriters[group][name];
     }
@@ -98,7 +98,7 @@ class Rewriter {
   constructor(
     public group: string,
     public name: string,
-    private func: (rewriter: Rewriter) => void
+    private func: (rewriter: Rewriter<T>) => void
   ) {
     Rewriter.register(group, name, this);
   }
@@ -330,7 +330,7 @@ class Rewriter {
    */
   withinFilesSync(
     filePattern: string,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): void {
     if (!this.options.runInstance) return;
     if (this.nodeVersion && !this.nodeVersion.match()) return;
@@ -341,11 +341,11 @@ class Rewriter {
         isValidFileSync(Configuration.rootPath) &&
         minimatch(Configuration.rootPath, filePattern)
       ) {
-        const instance = new Instance(this, filePattern, func);
+        const instance = new Instance<T>(this, filePattern, func);
         return instance.processSync();
       }
       globSync(filePattern).forEach((filePath) => {
-        const instance = new Instance(this, filePath, func);
+        const instance = new Instance<T>(this, filePath, func);
         instance.processSync();
       });
     } else {
@@ -353,14 +353,14 @@ class Rewriter {
         isValidFileSync(Configuration.rootPath) &&
         minimatch(Configuration.rootPath, filePattern)
       ) {
-        const instance = new Instance(this, filePattern, func);
+        const instance = new Instance<T>(this, filePattern, func);
         const result = instance.testSync();
         this.mergeTestResults([result]);
         return;
       }
       const filePaths = globSync(filePattern);
       const results = filePaths.map((filePath) => {
-        const instance = new Instance(this, filePath, func);
+        const instance = new Instance<T>(this, filePath, func);
         return instance.testSync();
       });
       this.mergeTestResults(results);
@@ -383,7 +383,7 @@ class Rewriter {
    */
   async withinFiles(
     filePattern: string,
-    func: (instance: Instance) => void
+    func: (instance: Instance<T>) => void
   ): Promise<void> {
     if (!this.options.runInstance) return;
     if (this.nodeVersion && !(await this.nodeVersion.match())) return;
@@ -394,13 +394,13 @@ class Rewriter {
         (await isValidFile(Configuration.rootPath)) &&
         minimatch(Configuration.rootPath, filePattern)
       ) {
-        const instance = new Instance(this, filePattern, func);
+        const instance = new Instance<T>(this, filePattern, func);
         return await instance.process();
       }
       const filePaths = await glob(filePattern);
       await Promise.all(
         filePaths.map((filePath) => {
-          const instance = new Instance(this, filePath, func);
+          const instance = new Instance<T>(this, filePath, func);
           return instance.process();
         })
       );
@@ -409,7 +409,7 @@ class Rewriter {
         (await isValidFile(Configuration.rootPath)) &&
         minimatch(Configuration.rootPath, filePattern)
       ) {
-        const instance = new Instance(this, filePattern, func);
+        const instance = new Instance<T>(this, filePattern, func);
         const result = await instance.test();
         this.mergeTestResults([result]);
         return;
@@ -417,7 +417,7 @@ class Rewriter {
       const filePaths = await glob(filePattern);
       const results = await Promise.all(
         filePaths.map((filePath) => {
-          const instance = new Instance(this, filePath, func);
+          const instance = new Instance<T>(this, filePath, func);
           return instance.test();
         })
       );

@@ -1,11 +1,12 @@
+import { Node } from "typescript";
 import Rewriter from "../src/rewriter";
 import Instance from "../src/instance";
 import { WithinScope, GotoScope } from "../src/scope";
 import { parse } from "./helper";
 
 describe("Scope", () => {
-  const rewriter = new Rewriter("snippet group", "snippet name", () => {});
-  const instance = new Instance(rewriter, "", function () {});
+  const rewriter = new Rewriter<Node>("snippet group", "snippet name", () => {});
+  const instance = new Instance<Node>(rewriter, "", function () {});
 
   describe("WithinScope", () => {
     const source = `class FooBar {}`;
@@ -19,9 +20,9 @@ describe("Scope", () => {
       describe("rules", () => {
         test("does not call function if no matching node", () => {
           let run = false;
-          new WithinScope(
+          new WithinScope<Node>(
             instance,
-            { nodeType: "ClassDeclaration", id: { name: "Synvert" } },
+            { nodeType: "ClassDeclaration", name: "Synvert" },
             {},
             function () {
               run = true;
@@ -32,9 +33,9 @@ describe("Scope", () => {
 
         test("calls function if there is a matching node", () => {
           let run = false;
-          new WithinScope(
+          new WithinScope<Node>(
             instance,
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            { nodeType: "ClassDeclaration", name: "FooBar" },
             {},
             function () {
               run = true;
@@ -47,9 +48,9 @@ describe("Scope", () => {
       describe("nql", () => {
         test("does not call function if no matching node", () => {
           let run = false;
-          new WithinScope(
+          new WithinScope<Node>(
             instance,
-            ".ClassDeclaration[id.name=Synvert]",
+            ".ClassDeclaration[name=Synvert]",
             {},
             function () {
               run = true;
@@ -60,9 +61,9 @@ describe("Scope", () => {
 
         test("calls function if there is a matching node", () => {
           let run = false;
-          new WithinScope(
+          new WithinScope<Node>(
             instance,
-            ".ClassDeclaration[id.name=FooBar]",
+            ".ClassDeclaration[name=FooBar]",
             {},
             function () {
               run = true;
@@ -81,9 +82,9 @@ describe("Scope", () => {
       describe("rules", () => {
         test("does not call function if no matching node", async () => {
           let run = false;
-          const scope = new WithinScope(
+          const scope = new WithinScope<Node>(
             instance,
-            { nodeType: "ClassDeclaration", id: { name: "Synvert" } },
+            { nodeType: "ClassDeclaration", name: "Synvert" },
             {},
             function () {
               run = true;
@@ -95,9 +96,9 @@ describe("Scope", () => {
 
         test("calls function if there is a matching node", async () => {
           let run = false;
-          const scope = new WithinScope(
+          const scope = new WithinScope<Node>(
             instance,
-            { nodeType: "ClassDeclaration", id: { name: "FooBar" } },
+            { nodeType: "ClassDeclaration", name: "FooBar" },
             {},
             function () {
               run = true;
@@ -111,9 +112,9 @@ describe("Scope", () => {
       describe("nql", () => {
         test("does not call function if no matching node", async () => {
           let run = false;
-          const scope = new WithinScope(
+          const scope = new WithinScope<Node>(
             instance,
-            ".ClassDeclaration[id.name=Synvert]",
+            ".ClassDeclaration[name=Synvert]",
             {},
             function () {
               run = true;
@@ -125,9 +126,9 @@ describe("Scope", () => {
 
         test("calls function if there is a matching node", async () => {
           let run = false;
-          const scope = new WithinScope(
+          const scope = new WithinScope<Node>(
             instance,
-            ".ClassDeclaration[id.name=FooBar]",
+            ".ClassDeclaration[name=FooBar]",
             {},
             function () {
               run = true;
@@ -156,7 +157,7 @@ describe("Scope", () => {
 
       test("does not call function if no matching node", () => {
         let run = false;
-        new GotoScope(instance, "name", function () {
+        new GotoScope<Node>(instance, "id", function () {
           run = true;
         }).processSync();
         expect(run).toBe(false);
@@ -164,7 +165,7 @@ describe("Scope", () => {
 
       test("calls function if there is a matching node", () => {
         let run = false;
-        new GotoScope(instance, "id", function () {
+        new GotoScope<Node>(instance, "name", function () {
           run = true;
         }).processSync();
         expect(run).toBe(true);
@@ -172,7 +173,7 @@ describe("Scope", () => {
 
       test("calls function if there is a matching node with nested keys", () => {
         let run = false;
-        new GotoScope(instance, "body.body.0", function () {
+        new GotoScope<Node>(instance, "members.0", function () {
           run = true;
         }).processSync();
         expect(run).toBe(true);
@@ -186,7 +187,7 @@ describe("Scope", () => {
 
       test("does not call function if no matching node", async () => {
         let run = false;
-        const scope = new GotoScope(instance, "name", function () {
+        const scope = new GotoScope<Node>(instance, "id", function () {
           run = true;
         });
         await scope.process();
@@ -195,7 +196,7 @@ describe("Scope", () => {
 
       test("calls function if there is a matching node", async () => {
         let run = false;
-        const scope = new GotoScope(instance, "id", function () {
+        const scope = new GotoScope<Node>(instance, "name", function () {
           run = true;
         });
         await scope.process();
@@ -204,7 +205,7 @@ describe("Scope", () => {
 
       test("calls function if there is a matching node with nested keys", async () => {
         let run = false;
-        const scope = new GotoScope(instance, "body.body.0", function () {
+        const scope = new GotoScope<Node>(instance, "members.0", function () {
           run = true;
         });
         await scope.process();

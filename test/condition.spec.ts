@@ -1,3 +1,4 @@
+import { Node } from "typescript";
 import Rewriter from "../src/rewriter";
 import Instance from "../src/instance";
 import {
@@ -10,8 +11,8 @@ import { parse } from "./helper";
 import mock from "mock-fs";
 
 describe("Condition", () => {
-  const rewriter = new Rewriter("snippet group", "snippet name", () => {});
-  const instance = new Instance(rewriter, "", function () {});
+  const rewriter = new Rewriter<Node>("snippet group", "snippet name", () => {});
+  const instance = new Instance<Node>(rewriter, "", function () {});
 
   describe("IfExistCondition", () => {
     const source = `
@@ -30,9 +31,9 @@ describe("Condition", () => {
 
       test("does not call function if no matching node", () => {
         let run = false;
-        new IfExistCondition(
+        new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
           {},
           function () {
             run = true;
@@ -43,9 +44,9 @@ describe("Condition", () => {
 
       test("calls function if there is a matching node", () => {
         let run = false;
-        new IfExistCondition(
+        new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           {},
           function () {
             run = true;
@@ -56,9 +57,9 @@ describe("Condition", () => {
 
       test("calls function if there is a matching node in child node", () => {
         let run = false;
-        new IfExistCondition(
+        new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           { in: "expression" },
           function () {
             run = true;
@@ -69,9 +70,9 @@ describe("Condition", () => {
 
       test("calls else function if no matching node", () => {
         let run = false;
-        new IfExistCondition(
+        new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
           {},
           function () {
             run = false;
@@ -96,9 +97,9 @@ describe("Condition", () => {
 
       test("does not call function if no matching node", async () => {
         let run = false;
-        const condition = new IfExistCondition(
+        const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
           {},
           function () {
             run = true;
@@ -110,9 +111,9 @@ describe("Condition", () => {
 
       test("calls function if there is a matching node", async () => {
         let run = false;
-        const condition = new IfExistCondition(
+        const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           {},
           function () {
             run = true;
@@ -124,9 +125,9 @@ describe("Condition", () => {
 
       test("calls function if there is a matching node in child node", async () => {
         let run = false;
-        const condition = new IfExistCondition(
+        const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           { in: "expression" },
           function () {
             run = true;
@@ -138,9 +139,9 @@ describe("Condition", () => {
 
       test("calls else function if no matching node", async () => {
         let run = false;
-        const condition = new IfExistCondition(
+        const condition = new IfExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
           {},
           function () {
             run = false;
@@ -173,9 +174,9 @@ describe("Condition", () => {
 
       test("calls function if no matching node", () => {
         let run = false;
-        new UnlessExistCondition(
+        new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
           {},
           function () {
             run = true;
@@ -186,9 +187,9 @@ describe("Condition", () => {
 
       test("does not call function if there is a matching node", () => {
         let run = false;
-        new UnlessExistCondition(
+        new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           {},
           function () {
             run = true;
@@ -199,10 +200,10 @@ describe("Condition", () => {
 
       test("calls function if no matching node in child node", () => {
         let run = false;
-        new UnlessExistCondition(
+        new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
-          { in: "expression.callee" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          { in: "expression.expression" },
           function () {
             run = true;
           }
@@ -212,9 +213,9 @@ describe("Condition", () => {
 
       test("calls else function if there is a matching node", () => {
         let run = false;
-        new UnlessExistCondition(
+        new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           {},
           function () {
             run = false;
@@ -239,9 +240,9 @@ describe("Condition", () => {
 
       test("calls function if no matching node", async () => {
         let run = false;
-        const condition = new UnlessExistCondition(
+        const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "jQuery", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "jQuery", name: "ajax" },
           {},
           function () {
             run = true;
@@ -253,9 +254,9 @@ describe("Condition", () => {
 
       test("does not call function if there is a matching node", async () => {
         let run = false;
-        const condition = new UnlessExistCondition(
+        const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           {},
           function () {
             run = true;
@@ -267,10 +268,10 @@ describe("Condition", () => {
 
       test("calls function if no matching node in child node", async () => {
         let run = false;
-        const condition = new UnlessExistCondition(
+        const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
-          { in: "expression.callee" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
+          { in: "expression.expression" },
           function () {
             run = true;
           }
@@ -281,9 +282,9 @@ describe("Condition", () => {
 
       test("calls else function if there is a matching node", async () => {
         let run = false;
-        const condition = new UnlessExistCondition(
+        const condition = new UnlessExistCondition<Node>(
           instance,
-          { nodeType: "MemberExpression", object: "$", property: "ajax" },
+          { nodeType: "PropertyAccessExpression", expression: "$", name: "ajax" },
           {},
           function () {
             run = false;
@@ -318,7 +319,7 @@ describe("Condition", () => {
 
       test("does not call function if no matching node", () => {
         let run = false;
-        new IfOnlyExistCondition(
+        new IfOnlyExistCondition<Node>(
           instance,
           {
             nodeType: "ExpressionStatement",
@@ -350,11 +351,11 @@ describe("Condition", () => {
 
       test("calls function if there is only one matching node", () => {
         let run = false;
-        new IfOnlyExistCondition(
+        new IfOnlyExistCondition<Node>(
           instance,
           {
             nodeType: "ExpressionStatement",
-            expression: { nodeType: "Literal", value: "use strict" },
+            expression: { nodeType: "StringLiteral", text: "use strict" },
           },
           {},
           function () {
@@ -366,10 +367,10 @@ describe("Condition", () => {
 
       test("calls else function if there is more than one matching node", () => {
         let run = false;
-        new IfOnlyExistCondition(
+        new IfOnlyExistCondition<Node>(
           instance,
           {
-            nodeType: "Literal",
+            nodeType: "StringLiteral",
           },
           {},
           function () {
@@ -402,11 +403,11 @@ describe("Condition", () => {
 
       test("does not call function if no matching node", async () => {
         let run = false;
-        const condition = new IfOnlyExistCondition(
+        const condition = new IfOnlyExistCondition<Node>(
           instance,
           {
             nodeType: "ExpressionStatement",
-            expression: { nodeType: "Literal", value: "strict" },
+            expression: { nodeType: "StringLiteral", text: "strict" },
           },
           {},
           function () {
@@ -435,11 +436,11 @@ describe("Condition", () => {
 
       test("calls function if there is only one matching node", async () => {
         let run = false;
-        const condition = new IfOnlyExistCondition(
+        const condition = new IfOnlyExistCondition<Node>(
           instance,
           {
             nodeType: "ExpressionStatement",
-            expression: { nodeType: "Literal", value: "use strict" },
+            expression: { nodeType: "StringLiteral", text: "use strict" },
           },
           {},
           function () {
@@ -452,10 +453,10 @@ describe("Condition", () => {
 
       test("calls else function if there is more than one matching node", async () => {
         let run = false;
-        const condition = new IfOnlyExistCondition(
+        const condition = new IfOnlyExistCondition<Node>(
           instance,
           {
-            nodeType: "Literal",
+            nodeType: "StringLiteral",
           },
           {},
           function () {
@@ -489,10 +490,10 @@ describe("Condition", () => {
 
       test("does not call function if no matching node", () => {
         let run = false;
-        new IfAllCondition(
+        new IfAllCondition<Node>(
           instance,
-          { nodeType: "ImportDefaultSpecifier" },
-          { match: { local: { name: { in: ["a", "b"] } } } },
+          { nodeType: "ImportClause" },
+          { match: { elements: { in: ["a", "b"] } } },
           function () {
             run = true;
           }
@@ -502,10 +503,10 @@ describe("Condition", () => {
 
       test("calls function if match", () => {
         let run = false;
-        new IfAllCondition(
+        new IfAllCondition<Node>(
           instance,
-          { nodeType: "ImportSpecifier" },
-          { match: { local: { name: { in: ["a", "b"] } } } },
+          { nodeType: "NamedImports" },
+          { match: { elements: { in: ["a", "b"] } } },
           function () {
             run = true;
           },
@@ -518,10 +519,10 @@ describe("Condition", () => {
 
       test("calls else function if not match", () => {
         let run = false;
-        new IfAllCondition(
+        new IfAllCondition<Node>(
           instance,
-          { nodeType: "ImportSpecifier" },
-          { match: { local: { name: { in: ["c", "d"] } } } },
+          { nodeType: "NamedImports" },
+          { match: { elements: { in: ["c", "d"] } } },
           function () {
             run = false;
           },
@@ -545,10 +546,10 @@ describe("Condition", () => {
 
       test("does not call function if no matching node", async () => {
         let run = false;
-        const condition = new IfAllCondition(
+        const condition = new IfAllCondition<Node>(
           instance,
-          { nodeType: "ImportDefaultSpecifier" },
-          { match: { local: { name: { in: ["a", "b"] } } } },
+          { nodeType: "ImportClause" },
+          { match: { elements: { in: ["a", "b"] } } },
           function () {
             run = true;
           }
@@ -559,10 +560,10 @@ describe("Condition", () => {
 
       test("calls function if match", async () => {
         let run = false;
-        const condition = new IfAllCondition(
+        const condition = new IfAllCondition<Node>(
           instance,
-          { nodeType: "ImportSpecifier" },
-          { match: { local: { name: { in: ["a", "b"] } } } },
+          { nodeType: "NamedImports" },
+          { match: { elements: { in: ["a", "b"] } } },
           function () {
             run = true;
           },
@@ -576,10 +577,10 @@ describe("Condition", () => {
 
       test("calls else function if not match", async () => {
         let run = false;
-        const condition = new IfAllCondition(
+        const condition = new IfAllCondition<Node>(
           instance,
-          { nodeType: "ImportSpecifier" },
-          { match: { local: { name: { in: ["c", "d"] } } } },
+          { nodeType: "NamedImports" },
+          { match: { elements: { in: ["c", "d"] } } },
           function () {
             run = false;
           },

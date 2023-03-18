@@ -1,8 +1,6 @@
-import { Node } from "acorn";
 import NodeQuery from "@xinminlabs/node-query";
 import { getTargetNode } from "@xinminlabs/node-query/lib/compiler/helpers";
 
-import type { NodeExt } from "./types/node-ext";
 import type { QueryOptions } from "@xinminlabs/node-query";
 import Instance from "./instance";
 
@@ -10,20 +8,20 @@ import Instance from "./instance";
  * Scope just likes its name, different scope points to different current node.
  * One scope defines some rules, it finds nodes and changes current node to the matching node.
  */
-abstract class Scope {
+abstract class Scope<T> {
   /**
    * Create a Scope
    * @param {Instance} instance
    */
-  constructor(protected instance: Instance) {}
+  constructor(protected instance: Instance<T>) {}
 }
 
 /**
  * WithinScope finds out nodes which match rules, then changes its scope to matching node.
  * @extends Scope
  */
-class WithinScope extends Scope {
-  private nodeQuery: NodeQuery<NodeExt>;
+class WithinScope<T> extends Scope<T> {
+  private nodeQuery: NodeQuery<T>;
   private options: QueryOptions;
 
   /**
@@ -34,13 +32,13 @@ class WithinScope extends Scope {
    * @param {Function} func - a function to be called if rules are matched.
    */
   constructor(
-    instance: Instance,
+    instance: Instance<T>,
     nqlOrRules: string | object,
     options: QueryOptions,
-    private func: (instance: Instance) => void
+    private func: (instance: Instance<T>) => void
   ) {
     super(instance);
-    this.nodeQuery = new NodeQuery(nqlOrRules);
+    this.nodeQuery = new NodeQuery<T>(nqlOrRules);
     this.options = Object.assign(
       { includingSelf: true, stopAtFirstMatch: false, recursive: true },
       options
@@ -61,7 +59,7 @@ class WithinScope extends Scope {
 
     instance.processWithNodeSync(currentNode, () => {
       this.nodeQuery
-        .queryNodes(currentNode as NodeExt, this.options)
+        .queryNodes(currentNode, this.options)
         .forEach((matchingNode) => {
           instance.processWithNodeSync(matchingNode, () => {
             this.func.call(this.instance, this.instance);
@@ -79,7 +77,7 @@ class WithinScope extends Scope {
 
     await instance.processWithNode(currentNode, async () => {
       const matchingNodes = this.nodeQuery.queryNodes(
-        currentNode as NodeExt,
+        currentNode,
         this.options
       );
       for (const matchingNode of matchingNodes) {
@@ -95,7 +93,7 @@ class WithinScope extends Scope {
  * Go to and change its scope to a child node.
  * @extends Scope
  */
-class GotoScope extends Scope {
+class GotoScope<T> extends Scope<T> {
   /**
    * Create a GotoScope
    * @param {Instance} instance
@@ -103,9 +101,9 @@ class GotoScope extends Scope {
    * @param {Function} func
    */
   constructor(
-    instance: Instance,
+    instance: Instance<T>,
     private childNodeName: string,
-    private func: (instance: Instance) => void
+    private func: (instance: Instance<T>) => void
   ) {
     super(instance);
   }
@@ -117,10 +115,10 @@ class GotoScope extends Scope {
     const currentNode = this.instance.currentNode;
     if (!currentNode) return;
 
-    const childNode = getTargetNode(currentNode, this.childNodeName) as Node;
+    const childNode = getTargetNode(currentNode, this.childNodeName);
     if (!childNode) return;
 
-    this.instance.processWithOtherNodeSync(childNode, () => {
+    this.instance.processWithOtherNodeSync(childNode as T, () => {
       this.func.call(this.instance, this.instance);
     });
   }
@@ -129,10 +127,10 @@ class GotoScope extends Scope {
     const currentNode = this.instance.currentNode;
     if (!currentNode) return;
 
-    const childNode = getTargetNode(currentNode, this.childNodeName) as Node;
+    const childNode = getTargetNode(currentNode, this.childNodeName);
     if (!childNode) return;
 
-    await this.instance.processWithOtherNode(childNode, async () => {
+    await this.instance.processWithOtherNode(childNode as T, async () => {
       await this.func.call(this.instance, this.instance);
     });
   }

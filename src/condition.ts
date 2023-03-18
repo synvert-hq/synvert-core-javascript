@@ -1,23 +1,22 @@
 import { t } from "typy";
-import { Node } from "acorn";
 import NodeQuery from "@xinminlabs/node-query";
 
 import Instance from "./instance";
 import { arrayBody } from "./utils";
 
-interface ConditionOptions {
+interface ConditionOptions<T> {
   in?: string;
-  match?: ((node: Node) => boolean) | string | object;
+  match?: ((node: T) => boolean) | string | object;
 }
 
 /**
  * Condition is used to check if the node matches, condition won’t change the node scope.
  */
-abstract class Condition {
-  protected nodeQuery: NodeQuery<Node>;
-  protected options: ConditionOptions;
-  protected func: (instance: Instance) => void;
-  protected elseFunc?: (instance: Instance) => void;
+abstract class Condition<T> {
+  protected nodeQuery: NodeQuery<T>;
+  protected options: ConditionOptions<T>;
+  protected func: (instance: Instance<T>) => void;
+  protected elseFunc?: (instance: Instance<T>) => void;
 
   /**
    * Create a Condition
@@ -28,13 +27,13 @@ abstract class Condition {
    * @param {Function} elseFunc - a fucntion to be called if nql or rules are not matched.
    */
   constructor(
-    protected instance: Instance,
+    protected instance: Instance<T>,
     nqlOrRules: string | object,
-    options: ConditionOptions,
-    func: (instance: Instance) => void,
-    elseFunc?: (instance: Instance) => void
+    options: ConditionOptions<T>,
+    func: (instance: Instance<T>) => void,
+    elseFunc?: (instance: Instance<T>) => void
   ) {
-    this.nodeQuery = new NodeQuery(nqlOrRules);
+    this.nodeQuery = new NodeQuery<T>(nqlOrRules);
     this.options = options;
     this.func = func;
     this.elseFunc = elseFunc;
@@ -68,9 +67,9 @@ abstract class Condition {
    * e.g. source code of the node is `$.ajax({})` and `options` is `{ in: 'callee' }`
    * the target node is `$.ajax`.
    * @private
-   * @returns {Node}
+   * @returns {T}
    */
-  protected targetNode(): Node {
+  protected targetNode(): T {
     if (this.options.in) {
       return t(this.instance.currentNode, this.options.in).safeObject;
     }
@@ -82,12 +81,15 @@ abstract class Condition {
  * IfExistCondition checks if matching node exists in the node children.
  * @extends Condition
  */
-class IfExistCondition extends Condition {
+class IfExistCondition<T> extends Condition<T> {
   /**
    * Check if any child node matches.
    */
   protected match(): boolean {
-    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), {
+    const targetNode = this.targetNode();
+    if (!targetNode) return false;
+
+    const matchingNodes = this.nodeQuery.queryNodes(targetNode, {
       includingSelf: false,
       stopAtFirstMatch: true,
     });
@@ -99,12 +101,15 @@ class IfExistCondition extends Condition {
  * UnlessExistCondition checks if matching node doesn't exist in the node children.
  * @extends Condition
  */
-class UnlessExistCondition extends Condition {
+class UnlessExistCondition<T> extends Condition<T> {
   /**
    * Check if none of child node matches.
    */
   protected match(): boolean {
-    const matchingNodes = this.nodeQuery.queryNodes(this.targetNode(), {
+    const targetNode = this.targetNode();
+    if (!targetNode) return true;
+
+    const matchingNodes = this.nodeQuery.queryNodes(targetNode, {
       includingSelf: false,
       stopAtFirstMatch: true,
     });
@@ -116,12 +121,15 @@ class UnlessExistCondition extends Condition {
  * IfOnlyExistCondition checks if node has only one child node and the child node matches.
  * @extends Condition
  */
-class IfOnlyExistCondition extends Condition {
+class IfOnlyExistCondition<T> extends Condition<T> {
   /**
    * Check if only have one child node and the child node matches.
    */
   protected match(): boolean {
-    const body = arrayBody(this.targetNode());
+    const targetNode = this.targetNode();
+    if (!targetNode) return false;
+
+    const body = arrayBody(targetNode);
     return body.length === 1 && this.nodeQuery.matchNode(body[0]);
   }
 }
@@ -130,12 +138,15 @@ class IfOnlyExistCondition extends Condition {
  * IfAllCondition checks if all matching nodes match options.match.
  * @extends Condition
  */
-class IfAllCondition extends Condition {
+class IfAllCondition<T> extends Condition<T> {
   /**
    * Find all matching nodes, if all match options.match, run the func, else run the elseFunc.
    */
   protected match(): boolean {
-    const nodes = this.nodeQuery.queryNodes(this.targetNode(), {
+    const targetNode = this.targetNode();
+    if (!targetNode) return false;
+
+    const nodes = this.nodeQuery.queryNodes(targetNode, {
       includingSelf: false,
     });
     if (nodes.length === 0) {
@@ -147,14 +158,14 @@ class IfAllCondition extends Condition {
   /**
    * Function to match node.
    * @private
-   * @param {Node} node
+   * @param {T} node
    * @returns {boolean} true if node matches
    */
-  _matchFunc(node: Node): boolean {
+  _matchFunc(node: T): boolean {
     if (typeof this.options.match === "function") {
       return this.options.match(node);
     } else {
-      return new NodeQuery(this.options.match!).matchNode(node);
+      return new NodeQuery<T>(this.options.match!).matchNode(node);
     }
   }
 }

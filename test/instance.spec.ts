@@ -1,5 +1,6 @@
 import fs, { promises as promisesFs } from "fs";
 import mock from "mock-fs";
+import { Node } from "typescript";
 
 import Rewriter from "../src/rewriter";
 import Instance from "../src/instance";
@@ -13,27 +14,27 @@ import { Parser } from "../src/types/options";
 import Configuration from "../src/configuration";
 
 describe("Instance", () => {
-  const rewriter = new Rewriter("snippet group", "snippet name", () => {});
+  const rewriter = new Rewriter<Node>("snippet group", "snippet name", () => {});
 
   describe("#filePath", () => {
     test("get file path", () => {
-      const instance = new Instance(rewriter, "code.ts", function () {});
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {});
       expect(instance.filePath).toEqual("code.ts");
     });
   });
 
   describe("#mutationAdapter", () => {
     test("get mutation adapter", () => {
-      const instance = new Instance(rewriter, "code.ts", function () {});
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {});
       expect(instance.mutationAdapter).not.toBeNull();
     });
   });
 
   describe("processSync", () => {
-    let instance: Instance;
+    let instance: Instance<Node>;
 
     beforeEach(() => {
-      instance = new Instance(rewriter, "code.ts", function () {
+      instance = new Instance<Node>(rewriter, "code.ts", function () {
         this.findNodeSync(
           ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
           () => {
@@ -101,8 +102,8 @@ describe("Instance", () => {
     });
 
     test("writes new code to html file", () => {
-      instance = new Instance(
-        new Rewriter("grup", "name", function () {}),
+      instance = new Instance<Node>(
+        new Rewriter<Node>("grup", "name", function () {}),
         "code.html",
         function () {
           this.findNodeSync(
@@ -151,8 +152,8 @@ describe("Instance", () => {
     });
 
     test("writes new code to erb file", () => {
-      instance = new Instance(
-        new Rewriter("grup", "name", function () {}),
+      instance = new Instance<Node>(
+        new Rewriter<Node>("grup", "name", function () {}),
         "code.html.erb",
         function () {
           this.findNodeSync(
@@ -202,10 +203,10 @@ describe("Instance", () => {
   });
 
   describe("process", () => {
-    let instance: Instance;
+    let instance: Instance<Node>;
 
     beforeEach(() => {
-      instance = new Instance(rewriter, "code.ts", async function () {
+      instance = new Instance<Node>(rewriter, "code.ts", async function () {
         await this.findNode(
           ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
           () => {
@@ -273,8 +274,8 @@ describe("Instance", () => {
     });
 
     test("writes new code to html file", async () => {
-      instance = new Instance(
-        new Rewriter("group", "name", function () {}),
+      instance = new Instance<Node>(
+        new Rewriter<Node>("group", "name", function () {}),
         "code.html",
         async function () {
           await this.findNode(
@@ -323,8 +324,8 @@ describe("Instance", () => {
     });
 
     test("writes new code to erb file", async () => {
-      instance = new Instance(
-        new Rewriter("group", "name", function () {}),
+      instance = new Instance<Node>(
+        new Rewriter<Node>("group", "name", function () {}),
         "code.html.erb",
         async function () {
           await this.findNode(
@@ -382,7 +383,7 @@ describe("Instance", () => {
     });
 
     test("gets actions", () => {
-      const instance = new Instance(rewriter, "code.ts", function () {
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {
         this.withNodeSync(
           {
             nodeType: "CallExpression",
@@ -418,7 +419,7 @@ describe("Instance", () => {
 
     test("gets no actions if parser is espree and file extension is ts", () => {
       rewriter.options.parser = Parser.ESPREE;
-      const instance = new Instance(rewriter, "code.ts", function () {
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {
         this.withNodeSync(
           {
             nodeType: "CallExpression",
@@ -447,8 +448,8 @@ describe("Instance", () => {
     });
 
     test("gets actions for html file", () => {
-      const instance = new Instance(
-        new Rewriter("group", "name", function () {}),
+      const instance = new Instance<Node>(
+        new Rewriter<Node>("group", "name", function () {}),
         "code.html",
         function () {
           this.withNodeSync(
@@ -492,8 +493,8 @@ describe("Instance", () => {
     });
 
     test("gets actions for erb file", () => {
-      const instance = new Instance(
-        new Rewriter("group", "name", function () {}),
+      const instance = new Instance<Node>(
+        new Rewriter<Node>("group", "name", function () {}),
         "code.html.erb",
         function () {
           this.withNodeSync(
@@ -544,7 +545,7 @@ describe("Instance", () => {
     });
 
     test("gets actions", async () => {
-      const instance = new Instance(rewriter, "code.ts", async function () {
+      const instance = new Instance<Node>(rewriter, "code.ts", async function () {
         await this.withNode(
           {
             nodeType: "CallExpression",
@@ -580,7 +581,7 @@ describe("Instance", () => {
 
     test("gets no actions if parser is espree and file extension is ts", async () => {
       rewriter.options.parser = Parser.ESPREE;
-      const instance = new Instance(rewriter, "code.ts", async function () {
+      const instance = new Instance<Node>(rewriter, "code.ts", async function () {
         await this.withNode(
           {
             nodeType: "CallExpression",
@@ -609,7 +610,7 @@ describe("Instance", () => {
     });
 
     test("gets actions for html", async () => {
-      const instance = new Instance(rewriter, "code.html", async function () {
+      const instance = new Instance<Node>(rewriter, "code.html", async function () {
         await this.withNode(
           {
             nodeType: "CallExpression",
@@ -650,7 +651,7 @@ describe("Instance", () => {
     });
 
     test("gets actions for erb", async () => {
-      const instance = new Instance(
+      const instance = new Instance<Node>(
         rewriter,
         "code.html.erb",
         async function () {
@@ -718,7 +719,7 @@ describe("Instance", () => {
           }
         );
       `;
-      const instance = new Instance(rewriter, "code.ts", function () {
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {
         this.callHelperSync("helpers/helper");
       });
       const input = `
@@ -767,7 +768,7 @@ describe("Instance", () => {
         );
       `;
       rewriter.options.parser = Parser.TYPESCRIPT;
-      const instance = new Instance(rewriter, "code.ts", async function () {
+      const instance = new Instance<Node>(rewriter, "code.ts", async function () {
         await this.callHelper("helpers/helper");
       });
       const input = `
@@ -789,7 +790,7 @@ describe("Instance", () => {
   });
 
   describe("wrapWithQuotes", () => {
-    const instance = new Instance(rewriter, "code.ts", function () {});
+    const instance = new Instance<Node>(rewriter, "code.ts", function () {});
 
     describe("Configuration.singleQuote is true", () => {
       beforeEach(() => {
@@ -829,7 +830,7 @@ describe("Instance", () => {
   });
 
   describe("appendSemicolon", () => {
-    const instance = new Instance(rewriter, "code.ts", function () {});
+    const instance = new Instance<Node>(rewriter, "code.ts", function () {});
 
     describe("Configuration.semi is true", () => {
       test("appends semicolon", () => {
@@ -857,7 +858,7 @@ describe("Instance", () => {
   });
 
   describe("addLeadingSpaces", () => {
-    const instance = new Instance(rewriter, "code.ts", function () {});
+    const instance = new Instance<Node>(rewriter, "code.ts", function () {});
 
     test("add leading spaces", () => {
       expect(instance.addLeadingSpaces("foo")).toEqual("  foo");
@@ -883,7 +884,7 @@ describe("Instance", () => {
           }
         }
       `;
-      const instance = new Instance(rewriter, "code.ts", function () {});
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {});
       expect(instance.indent(oldCode, 2)).toEqual(newCode);
     });
 
@@ -902,7 +903,7 @@ describe("Instance", () => {
           }
         }
       `;
-      const instance = new Instance(rewriter, "code.ts", function () {});
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {});
       expect(instance.indent(oldCode, 2, { skipFirstLine: true })).toEqual(
         newCode
       );
