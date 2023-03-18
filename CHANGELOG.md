@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.12.2 (2023-03-18)
+
+* Use Generic Type
+* Update `@xinminlabs/node-mutation` to 1.17.0 and `@xinminlabs/node-query` to 1.7.0
+
 ## 2.12.1 (2023-03-09)
 
 * Add `skipFirstLine` option to `indent` api
