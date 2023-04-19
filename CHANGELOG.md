@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.13.0 (2023-04-19)
+
+* Add `type` to `Action`
+* `addFile` work for test
+* `removeFile` work for test
+
 ## 2.12.2 (2023-03-18)
 
 * Use Generic Type
