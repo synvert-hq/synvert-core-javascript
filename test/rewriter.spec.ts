@@ -210,7 +210,7 @@ describe("static register", () => {
       expect(results[0].affected).toBeTruthy();
       expect(results[0].conflicted).toBeFalsy();
       expect(results[0].actions).toEqual([
-        { start: 6, end: 12, newCode: "Synvert" },
+        { type: "replace", start: 6, end: 12, newCode: "Synvert" },
       ]);
     });
 
@@ -238,7 +238,7 @@ describe("static register", () => {
       expect(results[0].affected).toBeTruthy();
       expect(results[0].conflicted).toBeFalsy();
       expect(results[0].actions).toEqual([
-        { start: 6, end: 12, newCode: "Synvert" },
+        { type: "replace", start: 6, end: 12, newCode: "Synvert" },
       ]);
     });
   });

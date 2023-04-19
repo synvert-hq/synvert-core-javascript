@@ -410,6 +410,7 @@ describe("Instance", () => {
       expect(results).toEqual({
         actions: [
           {
+            type: "",
             end: 74,
             newCode: undefined,
             start: 59,
@@ -485,6 +486,7 @@ describe("Instance", () => {
       expect(results).toEqual({
         actions: [
           {
+            type: "",
             end: 162,
             newCode: undefined,
             start: 147,
@@ -530,6 +532,7 @@ describe("Instance", () => {
       expect(results).toEqual({
         actions: [
           {
+            type: "",
             end: 155,
             newCode: undefined,
             start: 140,
@@ -576,6 +579,7 @@ describe("Instance", () => {
       expect(results).toEqual({
         actions: [
           {
+            type: "",
             end: 74,
             newCode: undefined,
             start: 59,
@@ -655,6 +659,7 @@ describe("Instance", () => {
       expect(results).toEqual({
         actions: [
           {
+            type: "",
             end: 162,
             newCode: undefined,
             start: 147,
@@ -700,6 +705,7 @@ describe("Instance", () => {
       expect(results).toEqual({
         actions: [
           {
+            type: "",
             end: 155,
             newCode: undefined,
             start: 140,
