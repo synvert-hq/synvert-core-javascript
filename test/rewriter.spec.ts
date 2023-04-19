@@ -244,44 +244,78 @@ describe("static register", () => {
   });
 
   describe("addFile", () => {
-    test("adds a file", () => {
-      const rewriter = new Rewriter<Node>(
-        "snippet group",
-        "snippet name",
-        function () {
-          this.addFileSync("foobar.js", "foobar");
-        }
-      );
-      rewriter.processSync();
-      expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("foobar");
-      fs.rmSync("foobar.js");
+    describe("sync", () => {
+      test("adds a file", () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.addFileSync("foobar.js", "foobar");
+          }
+        );
+        rewriter.processSync();
+        expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("foobar");
+        fs.rmSync("foobar.js");
+      });
+
+      test("does nothing if file exists", () => {
+        fs.writeFileSync("foobar.js", "old");
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.addFileSync("foobar.js", "foobar");
+          }
+        );
+        rewriter.processSync();
+        expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("old");
+        fs.rmSync("foobar.js");
+      });
+
+      test("returns test result", () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.addFileSync("foobar.js", "foobar");
+          }
+        );
+        const results = rewriter.testSync();
+        expect(results[0].filePath).toEqual("foobar.js");
+        expect(results[0].affected).toBeTruthy();
+        expect(results[0].conflicted).toBeFalsy();
+        expect(results[0].actions).toEqual([{ type: "add_file", start: 0, end: 0, newCode: "foobar"}]);
+      });
     });
 
-    test("does nothing if file exists", () => {
-      fs.writeFileSync("foobar.js", "old");
-      const rewriter = new Rewriter<Node>(
-        "snippet group",
-        "snippet name",
-        function () {
-          this.addFileSync("foobar.js", "foobar");
-        }
-      );
-      rewriter.processSync();
-      expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("old");
-      fs.rmSync("foobar.js");
-    });
+    describe("async", () => {
+      test("async adds a file", async () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          async function () {
+            await this.addFile("foobar.js", "foobar");
+          }
+        );
+        await rewriter.process();
+        expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual("foobar");
+        await promisesFs.rm("foobar.js");
+      });
 
-    test("async adds a file", async () => {
-      const rewriter = new Rewriter<Node>(
-        "snippet group",
-        "snippet name",
-        async function () {
-          await this.addFile("foobar.js", "foobar");
-        }
-      );
-      await rewriter.process();
-      expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual("foobar");
-      await promisesFs.rm("foobar.js");
+      test("returns test result", async () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          async function () {
+            this.addFileSync("foobar.js", "foobar");
+          }
+        );
+        const results = await rewriter.test();
+        expect(results[0].filePath).toEqual("foobar.js");
+        expect(results[0].affected).toBeTruthy();
+        expect(results[0].conflicted).toBeFalsy();
+        expect(results[0].actions).toEqual([{ type: "add_file", start: 0, end: 0, newCode: "foobar"}]);
+      });
     });
   });
 

@@ -435,6 +435,17 @@ class Rewriter<T> {
   addFileSync(fileName: string, content: string): void {
     if (!this.options.runInstance) return;
 
+    if (!this.options.writeToFile) {
+      const result = {
+        affected: true,
+        conflicted: false,
+        filePath: fileName,
+        actions: [{ type: "add_file", start: 0, end: 0, newCode: content }]
+      };
+      this.testResults.push(result);
+      return;
+    }
+
     const filePath = path.join(Configuration.rootPath, fileName);
     if (isValidFileSync(filePath)) {
       return;
@@ -451,6 +462,17 @@ class Rewriter<T> {
    */
   async addFile(fileName: string, content: string): Promise<void> {
     if (!this.options.runInstance) return;
+
+    if (!this.options.writeToFile) {
+      const result = {
+        affected: true,
+        conflicted: false,
+        filePath: fileName,
+        actions: [{ type: "add_file", start: 0, end: 0, newCode: content }]
+      };
+      this.testResults.push(result);
+      return;
+    }
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (await isValidFile(filePath)) {
