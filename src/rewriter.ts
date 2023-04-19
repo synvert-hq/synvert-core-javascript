@@ -440,7 +440,7 @@ class Rewriter<T> {
         affected: true,
         conflicted: false,
         filePath: fileName,
-        actions: [{ type: "add_file", start: 0, end: 0, newCode: content }]
+        actions: [{ type: "add_file", start: 0, end: 0, newCode: content }],
       };
       this.testResults.push(result);
       return;
@@ -468,7 +468,7 @@ class Rewriter<T> {
         affected: true,
         conflicted: false,
         filePath: fileName,
-        actions: [{ type: "add_file", start: 0, end: 0, newCode: content }]
+        actions: [{ type: "add_file", start: 0, end: 0, newCode: content }],
       };
       this.testResults.push(result);
       return;
@@ -494,7 +494,7 @@ class Rewriter<T> {
         affected: true,
         conflicted: false,
         filePath: fileName,
-        actions: [{ type: "remove_file", start: 0, end: -1 }]
+        actions: [{ type: "remove_file", start: 0, end: -1 }],
       };
       this.testResults.push(result);
       return;
@@ -519,7 +519,7 @@ class Rewriter<T> {
         affected: true,
         conflicted: false,
         filePath: fileName,
-        actions: [{ type: "remove_file", start: 0, end: -1 }]
+        actions: [{ type: "remove_file", start: 0, end: -1 }],
       };
       this.testResults.push(result);
       return;
