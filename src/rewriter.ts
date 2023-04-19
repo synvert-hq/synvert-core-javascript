@@ -489,6 +489,17 @@ class Rewriter<T> {
   removeFileSync(fileName: string): void {
     if (!this.options.runInstance) return;
 
+    if (!this.options.writeToFile) {
+      const result = {
+        affected: true,
+        conflicted: false,
+        filePath: fileName,
+        actions: [{ type: "remove_file", start: 0, end: -1 }]
+      };
+      this.testResults.push(result);
+      return;
+    }
+
     const filePath = path.join(Configuration.rootPath, fileName);
     if (isValidFileSync(filePath)) {
       fs.rmSync(filePath);
@@ -502,6 +513,17 @@ class Rewriter<T> {
    */
   async removeFile(fileName: string): Promise<void> {
     if (!this.options.runInstance) return;
+
+    if (!this.options.writeToFile) {
+      const result = {
+        affected: true,
+        conflicted: false,
+        filePath: fileName,
+        actions: [{ type: "remove_file", start: 0, end: -1 }]
+      };
+      this.testResults.push(result);
+      return;
+    }
 
     const filePath = path.join(Configuration.rootPath, fileName);
     if (await isValidFile(filePath)) {

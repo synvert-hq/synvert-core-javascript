@@ -320,42 +320,80 @@ describe("static register", () => {
   });
 
   describe("removeFile", () => {
-    test("removes a file", () => {
-      fs.writeFileSync("foobar.js", "foobar");
-      const rewriter = new Rewriter<Node>(
-        "snippet group",
-        "snippet name",
-        function () {
-          this.removeFileSync("foobar.js");
-        }
-      );
-      rewriter.processSync();
-      expect(isValidFileSync("foobar.js")).toBeFalsy();
+    describe("sync", () => {
+      test("removes a file", () => {
+        fs.writeFileSync("foobar.js", "foobar");
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.removeFileSync("foobar.js");
+          }
+        );
+        rewriter.processSync();
+        expect(isValidFileSync("foobar.js")).toBeFalsy();
+      });
+
+      test("does nothing if file not exist", () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.removeFileSync("foobar.js");
+          }
+        );
+        rewriter.processSync();
+        expect(isValidFileSync("foobar.js")).toBeFalsy();
+      });
+
+      test("returns test result", () => {
+        fs.writeFileSync("foobar.js", "foobar");
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.removeFileSync("foobar.js");
+          }
+        );
+        const results = rewriter.testSync();
+        expect(results[0].filePath).toEqual("foobar.js");
+        expect(results[0].affected).toBeTruthy();
+        expect(results[0].conflicted).toBeFalsy();
+        expect(results[0].actions).toEqual([{ type: "remove_file", start: 0, end: -1 }]);
+        fs.unlinkSync("foobar.js");
+      });
     });
 
-    test("does nothing if file not exist", () => {
-      const rewriter = new Rewriter<Node>(
-        "snippet group",
-        "snippet name",
-        function () {
-          this.removeFileSync("foobar.js");
-        }
-      );
-      rewriter.processSync();
-      expect(isValidFileSync("foobar.js")).toBeFalsy();
-    });
+    describe("async", () => {
+      test("async removes a file", async () => {
+        await promisesFs.writeFile("foobar.js", "foobar");
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          async function () {
+            await this.removeFile("foobar.js");
+          }
+        );
+        await rewriter.process();
+        expect(await isValidFile("foobar.js")).toBeFalsy();
+      });
 
-    test("async removes a file", async () => {
-      await promisesFs.writeFile("foobar.js", "foobar");
-      const rewriter = new Rewriter<Node>(
-        "snippet group",
-        "snippet name",
-        async function () {
-          await this.removeFile("foobar.js");
-        }
-      );
-      await rewriter.process();
-      expect(await isValidFile("foobar.js")).toBeFalsy();
+      test("returns test result", async () => {
+        fs.writeFileSync("foobar.js", "foobar");
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          async function () {
+            this.removeFileSync("foobar.js");
+          }
+        );
+        const results = await rewriter.test();
+        expect(results[0].filePath).toEqual("foobar.js");
+        expect(results[0].affected).toBeTruthy();
+        expect(results[0].conflicted).toBeFalsy();
+        expect(results[0].actions).toEqual([{ type: "remove_file", start: 0, end: -1 }]);
+        await promisesFs.unlink("foobar.js");
+      });
     });
   });
 
