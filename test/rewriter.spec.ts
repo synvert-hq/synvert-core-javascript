@@ -284,7 +284,9 @@ describe("static register", () => {
         expect(results[0].filePath).toEqual("foobar.js");
         expect(results[0].affected).toBeTruthy();
         expect(results[0].conflicted).toBeFalsy();
-        expect(results[0].actions).toEqual([{ type: "add_file", start: 0, end: 0, newCode: "foobar"}]);
+        expect(results[0].actions).toEqual([
+          { type: "add_file", start: 0, end: 0, newCode: "foobar" },
+        ]);
       });
     });
 
@@ -298,7 +300,9 @@ describe("static register", () => {
           }
         );
         await rewriter.process();
-        expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual("foobar");
+        expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual(
+          "foobar"
+        );
         await promisesFs.rm("foobar.js");
       });
 
@@ -314,7 +318,9 @@ describe("static register", () => {
         expect(results[0].filePath).toEqual("foobar.js");
         expect(results[0].affected).toBeTruthy();
         expect(results[0].conflicted).toBeFalsy();
-        expect(results[0].actions).toEqual([{ type: "add_file", start: 0, end: 0, newCode: "foobar"}]);
+        expect(results[0].actions).toEqual([
+          { type: "add_file", start: 0, end: 0, newCode: "foobar" },
+        ]);
       });
     });
   });
@@ -359,7 +365,9 @@ describe("static register", () => {
         expect(results[0].filePath).toEqual("foobar.js");
         expect(results[0].affected).toBeTruthy();
         expect(results[0].conflicted).toBeFalsy();
-        expect(results[0].actions).toEqual([{ type: "remove_file", start: 0, end: -1 }]);
+        expect(results[0].actions).toEqual([
+          { type: "remove_file", start: 0, end: -1 },
+        ]);
         fs.unlinkSync("foobar.js");
       });
     });
@@ -391,7 +399,9 @@ describe("static register", () => {
         expect(results[0].filePath).toEqual("foobar.js");
         expect(results[0].affected).toBeTruthy();
         expect(results[0].conflicted).toBeFalsy();
-        expect(results[0].actions).toEqual([{ type: "remove_file", start: 0, end: -1 }]);
+        expect(results[0].actions).toEqual([
+          { type: "remove_file", start: 0, end: -1 },
+        ]);
         await promisesFs.unlink("foobar.js");
       });
     });

@@ -287,9 +287,7 @@ export const evalHelperSync = (helperName: string): Helper => {
  * @param {string} helperName - helper name, it can be a http url, file path or helper name.
  * @returns {Promise<Helper>} a Helper object
  */
-export const evalHelper = async <T>(
-  helperName: string
-): Promise<Helper> => {
+export const evalHelper = async <T>(helperName: string): Promise<Helper> => {
   return eval(await loadSnippet(helperName));
 };
 

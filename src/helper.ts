@@ -42,10 +42,7 @@ class Helper {
    * @param {string} name - helper name
    * @param {Function} func - a function defines the behaviors of the helper
    */
-  constructor(
-    public name: string,
-    public func: (options: any) => void
-  ) {
+  constructor(public name: string, public func: (options: any) => void) {
     Helper.register(name, this);
   }
 }
