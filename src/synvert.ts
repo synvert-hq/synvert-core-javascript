@@ -1,4 +1,5 @@
 import Rewriter from "./rewriter";
+import Helper from "./helper";
 import Configuration from "./configuration";
 import {
   evalSnippet,
@@ -21,6 +22,7 @@ const version = pjson.version;
 
 export {
   Rewriter,
+  Helper,
   Configuration,
   ALL_FILES,
   ALL_JS_FILES,

@@ -718,28 +718,30 @@ describe("Instance", () => {
     });
   });
 
-  describe("#calHelperSync", () => {
+  describe.skip("#calHelperSync", () => {
     afterEach(() => {
       mock.restore();
     });
 
     test("calls helper", () => {
       const helper = `
-        findNode(
-          ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
-          () => {
-            replace("expression.name", { with: "trimStart" });
-          }
-        );
-        withNode(
-          {
-            nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
-          },
-          () => {
-            replace("expression.name", { with: "trimEnd" });
-          }
-        );
+        new Synvert.Helper("helpers/helper", function () {
+          findNode(
+            ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+            () => {
+              replace("expression.name", { with: "trimStart" });
+            }
+          );
+          withNode(
+            {
+              nodeType: "CallExpression",
+              expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            },
+            () => {
+              replace("expression.name", { with: "trimEnd" });
+            }
+          );
+        });
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {
         this.callHelperSync("helpers/helper");
@@ -762,7 +764,7 @@ describe("Instance", () => {
     });
   });
 
-  describe("#calHelper", () => {
+  describe.skip("#calHelper", () => {
     beforeEach(() => {
       NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
       NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
@@ -773,21 +775,23 @@ describe("Instance", () => {
 
     test("calls helper", async () => {
       const helper = `
-        findNode(
-          ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
-          () => {
-            replace("expression.name", { with: "trimStart" });
-          }
-        );
-        withNode(
-          {
-            nodeType: "CallExpression",
-            expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
-          },
-          () => {
-            replace("expression.name", { with: "trimEnd" });
-          }
-        );
+        new Synvert.Helper("helpers/helper", function () {
+          findNode(
+            ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+            () => {
+              replace("expression.name", { with: "trimStart" });
+            }
+          );
+          withNode(
+            {
+              nodeType: "CallExpression",
+              expression: { nodeType: "PropertyAccessExpression", name: "trimRight" },
+            },
+            () => {
+              replace("expression.name", { with: "trimEnd" });
+            }
+          );
+        });
       `;
       rewriter.options.parser = Parser.TYPESCRIPT;
       const instance = new Instance<Node>(

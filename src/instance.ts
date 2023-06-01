@@ -5,6 +5,7 @@ import path from "path";
 import debug from "debug";
 import Configuration from "./configuration";
 import Rewriter from "./rewriter";
+import Helper from "./helper";
 import { WithinScope, GotoScope } from "./scope";
 import {
   IfExistCondition,
@@ -13,7 +14,7 @@ import {
   IfAllCondition,
   ConditionOptions,
 } from "./condition";
-import { loadSnippet, loadSnippetSync } from "./utils";
+import { evalHelperSync, evalHelper } from "./utils";
 import { QueryOptions } from "@xinminlabs/node-query";
 import NodeMutation, {
   Strategy as NodeMutationStrategy,
@@ -1011,29 +1012,29 @@ class Instance<T> {
 
   /**
    * Sync to call a helper to run shared code.
-   * @param {string} helperName - snippet helper name, it can be a http url, file path or a short name
+   * @param {string} helperName - snippet helper name, it can be a http url, file path or a helper name
    * @param options - options can be anything it needs to be passed to the helper
    */
   callHelperSync(helperName: string, options: any): void {
-    const helperContent = loadSnippetSync(helperName, false);
-    this.options = options;
-    Function(helperContent).call(this, this);
-    this.options = undefined;
+    const helper = Helper.fetch(helperName) || evalHelperSync(helperName);
+    if (!helper) {
+      return;
+    }
+    helper.func.call(this, options);
   }
 
   /**
    * Async to call a helper to run shared code.
    * @async
-   * @param {string} helperName - snippet helper name, it can be a http url, file path or a short name
+   * @param {string} helperName - snippet helper name, it can be a http url, file path or a helper name
    * @param options - options can be anything it needs to be passed to the helper
    */
   async callHelper(helperName: string, options: any): Promise<void> {
-    const helperContent = await loadSnippet(helperName, false);
-    this.options = options;
-    // await Function(`(async () => { ${helperContent} })()`).call(this, this);
-    // is not working
-    await eval(`(async () => { ${helperContent} }).call(this, this)`);
-    this.options = undefined;
+    const helper = Helper.fetch(helperName) || await evalHelper(helperName);
+    if (!helper) {
+      return;
+    }
+    await helper.func.call(this, options);
   }
 
   /**
