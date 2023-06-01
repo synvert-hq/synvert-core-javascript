@@ -1,6 +1,6 @@
 {
   "name": "synvert-core",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "write javascript code to rewrite javascript code",
   "main": "lib/synvert.js",
   "types": "lib/synvert.d.ts",

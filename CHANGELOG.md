@@ -1,10 +1,17 @@
 # CHANGELOG
 
+## 2.14.0 (2023-06-01)
+
+* Add `Helper` for shared snippet
+* Rewrite `callHelper`
+* Update `@xinminlabs/node-query` to 1.18.0 and `@xinminlabs/node-mutation` to 1.9.0
+
 ## 2.13.0 (2023-04-19)
 
 * Add `type` to `Action`
 * `addFile` work for test
 * `removeFile` work for test
+* Update `@xinminlabs/node-mutation` to 1.8.0
 
 ## 2.12.2 (2023-03-18)
 
