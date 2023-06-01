@@ -42,6 +42,12 @@ describe("rewriteSnippetToAsyncVersion", () => {
           });
         });
       });
+
+      new Synvert.Helper("name", () => {
+      });
+
+      new Synvert.Helper("name", function () {
+      });
     `;
     const newSnippet = dedent`
       const Synvert = require("synvert-core");
@@ -79,6 +85,12 @@ describe("rewriteSnippetToAsyncVersion", () => {
           });
         });
       });
+
+      new Synvert.Helper("name", async function () {
+      });
+
+      new Synvert.Helper("name", async function () {
+      });
     `;
     expect(rewriteSnippetToAsyncVersion(originalSnippet)).toEqual(newSnippet);
     expect(
@@ -108,6 +120,9 @@ describe("rewriteSnippetToSyncVersion", () => {
           });
         });
       });
+
+      new Synvert.Helper("name", () => {
+      });
     `;
     const newSnippet = dedent`
       const Synvert = require("synvert-core");
@@ -126,6 +141,9 @@ describe("rewriteSnippetToSyncVersion", () => {
             this.delete("expression.expression");
           });
         });
+      });
+
+      new Synvert.Helper("name", function () {
       });
     `;
     expect(rewriteSnippetToSyncVersion(originalSnippet)).toEqual(newSnippet);

@@ -14,6 +14,7 @@ import NodeMutation, {
 import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
 import Configuration from "./configuration";
+import Helper from "./helper";
 
 const REWRITER_METHODS = "addFile removeFile withinFiles withinFile addSnippet";
 const SCOPE_METHODS = "withinNode withNode findNode gotoNode";
@@ -41,6 +42,10 @@ export const arrayBody = <T>(node: T): T[] => {
 
 const NEW_REWRITER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression[modifiers=undefined]]`
+);
+
+const NEW_HELPER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
+  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`
 );
 
 const NEW_INSTANCE_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
@@ -74,6 +79,9 @@ export const rewriteSnippetToAsyncVersion = (
     const node = parseCode(newSnippet);
     const mutation = new NodeMutation<ts.Node>(newSnippet);
     NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
+      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+    );
+    NEW_HELPER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
       mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
     );
     NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
@@ -140,6 +148,10 @@ const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`
 );
+
+const NEW_HELPER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
+  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.ArrowFunction]`
+);
 const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
 );
@@ -153,6 +165,10 @@ const addProperScopeToSnippet = (snippet: string): string => {
   NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY.queryNodes(node).forEach((node) => {
     mutation.delete(node, "arguments.2.equalsGreaterThanToken");
     mutation.insert(node, "function ", { at: "beginning", to: "arguments.2" });
+  });
+  NEW_HELPER_WITH_ARROW_FUNCTION_QUERY.queryNodes(node).forEach((node) => {
+    mutation.delete(node, "arguments.1.equalsGreaterThanToken");
+    mutation.insert(node, "function ", { at: "beginning", to: "arguments.1" });
   });
   NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY.queryNodes(node).forEach((node) => {
     mutation.delete(node, "arguments.1.equalsGreaterThanToken");
@@ -254,6 +270,27 @@ export const evalSnippet = async <T>(
   snippetName: string
 ): Promise<Rewriter<T>> => {
   return eval(await loadSnippet(snippetName));
+};
+
+/**
+ * Sync to eval the helper by name.
+ * @param {string} helperName - helper name, it can be a http url, file path or helper name.
+ * @returns {Helper} a Helper object
+ */
+export const evalHelperSync = (helperName: string): Helper => {
+  return eval(loadSnippetSync(helperName));
+};
+
+/**
+ * Async to eval the helper by name.
+ * @async
+ * @param {string} helperName - helper name, it can be a http url, file path or helper name.
+ * @returns {Promise<Helper>} a Helper object
+ */
+export const evalHelper = async <T>(
+  helperName: string
+): Promise<Helper> => {
+  return eval(await loadSnippet(helperName));
 };
 
 /**
