@@ -1030,7 +1030,7 @@ class Instance<T> {
    * @param options - options can be anything it needs to be passed to the helper
    */
   async callHelper(helperName: string, options: any): Promise<void> {
-    const helper = Helper.fetch(helperName) || await evalHelper(helperName);
+    const helper = Helper.fetch(helperName) || (await evalHelper(helperName));
     if (!helper) {
       return;
     }
