@@ -904,7 +904,10 @@ class Instance<T> {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    const codeWithNewLine = options.newLinePosition === "after" ? `${code}\n${column}` : `\n${column}${code}`;
+    const codeWithNewLine =
+      options.newLinePosition === "after"
+        ? `${code}\n${column}`
+        : `\n${column}${code}`;
     this.currentMutation.insert(this.currentNode, codeWithNewLine, {
       ...options,
       ...{ at: "end" },
@@ -931,7 +934,10 @@ class Instance<T> {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    const codeWithNewLine = options.newLinePosition === "before" ? `\n${column}${code}` : `${code}\n${column}`;
+    const codeWithNewLine =
+      options.newLinePosition === "before"
+        ? `\n${column}${code}`
+        : `${code}\n${column}`;
     this.currentMutation.insert(this.currentNode, codeWithNewLine, {
       ...options,
       ...{ at: "beginning" },
@@ -1137,7 +1143,7 @@ class Instance<T> {
   }
 
   private parseByGonzalesPe(filePath: string, source: string) {
-    const syntax = path.extname(filePath).split('.').pop();
+    const syntax = path.extname(filePath).split(".").pop();
     return gonzales.parse(source, { syntax, sourceFile: filePath });
   }
 
