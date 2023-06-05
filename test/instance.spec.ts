@@ -207,27 +207,21 @@ describe("Instance", () => {
     });
 
     test("writes new code to scss file", () => {
-      const rewriter = new Rewriter<Node>("scss", "convert_to_sass", function () {});
-      rewriter.configure({ parser: Parser.GONZALES_PE });
-      instance = new Instance<Node>(
-        rewriter,
-        "code.scss",
-        function () {
-          this.findNodeSync(
-            ".declarationDelimiter",
-            () => {
-              this.remove();
-            }
-          );
-          this.findNodeSync(
-            ".block",
-            () => {
-              this.delete("leftCurlyBracket");
-              this.delete("rightCurlyBracket", { wholeLine: true });
-            }
-          );
-        }
+      const rewriter = new Rewriter<Node>(
+        "scss",
+        "convert_to_sass",
+        function () {}
       );
+      rewriter.configure({ parser: Parser.GONZALES_PE });
+      instance = new Instance<Node>(rewriter, "code.scss", function () {
+        this.findNodeSync(".declarationDelimiter", () => {
+          this.remove();
+        });
+        this.findNodeSync(".block", () => {
+          this.delete("leftCurlyBracket");
+          this.delete("rightCurlyBracket", { wholeLine: true });
+        });
+      });
       const input = dedent`
         @import "../styles/imports";
 
@@ -261,47 +255,39 @@ describe("Instance", () => {
       `;
       mock({ "code.scss": input });
       instance.processSync();
-      const content = fs.readFileSync("code.scss", "utf8")
+      const content = fs.readFileSync("code.scss", "utf8");
       expect(fs.readFileSync("code.scss", "utf8")).toEqual(output + "\n");
     });
 
     test("writes new code to sass file", () => {
-      const rewriter = new Rewriter<Node>("sass", "convert_to_scss", function () {});
-      rewriter.configure({ parser: Parser.GONZALES_PE });
-      instance = new Instance<Node>(
-        rewriter,
-        "code.sass",
-        function () {
-          this.findNodeSync(
-            ".atrule .string",
-            () => {
-              this.insert(";", { at: "end" });
-            }
-          );
-          this.findNodeSync(
-            ".declaration, .include",
-            () => {
-              this.insert(";", { at: "end", conflictPosition: 0 });
-            }
-          );
-          this.findNodeSync(
-            ".mixin",
-            () => {
-              const conflictPosition = -this.currentNode.start.column;
-              this.insert(" {", { at: "end", to: "arguments" });
-              this.insertAfter("}", { to: "block", newLinePosition: "after", conflictPosition });
-            }
-          );
-          this.findNodeSync(
-            ".ruleset",
-            () => {
-              const conflictPosition = -this.currentNode.start.column;
-              this.insert(" {", { at: "end", to: "selector" });
-              this.insertAfter("}", { to: "block", conflictPosition });
-            }
-          );
-        }
+      const rewriter = new Rewriter<Node>(
+        "sass",
+        "convert_to_scss",
+        function () {}
       );
+      rewriter.configure({ parser: Parser.GONZALES_PE });
+      instance = new Instance<Node>(rewriter, "code.sass", function () {
+        this.findNodeSync(".atrule .string", () => {
+          this.insert(";", { at: "end" });
+        });
+        this.findNodeSync(".declaration, .include", () => {
+          this.insert(";", { at: "end", conflictPosition: 0 });
+        });
+        this.findNodeSync(".mixin", () => {
+          const conflictPosition = -this.currentNode.start.column;
+          this.insert(" {", { at: "end", to: "arguments" });
+          this.insertAfter("}", {
+            to: "block",
+            newLinePosition: "after",
+            conflictPosition,
+          });
+        });
+        this.findNodeSync(".ruleset", () => {
+          const conflictPosition = -this.currentNode.start.column;
+          this.insert(" {", { at: "end", to: "selector" });
+          this.insertAfter("}", { to: "block", conflictPosition });
+        });
+      });
       const input = dedent`
         @import "../styles/imports"
 
