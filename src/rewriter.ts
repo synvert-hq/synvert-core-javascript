@@ -184,7 +184,6 @@ class Rewriter<T> {
    * @param {RewriterOptions} options
    * @param {string} [options.sourceType] - script or module
    * @param {string} [options.parser] - typescript or espree
-   * @param {string} [options.strategy] - allow_insert_at_same_position
    */
   configure(options: RewriterOptions) {
     if (options.sourceType) {
@@ -199,9 +198,6 @@ class Rewriter<T> {
         NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
         NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
       }
-    }
-    if (options.strategy) {
-      this.options.strategy = options.strategy;
     }
   }
 

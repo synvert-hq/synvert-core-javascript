@@ -8,7 +8,7 @@ import {
   rewriteSnippetToSyncVersion,
 } from "./utils";
 import { SnippetNotFoundError } from "./errors";
-import { Parser, Strategy } from "./types/options";
+import { Parser } from "./types/options";
 import type { TestResultExt } from "./types/result";
 
 const ALL_FILES = "**/*.{js,jsx,ts,tsx,html,html.erb}";
@@ -36,6 +36,5 @@ export {
   rewriteSnippetToSyncVersion,
   SnippetNotFoundError,
   Parser,
-  Strategy,
   TestResultExt,
 };

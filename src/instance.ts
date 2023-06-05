@@ -17,12 +17,12 @@ import {
 import { evalHelperSync, evalHelper } from "./utils";
 import { QueryOptions } from "@xinminlabs/node-query";
 import NodeMutation, {
-  Strategy as NodeMutationStrategy,
+  Strategy,
   InsertOptions,
   ReplaceOptions,
   Adapter as MutationAdapter,
 } from "@xinminlabs/node-mutation";
-import { Parser, Strategy } from "./types/options";
+import { Parser } from "./types/options";
 import { TestResultExt } from "./types/result";
 import * as HtmlEngine from "./engines/html";
 import * as RailsErbEngine from "./engines/rails_erb";
@@ -70,10 +70,7 @@ class Instance<T> {
     private func: (instance: Instance<T>) => void
   ) {
     this.mutationAdapter = NodeMutation.getAdapter();
-    let strategy = NodeMutationStrategy.KEEP_RUNNING;
-    if (rewriter.options.strategy === Strategy.ALLOW_INSERT_AT_SAME_POSITION) {
-      strategy = strategy | NodeMutationStrategy.ALLOW_INSERT_AT_SAME_POSITION;
-    }
+    let strategy = Strategy.KEEP_RUNNING;
     NodeMutation.configure({ strategy, tabWidth: Configuration.tabWidth });
   }
 
