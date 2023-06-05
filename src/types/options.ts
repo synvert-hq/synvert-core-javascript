@@ -1,3 +1,5 @@
+import { InsertOptions } from "@xinminlabs/node-mutation";
+
 // This is for espree
 export enum SourceType {
   MODULE = "module",
@@ -7,7 +9,7 @@ export enum SourceType {
 export enum Parser {
   TYPESCRIPT = "typescript",
   ESPREE = "espree",
-}
+  GONZALES_PE = "gonzales_pe",
 }
 
 export type RewriterOptions = {
@@ -16,3 +18,7 @@ export type RewriterOptions = {
   runInstance?: boolean;
   writeToFile?: boolean;
 };
+
+export interface NewLineInsertOptions extends InsertOptions {
+  newLinePosition?: "before" | "after";
+}

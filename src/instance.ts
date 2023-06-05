@@ -1,5 +1,6 @@
 import ts from "typescript";
 import * as espree from "@xinminlabs/espree";
+import gonzales from "@xinminlabs/gonzales-pe";
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import debug from "debug";
@@ -20,9 +21,10 @@ import NodeMutation, {
   Strategy,
   InsertOptions,
   ReplaceOptions,
+  DeleteOptions,
   Adapter as MutationAdapter,
 } from "@xinminlabs/node-mutation";
-import { Parser } from "./types/options";
+import { Parser, NewLineInsertOptions } from "./types/options";
 import { TestResultExt } from "./types/result";
 import * as HtmlEngine from "./engines/html";
 import * as RailsErbEngine from "./engines/rails_erb";
@@ -88,6 +90,7 @@ class Instance<T> {
     if (Configuration.showRunProcess) {
       console.log(this.filePath);
     }
+    // It keeps running until no conflict.
     while (true) {
       const source = fs.readFileSync(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<T>(source);
@@ -131,6 +134,7 @@ class Instance<T> {
     if (Configuration.showRunProcess) {
       console.log(this.filePath);
     }
+    // It keeps running until no conflict.
     while (true) {
       const source = await promisesFs.readFile(currentFilePath, "utf-8");
       this.currentMutation = new NodeMutation<T>(source);
@@ -894,12 +898,14 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
+   * @param {string} [options.newLinePosition] - before or after to insert newLine
    */
-  insertAfter(code: string, options: InsertOptions): void {
+  insertAfter(code: string, options: NewLineInsertOptions): void {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    this.currentMutation.insert(this.currentNode, `\n${column}${code}`, {
+    const codeWithNewLine = options.newLinePosition === "after" ? `${code}\n${column}` : `\n${column}${code}`;
+    this.currentMutation.insert(this.currentNode, codeWithNewLine, {
       ...options,
       ...{ at: "end" },
     });
@@ -919,12 +925,14 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
+   * @param {string} [options.newLinePosition] - before or after to insert newLine
    */
-  insertBefore(code: string, options: InsertOptions): void {
+  insertBefore(code: string, options: NewLineInsertOptions): void {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    this.currentMutation.insert(this.currentNode, `${code}\n${column}`, {
+    const codeWithNewLine = options.newLinePosition === "before" ? `\n${column}${code}` : `${code}\n${column}`;
+    this.currentMutation.insert(this.currentNode, codeWithNewLine, {
       ...options,
       ...{ at: "beginning" },
     });
@@ -941,9 +949,11 @@ class Instance<T> {
    *   delete(["semicolon", "value"]);
    * });
    * @param {string|string[]} selectors - name of child nodes
+   * @param {Object} options
+   * @param {boolean} [options.wholeLine = false] - remove the whole line
    */
-  delete(selectors: string | string[]): void {
-    this.currentMutation.delete(this.currentNode, selectors);
+  delete(selectors: string | string[], options: DeleteOptions): void {
+    this.currentMutation.delete(this.currentNode, selectors, options);
   }
 
   /**
@@ -1116,11 +1126,19 @@ class Instance<T> {
    * @returns {Node} ast node
    */
   private parseCode(filePath: string, source: string) {
+    if (this.rewriter.options.parser === Parser.GONZALES_PE) {
+      return this.parseByGonzalesPe(filePath, source);
+    }
     if (this.rewriter.options.parser === Parser.ESPREE) {
       return this.parseByEspree(filePath, source);
     }
 
     return this.parseByTypescript(filePath, source);
+  }
+
+  private parseByGonzalesPe(filePath: string, source: string) {
+    const syntax = path.extname(filePath).split('.').pop();
+    return gonzales.parse(source, { syntax, sourceFile: filePath });
   }
 
   /**

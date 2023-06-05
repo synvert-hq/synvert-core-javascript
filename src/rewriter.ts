@@ -18,10 +18,12 @@ import Configuration from "./configuration";
 import NodeQuery, {
   EspreeAdapter as EspreeQueryAdapter,
   TypescriptAdapter as TypescriptQueryAdapter,
+  GonzalesPeAdapter as GonzalesPeQueryAdapter,
 } from "@xinminlabs/node-query";
 import NodeMutation, {
   EspreeAdapter as EspreeMutationAdapter,
   TypescriptAdapter as TypescriptMutationAdapter,
+  GonzalesPeAdapter as GonzalesPeMutationAdapter,
 } from "@xinminlabs/node-mutation";
 
 /**
@@ -191,12 +193,19 @@ class Rewriter<T> {
     }
     if (options.parser) {
       this.options.parser = options.parser;
-      if (this.options.parser === Parser.ESPREE) {
-        NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
-        NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
-      } else {
-        NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-        NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
+      switch (this.options.parser) {
+        case Parser.ESPREE:
+          NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
+          NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
+          break;
+        case Parser.GONZALES_PE:
+          NodeQuery.configure({ adapter: new GonzalesPeQueryAdapter() });
+          NodeMutation.configure({ adapter: new GonzalesPeMutationAdapter() });
+          break;
+        default:
+          NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
+          NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
+          break;
       }
     }
   }
