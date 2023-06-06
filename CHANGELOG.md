@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.16.0 (2023-06-06)
+
+* Export `ALL_CSS_FILES`, `ALL_LESS_FILES`, `ALL_SASS_FILES`, and `ALL_SCSS_FILES`
+* Drop `renameFileTo` from Instance and add `renameFile` to Rewriter
+* Fix `insertAfter` and `insertBefore` code
+
 ## 2.15.0 (2023-06-06)
 
 * Remove `ALLOW_INSERT_AT_SAME_POSITION` strategy
