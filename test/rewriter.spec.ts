@@ -431,7 +431,9 @@ describe("static register", () => {
           "snippet group",
           "snippet name",
           function () {
-            this.renameFileSync("*.js", (filename: string) => filename.replace(".js", ".ts"));
+            this.renameFileSync("*.js", (filename: string) =>
+              filename.replace(".js", ".ts")
+            );
           }
         );
         mock({ "foo.js": "foo", "bar.js": "bar" });
@@ -460,7 +462,9 @@ describe("static register", () => {
           "snippet group",
           "snippet name",
           async function () {
-            await this.renameFile("*.js", (filename: string) => filename.replace(".js", ".ts"));
+            await this.renameFile("*.js", (filename: string) =>
+              filename.replace(".js", ".ts")
+            );
           }
         );
         mock({ "foo.js": "foo", "bar.js": "bar" });
