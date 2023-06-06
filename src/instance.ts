@@ -906,7 +906,7 @@ class Instance<T> {
     );
     const codeWithNewLine =
       options.newLinePosition === "after"
-        ? `${code}\n${column}`
+        ? `${column}${code}\n`
         : `\n${column}${code}`;
     this.currentMutation.insert(this.currentNode, codeWithNewLine, {
       ...options,
@@ -937,7 +937,7 @@ class Instance<T> {
     const codeWithNewLine =
       options.newLinePosition === "before"
         ? `\n${column}${code}`
-        : `${code}\n${column}`;
+        : `${column}${code}\n`;
     this.currentMutation.insert(this.currentNode, codeWithNewLine, {
       ...options,
       ...{ at: "beginning" },

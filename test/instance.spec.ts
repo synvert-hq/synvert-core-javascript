@@ -285,7 +285,10 @@ describe("Instance", () => {
         this.findNodeSync(".ruleset", () => {
           const conflictPosition = -this.currentNode.start.column;
           this.insert(" {", { at: "end", to: "selector" });
-          this.insertAfter("}", { to: "block", conflictPosition });
+          this.insertAfter("}", {
+            to: "block",
+            conflictPosition
+          });
         });
       });
       const input = dedent`
