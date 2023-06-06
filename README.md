@@ -71,6 +71,8 @@ Scopes:
 * [findNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNodeSync) - alias to withNodeSync
 * [gotoNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNode) - go to a child node
 * [gotoNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNodeSync) - go to a child node
+* [renameFileTo](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#renameFileTo) - rename current filepath to a new file
+* [renameFileToSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#renameFileToSync) - rename current filepath to a new file
 
 Conditions:
 
