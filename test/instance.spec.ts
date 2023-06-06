@@ -843,7 +843,7 @@ describe("Instance", () => {
     });
 
     test("renames a file", () => {
-      const instance = new Instance<Node>(rewriter, "code.ts", function() {
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {
         this.renameFileToSync("new_code.ts");
       });
       mock({ "code.ts": "hello world" });
@@ -858,12 +858,18 @@ describe("Instance", () => {
     });
 
     test("renames a file", async () => {
-      const instance = new Instance<Node>(rewriter, "code.ts", async function() {
-        await this.renameFileTo("new_code.ts");
-      });
+      const instance = new Instance<Node>(
+        rewriter,
+        "code.ts",
+        async function () {
+          await this.renameFileTo("new_code.ts");
+        }
+      );
       mock({ "code.ts": "hello world" });
       await instance.processSync();
-      expect(await promisesFs.readFile("new_code.ts", "utf8")).toEqual("hello world");
+      expect(await promisesFs.readFile("new_code.ts", "utf8")).toEqual(
+        "hello world"
+      );
     });
   });
 

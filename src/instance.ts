@@ -1028,7 +1028,10 @@ class Instance<T> {
    * @param {string} newName - relative path to the root path.
    */
   renameFileToSync(newName: string): void {
-    fs.renameSync(path.join(Configuration.rootPath, this.filePath), path.join(Configuration.rootPath, newName));
+    fs.renameSync(
+      path.join(Configuration.rootPath, this.filePath),
+      path.join(Configuration.rootPath, newName)
+    );
   }
 
   /**
@@ -1036,7 +1039,10 @@ class Instance<T> {
    * @param {string} newName - relative path to the root path.
    */
   async renameFileTo(newName: string): Promise<void> {
-    await promisesFs.rename(path.join(Configuration.rootPath, this.filePath), path.join(Configuration.rootPath, newName));
+    await promisesFs.rename(
+      path.join(Configuration.rootPath, this.filePath),
+      path.join(Configuration.rootPath, newName)
+    );
   }
 
   /**
