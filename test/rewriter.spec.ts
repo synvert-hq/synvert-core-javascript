@@ -407,6 +407,70 @@ describe("static register", () => {
     });
   });
 
+  describe("renameFile", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
+    describe("sync", () => {
+      test("renames a file", () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.renameFileSync("foo.js", "bar.js");
+          }
+        );
+        mock({ "foo.js": "foobar" });
+        rewriter.processSync();
+        expect(fs.readFileSync("bar.js", "utf8")).toEqual("foobar");
+      });
+
+      test("renames multiple files", () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          function () {
+            this.renameFileSync("*.js", (filename: string) => filename.replace(".js", ".ts"));
+          }
+        );
+        mock({ "foo.js": "foo", "bar.js": "bar" });
+        rewriter.processSync();
+        expect(fs.readFileSync("foo.ts", "utf8")).toEqual("foo");
+        expect(fs.readFileSync("bar.ts", "utf8")).toEqual("bar");
+      });
+    });
+
+    describe("async", () => {
+      test("async renames a file", async () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          async function () {
+            await this.renameFile("foo.js", "bar.js");
+          }
+        );
+        mock({ "foo.js": "foobar" });
+        await rewriter.process();
+        expect(await promisesFs.readFile("bar.js", "utf8")).toEqual("foobar");
+      });
+
+      test("async renames multiple files", async () => {
+        const rewriter = new Rewriter<Node>(
+          "snippet group",
+          "snippet name",
+          async function () {
+            await this.renameFile("*.js", (filename: string) => filename.replace(".js", ".ts"));
+          }
+        );
+        mock({ "foo.js": "foo", "bar.js": "bar" });
+        await rewriter.process();
+        expect(await promisesFs.readFile("foo.ts", "utf8")).toEqual("foo");
+        expect(await promisesFs.readFile("bar.ts", "utf8")).toEqual("bar");
+      });
+    });
+  });
+
   describe("group and name", () => {
     test("get group and name", () => {
       const rewriter = new Rewriter<Node>(

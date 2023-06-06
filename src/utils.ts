@@ -16,14 +16,14 @@ import Rewriter from "./rewriter";
 import Configuration from "./configuration";
 import Helper from "./helper";
 
-const REWRITER_METHODS = "addFile removeFile withinFiles withinFile addSnippet";
+const REWRITER_METHODS = "addFile removeFile renameFile withinFiles withinFile addSnippet";
 const SCOPE_METHODS = "withinNode withNode findNode gotoNode";
 const CONDITION_METHODS =
   "ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes";
 // delete is a reserved word, we define another expression in GLOBAL_DSL_QUERY
 const ACTION_METHODS =
   "append prepend insert insertAfter insertBefore remove replace replaceWith noop";
-const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} renameFileTo callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
+const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
 
 export const arrayBody = <T>(node: T): T[] => {
   switch (NodeQuery.getAdapter().getNodeType(node)) {

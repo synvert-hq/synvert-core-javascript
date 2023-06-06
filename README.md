@@ -54,6 +54,8 @@ DSL are as follows
 * [addFileSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addFileSync) - add a new file
 * [removeFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFile) - remove a file
 * [removeFileSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFileSync) - remove a file
+* [renameFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#renameFile) - rename filepath to new filepath
+* [renameFileSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#renameFileSync) - rename filepath to new filepath
 * [withinFiles](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFiles) - find specified files
 * [withinFilesSync](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFilesSync) - find specified files
 * [withinFile](https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFile) - alias to withinFiles
@@ -71,8 +73,6 @@ Scopes:
 * [findNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNodeSync) - alias to withNodeSync
 * [gotoNode](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNode) - go to a child node
 * [gotoNodeSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNodeSync) - go to a child node
-* [renameFileTo](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#renameFileTo) - rename current filepath to a new file
-* [renameFileToSync](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#renameFileToSync) - rename current filepath to a new file
 
 Conditions:
 

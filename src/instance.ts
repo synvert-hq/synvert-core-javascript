@@ -1024,28 +1024,6 @@ class Instance<T> {
   }
 
   /**
-   * Sync to rename current filepath to a new file.
-   * @param {string} newName - relative path to the root path.
-   */
-  renameFileToSync(newName: string): void {
-    fs.renameSync(
-      path.join(Configuration.rootPath, this.filePath),
-      path.join(Configuration.rootPath, newName)
-    );
-  }
-
-  /**
-   * Rename current filepath to a new file.
-   * @param {string} newName - relative path to the root path.
-   */
-  async renameFileTo(newName: string): Promise<void> {
-    await promisesFs.rename(
-      path.join(Configuration.rootPath, this.filePath),
-      path.join(Configuration.rootPath, newName)
-    );
-  }
-
-  /**
    * Sync to call a helper to run shared code.
    * @param {string} helperName - snippet helper name, it can be a http url, file path or a helper name
    * @param options - options can be anything it needs to be passed to the helper
