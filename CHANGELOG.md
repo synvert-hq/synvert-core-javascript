@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.15.0 (2023-06-06)
+
+* Remove `ALLOW_INSERT_AT_SAME_POSITION` strategy
+* Add `GonzalesPe` to parse css, less, sass, and scss
+* Add new api `renameFileTo` and `renameFileToSync`
+
 ## 2.14.0 (2023-06-01)
 
 * Add `Helper` for shared snippet
