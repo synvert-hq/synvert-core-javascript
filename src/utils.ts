@@ -23,7 +23,7 @@ const CONDITION_METHODS =
 // delete is a reserved word, we define another expression in GLOBAL_DSL_QUERY
 const ACTION_METHODS =
   "append prepend insert insertAfter insertBefore remove replace replaceWith noop";
-const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
+const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} renameFileTo callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
 
 export const arrayBody = <T>(node: T): T[] => {
   switch (NodeQuery.getAdapter().getNodeType(node)) {
@@ -156,7 +156,9 @@ const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
 );
 const GLOBAL_DSL_QUERY = new NodeQuery<ts.Node>(
-  `.CallExpression[expression IN (${ALL_METHODS})], .DeleteExpression[expression=.ParenthesizedExpression[expression.nodeType IN (StringLiteral ArrayLiteralExpression)]]`
+  `.CallExpression[expression IN (${ALL_METHODS})],
+  .DeleteExpression[expression=.ParenthesizedExpression[expression.nodeType IN (StringLiteral ArrayLiteralExpression)]],
+  .DeleteExpression[expression=.ParenthesizedExpression[expression=.BinaryExpression[left.nodeType IN (StringLiteral ArrayLiteralExpression)][right.nodeType=ObjectLiteralExpression]]]`
 );
 
 const addProperScopeToSnippet = (snippet: string): string => {
