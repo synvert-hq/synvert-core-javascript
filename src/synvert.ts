@@ -16,6 +16,10 @@ const ALL_JS_FILES = "**/*.{js,jsx}";
 const ALL_TS_FILES = "**/*.{ts,tsx}";
 const ALL_HTML_FILES = "**/*.html";
 const ALL_RAILS_ERB_FILES = "**/*.html.erb";
+const ALL_CSS_FILES = "**/*.css";
+const ALL_LESS_FILES = "**/*.less";
+const ALL_SASS_FILES = "**/*.sass";
+const ALL_SCSS_FILES = "**/*.scss";
 
 const pjson = require("../package.json");
 const version = pjson.version;
@@ -29,6 +33,10 @@ export {
   ALL_TS_FILES,
   ALL_HTML_FILES,
   ALL_RAILS_ERB_FILES,
+  ALL_CSS_FILES,
+  ALL_LESS_FILES,
+  ALL_SASS_FILES,
+  ALL_SCSS_FILES,
   version,
   evalSnippet,
   evalSnippetSync,
