@@ -900,7 +900,7 @@ class Instance<T> {
    * @param {string} [options.to] - selector to find the child ast node
    * @param {string} [options.newLinePosition] - before or after to insert newLine
    */
-  insertAfter(code: string, options: NewLineInsertOptions): void {
+  insertAfter(code: string, options: NewLineInsertOptions = {}): void {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
@@ -930,7 +930,7 @@ class Instance<T> {
    * @param {string} [options.to] - selector to find the child ast node
    * @param {string} [options.newLinePosition] - before or after to insert newLine
    */
-  insertBefore(code: string, options: NewLineInsertOptions): void {
+  insertBefore(code: string, options: NewLineInsertOptions = {}): void {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
