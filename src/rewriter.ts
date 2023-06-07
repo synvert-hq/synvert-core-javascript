@@ -541,13 +541,17 @@ class Rewriter<T> {
    * @param {string} filePattern - pattern to find files, e.g. *.scss
    * @param {string | (string) => string} convertFunc - new file path string or function to convert file path to new file path.
    */
-  renameFileSync(filePattern: string, convertFunc: string | ((filePath: string) => string)): void {
+  renameFileSync(
+    filePattern: string,
+    convertFunc: string | ((filePath: string) => string)
+  ): void {
     globSync(filePattern).forEach((filePath: string) => {
-      const newFilePath = typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
+      const newFilePath =
+        typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
       fs.renameSync(
         path.join(Configuration.rootPath, filePath),
         path.join(Configuration.rootPath, newFilePath)
-      )
+      );
     });
   }
 
@@ -556,10 +560,14 @@ class Rewriter<T> {
    * @param {string} filePattern - pattern to find files, e.g. *.scss
    * @param {string | (string) => string} convertFunc - new file path string or function to convert file path to new file path.
    */
-  async renameFile(filePattern: string, convertFunc: string | ((filePath: string) => string)): Promise<void> {
+  async renameFile(
+    filePattern: string,
+    convertFunc: string | ((filePath: string) => string)
+  ): Promise<void> {
     const filePaths = await glob(filePattern);
     filePaths.map(async (filePath: string) => {
-      const newFilePath = typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
+      const newFilePath =
+        typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
       await promisesFs.rename(
         path.join(Configuration.rootPath, filePath),
         path.join(Configuration.rootPath, newFilePath)

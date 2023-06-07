@@ -16,7 +16,8 @@ import Rewriter from "./rewriter";
 import Configuration from "./configuration";
 import Helper from "./helper";
 
-const REWRITER_METHODS = "addFile removeFile renameFile withinFiles withinFile addSnippet";
+const REWRITER_METHODS =
+  "addFile removeFile renameFile withinFiles withinFile addSnippet";
 const SCOPE_METHODS = "withinNode withNode findNode gotoNode";
 const CONDITION_METHODS =
   "ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes";

@@ -287,7 +287,7 @@ describe("Instance", () => {
           this.insert(" {", { at: "end", to: "selector" });
           this.insertAfter("}", {
             to: "block",
-            conflictPosition
+            conflictPosition,
           });
         });
       });
