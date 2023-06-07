@@ -96,7 +96,7 @@ class Instance<T> {
       this.currentMutation = new NodeMutation<T>(source);
       this.mutationAdapter = NodeMutation.getAdapter();
       try {
-        const node = this.parseCode(this.filePath, source);
+        const node = this.parseCode(currentFilePath, source);
 
         this.processWithNodeSync(node, this.func);
 
