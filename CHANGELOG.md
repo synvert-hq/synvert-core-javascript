@@ -1,5 +1,10 @@
 # CHANGELOG
 
+
+## 2.16.2 (2023-06-07)
+
+* Fix file path when sync parse code
+
 ## 2.16.1 (2023-06-07)
 
 * Fix jsdoc
