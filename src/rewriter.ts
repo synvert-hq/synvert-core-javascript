@@ -539,7 +539,7 @@ class Rewriter<T> {
   /**
    * Sync to rename filepath to new filepath.
    * @param {string} filePattern - pattern to find files, e.g. *.scss
-   * @param {string | (string) => string} convertFunc - new file path string or function to convert file path to new file path.
+   * @param {string|Function} convertFunc - new file path string or function to convert file path to new file path.
    */
   renameFileSync(
     filePattern: string,
@@ -558,7 +558,7 @@ class Rewriter<T> {
   /**
    * Rename filepath to new filepath.
    * @param {string} filePattern - pattern to find files, e.g. *.scss
-   * @param {string | (string) => string} convertFunc - new file path string or function to convert file path to new file path.
+   * @param {string|Function} convertFunc - new file path string or function to convert file path to new file path.
    */
   async renameFile(
     filePattern: string,
