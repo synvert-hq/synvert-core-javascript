@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.16.1 (2023-06-07)
+
+* Fix jsdoc
+* Add default value to `insertAfter` and `insertBefore` apis
+* Remove `newLinePosition` option for `insertBefore` api
+
 ## 2.16.0 (2023-06-06)
 
 * Export `ALL_CSS_FILES`, `ALL_LESS_FILES`, `ALL_SASS_FILES`, and `ALL_SCSS_FILES`
