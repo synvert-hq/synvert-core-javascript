@@ -928,16 +928,12 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
-   * @param {string} [options.newLinePosition] - before or after to insert newLine
    */
-  insertBefore(code: string, options: NewLineInsertOptions = {}): void {
+  insertBefore(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    const codeWithNewLine =
-      options.newLinePosition === "before"
-        ? `\n${column}${code}`
-        : `${column}${code}\n`;
+    const codeWithNewLine = `${code}\n${column}`;
     this.currentMutation.insert(this.currentNode, codeWithNewLine, {
       ...options,
       ...{ at: "beginning" },
