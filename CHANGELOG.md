@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.16.3 (2023-07-09)
+
+* Update `@xinminlabs/node-query` to 1.18.2
+* Update `@xinminlabs/node-mutation` to 1.12.0
 
 ## 2.16.2 (2023-06-07)
 
