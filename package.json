@@ -22,9 +22,9 @@
   "homepage": "https://github.com/xinminlabs/synvert-core-javascript#readme",
   "dependencies": {
     "@xinminlabs/espree": "^9.5.2",
-    "@xinminlabs/gonzales-pe": "^1.0.0",
-    "@xinminlabs/node-mutation": "^1.11.0",
-    "@xinminlabs/node-query": "^1.18.1",
+    "@xinminlabs/gonzales-pe": "^1.1.0",
+    "@xinminlabs/node-mutation": "^1.12.0",
+    "@xinminlabs/node-query": "^1.18.2",
     "@yarnpkg/lockfile": "^1.1.0",
     "compare-versions": "^3.6.0",
     "debug": "^4.3.4",
