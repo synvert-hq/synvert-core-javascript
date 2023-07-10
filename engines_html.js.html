@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Home - Documentation</title>
+    <title>engines/html.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,135 +29,35 @@
 
 <div id="main">
     
+    <h1 class="page-title">engines/html.js</h1>
+    
 
     
 
 
 
     
-
-
-
-
-
-
-
-
-
-    
-
-
-    <section class="readme">
-        <article><h1>synvert-core-javascript</h1>
-<img src="https://synvert.net/img/logo_96.png" alt="logo" width="32" height="32" />
-<p><img src="https://github.com/xinminlabs/synvert-core-javascript/actions/workflows/main.yml/badge.svg" alt="Main workflow">
-<a href="https://awesomecode.io/repos/xinminlabs/synvert-core-javascript"><img src="https://awesomecode.io/projects/24366d99-29b2-407f-a7b8-9773e59f8cd0/status" alt="AwesomeCode Status for xinminlabs/synvert-core-javascript"></a></p>
-<p>Synvert core provides a set of DSLs to rewrite javascript code. e.g.</p>
-<pre class="prettyprint source lang-javascript"><code>const Synvert = require(&quot;synvert-core&quot;);
-
-new Synvert.Rewriter(&quot;jquery&quot;, &quot;deprecate-event-shorthand&quot;, () => {
-  description('jQuery event shorthand is deprecated.');
-
-  withinFiles(Synvert.ALL_FILES, function () {
-    // $('#test').click(function(e) { });
-    // =>
-    // $('#test').on('click', function(e) { });
-    findNode(`.CallExpression[callee=.MemberExpression[object IN (/^\\$/ /^jQuery/)][property=click]]
-                [arguments.length=1][arguments.0.type IN (FunctionExpression ArrowFunctionExpression)]`, () => {
-      replace(&quot;callee.property&quot;, { with: &quot;on&quot; });
-      insert(&quot;'click', &quot;, { to: &quot;arguments.0&quot;, at: &quot;beginning&quot; });
-    });
-
-    // $form.submit();
-    // =>
-    // $form.trigger('submit');
-    withNode(
-      {
-        nodeType: &quot;CallExpression&quot;,
-        callee: { nodeType: &quot;MemberExpression&quot;, object: /^\$/, property: 'submit' },
-        arguments: { length: 0 },
-      },
-      () => {
-        replace([&quot;callee.property&quot;, &quot;arguments&quot;], { with: &quot;trigger('submit')&quot; });
-      }
-    );
-  });
-});
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.encode = void 0;
+const convertMatchToSpaces = (match) => " ".repeat(match.length);
+/**
+ * Encode html string, leave only javascript code, replace other html code with whitespace.
+ * @param str {string} html string
+ * @returns {string} encoded string
+ */
+function encode(str) {
+    return str
+        .replace(/&lt;\/script>.*?&lt;script.*?>/gis, convertMatchToSpaces)
+        .replace(/^.*?&lt;script.*?>/is, convertMatchToSpaces)
+        .replace(/&lt;\/script>.*?$/is, convertMatchToSpaces);
+}
+exports.encode = encode;
 </code></pre>
-<p>Want to see more examples, check out <a href="https://github.com/xinminlabs/synvert-snippets-javascript">synvert-snippets-javascript</a>.</p>
-<p>Want to use the CLI, check out <a href="https://github.com/xinminlabs/synvert-javascript">synvert-javascript</a>.</p>
-<p>DSL are as follows</p>
-<ul>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#configure">configure</a> - configure the rewriter, set sourceTyep and parser</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#description">description</a> - set description of the rewriter</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNode">ifNode</a> - check if node version is greater than or equal to the specified node version</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#ifNpm">ifNpm</a> - check the version of the specifid npm package</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addFile">addFile</a> - add a new file</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addFileSync">addFileSync</a> - add a new file</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFile">removeFile</a> - remove a file</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#removeFileSync">removeFileSync</a> - remove a file</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#renameFile">renameFile</a> - rename filepath to new filepath</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#renameFileSync">renameFileSync</a> - rename filepath to new filepath</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFiles">withinFiles</a> - find specified files</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFilesSync">withinFilesSync</a> - find specified files</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFile">withinFile</a> - alias to withinFiles</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#withinFileSync">withinFileSync</a> - alias to withinFilesSync</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addSnippet">addSnippet</a> - call another snippet</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Rewriter.html#addSnippetSync">addSnippetSync</a> - call another snippet</li>
-</ul>
-<p>Scopes:</p>
-<ul>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withinNode">withinNode</a> - recursively find matching ast nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withinNodeSync">withinNodeSync</a> - recursively find matching ast nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNode">withNode</a> - alias to withNode</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#withNodeSync">withNodeSync</a> - alias to withNodeSync</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNode">findNode</a> - alias to withNode</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#findNodeSync">findNodeSync</a> - alias to withNodeSync</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNode">gotoNode</a> - go to a child node</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#gotoNodeSync">gotoNodeSync</a> - go to a child node</li>
-</ul>
-<p>Conditions:</p>
-<ul>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifExistNode">ifExistNode</a> - check if matching node exist in the child nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifExistNodeSync">ifExistNodeSync</a> - check if matching node exist in the child nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#unlessExistNode">unlessExistNode</a> - check if matching node does not exist in the child nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#unlessExistNodeSync">unlessExistNodeSync</a> - check if matching node does not exist in the child nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifOnlyExistNode">ifOnlyExistNode</a> - check if current node has only one child node and the child node matches</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifOnlyExistNodeSync">ifOnlyExistNodeSync</a> - check if current node has only one child node and the child node matches</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifAlNodes">ifAllNodes</a> - check if all nodes match or not</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#ifAlNodesSync">ifAllNodesSync</a> - check if all nodes match or not</li>
-</ul>
-<p>Actions:</p>
-<ul>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#append">append</a> - append the code to the bottom of the current node body</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#prepend">prepend</a> - prepend the code to the top of the current node body</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insert">insert</a> - insert code</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertAfter">insertAfter</a> - insert the code next to the current node</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#insertBefore">insertBefore</a> - insert the code previous to the current node</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replace">replace</a> - replace the code of specified child nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance#delete">delete</a> - delete code the code of specified child nodes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#remove">remove</a> - remove the whole code of current node</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replaceWith">replaceWith</a> - replace the whole code of current node</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#noop">noop</a> - no operation</li>
-</ul>
-<p>Others:</p>
-<ul>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelper">callHelper</a> - call a helper to run shared code</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#callHelperSync">callHelperSync</a> - call a helper to run shared code</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#wrapWithQuotes">wrapWithQuotes</a> - wrap string code with single or double quotes</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#appendSemicolon">appendSemicolon</a> - append semicolon to the end of the code</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#addLeadingSpaces">addLeadingSpaces</a> - add leading spaces to the code</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#indent">indent</a> - indent each line in a string code</li>
-</ul>
-<p>Properties:</p>
-<ul>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#filePath">filePath</a> - get the file path</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#currentNode">currentNode</a> - current ast node</li>
-<li><a href="https://xinminlabs.github.io/synvert-core-javascript/Instance.html#mutationAdapter">mutationAdapter</a> - get a <a href="https://github.com/xinminlabs/node-mutation-javascript/blob/main/src/adapter.ts">mutation adapter</a> to get some helper methods</li>
-</ul></article>
+        </article>
     </section>
-
-
 
 
 
