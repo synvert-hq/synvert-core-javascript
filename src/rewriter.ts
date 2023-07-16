@@ -545,7 +545,26 @@ class Rewriter<T> {
     filePattern: string,
     convertFunc: string | ((filePath: string) => string)
   ): void {
-    globSync(filePattern).forEach((filePath: string) => {
+    if (!this.options.runInstance) return;
+
+    const filePaths = globSync(filePattern);
+    if (!this.options.writeToFile) {
+      filePaths.forEach((filePath: string) => {
+        const newFilePath =
+          typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
+        const result = {
+          affected: true,
+          conflicted: false,
+          filePath,
+          newFilePath,
+          actions: [{ type: "rename_file", start: 0, end: -1 }],
+        }
+        this.testResults.push(result);
+      });
+      return;
+    }
+
+    filePaths.forEach((filePath: string) => {
       const newFilePath =
         typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
       fs.renameSync(
@@ -564,7 +583,25 @@ class Rewriter<T> {
     filePattern: string,
     convertFunc: string | ((filePath: string) => string)
   ): Promise<void> {
+    if (!this.options.runInstance) return;
+
     const filePaths = await glob(filePattern);
+    if (!this.options.writeToFile) {
+      filePaths.forEach((filePath: string) => {
+        const newFilePath =
+          typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
+        const result = {
+          affected: true,
+          conflicted: false,
+          filePath,
+          newFilePath,
+          actions: [{ type: "rename_file", start: 0, end: -1 }],
+        }
+        this.testResults.push(result);
+      });
+      return;
+    }
+
     filePaths.map(async (filePath: string) => {
       const newFilePath =
         typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
