@@ -558,7 +558,7 @@ class Rewriter<T> {
           filePath,
           newFilePath,
           actions: [{ type: "rename_file", start: 0, end: -1 }],
-        }
+        };
         this.testResults.push(result);
       });
       return;
@@ -596,7 +596,7 @@ class Rewriter<T> {
           filePath,
           newFilePath,
           actions: [{ type: "rename_file", start: 0, end: -1 }],
-        }
+        };
         this.testResults.push(result);
       });
       return;
