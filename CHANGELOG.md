@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.16.4 (2023-07-16)
+
+* Do not rename file if options `writeToFile` is false
+
 ## 2.16.3 (2023-07-09)
 
 * Update `@xinminlabs/node-query` to 1.18.2
