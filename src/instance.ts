@@ -1020,6 +1020,19 @@ class Instance<T> {
   }
 
   /**
+   * Group actions.
+   * @example
+   * group(() => {
+   *   delete("leftCurlyBracket");
+   *   delete("rightCurlyBracket", { wholeLine: true });
+   * });
+   * @param {Function} func
+   */
+  group(func: () => {}): void {
+    this.currentMutation.group(func);
+  }
+
+  /**
    * Sync to call a helper to run shared code.
    * @param {string} helperName - snippet helper name, it can be a http url, file path or a helper name
    * @param options - options can be anything it needs to be passed to the helper

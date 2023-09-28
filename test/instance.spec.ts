@@ -218,8 +218,10 @@ describe("Instance", () => {
           this.remove();
         });
         this.findNodeSync(".block", () => {
-          this.delete("leftCurlyBracket");
-          this.delete("rightCurlyBracket", { wholeLine: true });
+          this.group(() => {
+            this.delete("leftCurlyBracket");
+            this.delete("rightCurlyBracket", { wholeLine: true });
+          });
         });
       });
       const input = dedent`
