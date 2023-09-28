@@ -97,6 +97,7 @@ Actions:
 * [remove](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#remove) - remove the whole code of current node
 * [replaceWith](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#replaceWith) - replace the whole code of current node
 * [noop](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#noop) - no operation
+* [group](https://xinminlabs.github.io/synvert-core-javascript/Instance.html#group) - group actions
 
 Others:
 
