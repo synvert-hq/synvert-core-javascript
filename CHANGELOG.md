@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.17.0 (2023-09-29)
+
+* Update `@xinminlabs/node-mutation` to 1.13.0
+* Add `group` dsl
+
 ## 2.16.4 (2023-07-16)
 
 * Do not rename file if options `writeToFile` is false
