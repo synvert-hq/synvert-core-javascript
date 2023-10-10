@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.2 (2023-10-09)
+
+* Allow `indent` negative value
+
 ## 2.17.1 (2023-10-09)
 
 * Add `group` to `ACTION_METHODS`
