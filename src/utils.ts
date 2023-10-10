@@ -23,7 +23,7 @@ const CONDITION_METHODS =
   "ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes";
 // delete is a reserved word, we define another expression in GLOBAL_DSL_QUERY
 const ACTION_METHODS =
-  "append prepend insert insertAfter insertBefore remove replace replaceWith noop";
+  "group append prepend insert insertAfter insertBefore remove replace replaceWith noop";
 const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
 
 export const arrayBody = <T>(node: T): T[] => {

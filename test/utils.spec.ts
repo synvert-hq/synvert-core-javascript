@@ -20,8 +20,10 @@ describe("rewriteSnippetToAsyncVersion", () => {
         withinFiles(Synvert.ALL_FILES, () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
-            replace("expresion.name", { with: "foobar" });
-            delete("expression.expression");
+            group(() => {
+              replace("expresion.name", { with: "foobar" });
+              delete("expression.expression");
+            });
           });
         });
       });
@@ -37,8 +39,10 @@ describe("rewriteSnippetToAsyncVersion", () => {
         withinFiles(Synvert.ALL_FILES, function () {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
-            replace("expresion.name", { with: "foobar" });
-            delete("expression.expression");
+            group(() => {
+              replace("expresion.name", { with: "foobar" });
+              delete("expression.expression");
+            });
           });
         });
       });
@@ -63,8 +67,10 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
-            this.replace("expresion.name", { with: "foobar" });
-            this.delete("expression.expression");
+            this.group(() => {
+              this.replace("expresion.name", { with: "foobar" });
+              this.delete("expression.expression");
+            });
           });
         });
       });
@@ -80,8 +86,10 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
-            this.replace("expresion.name", { with: "foobar" });
-            this.delete("expression.expression");
+            this.group(() => {
+              this.replace("expresion.name", { with: "foobar" });
+              this.delete("expression.expression");
+            });
           });
         });
       });
@@ -115,8 +123,10 @@ describe("rewriteSnippetToSyncVersion", () => {
         withinFiles(Synvert.ALL_FILES, () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
-            replace("expresion.name", { with: "foobar" });
-            delete("expression.expression");
+            group(() => {
+              replace("expresion.name", { with: "foobar" });
+              delete("expression.expression");
+            });
           });
         });
       });
@@ -137,8 +147,10 @@ describe("rewriteSnippetToSyncVersion", () => {
         this.withinFilesSync(Synvert.ALL_FILES, function () {
           this.callHelperSync("helper/foobar")
           this.findNodeSync(".CallExpression", () => {
-            this.replace("expresion.name", { with: "foobar" });
-            this.delete("expression.expression");
+            this.group(() => {
+              this.replace("expresion.name", { with: "foobar" });
+              this.delete("expression.expression");
+            });
           });
         });
       });
