@@ -1062,5 +1062,24 @@ describe("Instance", () => {
         newCode
       );
     });
+
+    describe("negative space count", () => {
+      const oldCode = `
+        class Foo {
+          bar() {
+            test()
+          }
+        }
+      `;
+      const newCode = `
+      class Foo {
+        bar() {
+          test()
+        }
+      }
+      `;
+      const instance = new Instance<Node>(rewriter, "code.ts", function () {});
+      expect(instance.indent(oldCode, -2)).toEqual(newCode);
+    });
   });
 });

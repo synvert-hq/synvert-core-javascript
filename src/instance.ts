@@ -1128,7 +1128,11 @@ class Instance<T> {
           firstLine = !firstLine;
           return line;
         }
-        return " ".repeat(spaceCount) + line;
+        if (spaceCount > 0) {
+          return " ".repeat(spaceCount) + line;
+        } else {
+          return line.slice(-spaceCount);
+        }
       })
       .join("\n");
   }
