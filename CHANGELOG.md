@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.1 (2023-10-09)
+
+* Add `group` to `ACTION_METHODS`
+
 ## 2.17.0 (2023-09-29)
 
 * Update `@xinminlabs/node-mutation` to 1.13.0
