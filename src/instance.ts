@@ -22,6 +22,7 @@ import NodeMutation, {
   InsertOptions,
   ReplaceOptions,
   DeleteOptions,
+  RemoveOptions,
   Adapter as MutationAdapter,
 } from "@xinminlabs/node-mutation";
 import { Parser, NewLineInsertOptions } from "./types/options";
@@ -879,6 +880,8 @@ class Instance<T> {
    * @param {Object} options
    * @param {string} [options.at = "end"] - insert position, beginning or end
    * @param {string} [option.to] - selector to find the child ast node
+   * @param {boolean} [option.andComma] - insert additional comma
+   * @param {boolean} [option.andSpace] - insert additional space
    */
   insert(code: string, options: InsertOptions): void {
     this.currentMutation.insert(this.currentNode, code, options);
@@ -899,6 +902,8 @@ class Instance<T> {
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
    * @param {string} [options.newLinePosition] - before or after to insert newLine
+   * @param {boolean} [option.andComma] - insert additional comma
+   * @param {boolean} [option.andSpace] - insert additional space
    */
   insertAfter(code: string, options: NewLineInsertOptions = {}): void {
     const column = " ".repeat(
@@ -928,6 +933,8 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
+   * @param {boolean} [option.andComma] - insert additional comma
+   * @param {boolean} [option.andSpace] - insert additional space
    */
   insertBefore(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
@@ -953,6 +960,7 @@ class Instance<T> {
    * @param {string|string[]} selectors - name of child nodes
    * @param {Object} options
    * @param {boolean} [options.wholeLine = false] - remove the whole line
+   * @param {boolean} [option.andComma] - delete additional comma
    */
   delete(selectors: string | string[], options: DeleteOptions): void {
     this.currentMutation.delete(this.currentNode, selectors, options);
@@ -973,9 +981,11 @@ class Instance<T> {
    * withNode({ nodeType: "MethodDefinition", kind: "constructor" }, () => {
    *   remove();
    * });
+   * @param {Object} options
+   * @param {boolean} [option.andComma] - remove additional comma
    */
-  remove(): void {
-    this.currentMutation.remove(this.currentNode);
+  remove(options: RemoveOptions): void {
+    this.currentMutation.remove(this.currentNode, options);
   }
 
   /**
