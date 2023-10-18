@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.17.5 (2023-10-18)
+
+* Update `@xinminlabs/node-mutation` to 1.15.1
+* Prepare before `processSync`
+
 ## 2.17.4 (2023-10-18)
 
 * Update `@xinminlabs/node-mutation` to 1.15.0
