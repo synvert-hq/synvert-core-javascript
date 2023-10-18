@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.17.4 (2023-10-18)
+
+* Update `@xinminlabs/node-mutation` to 1.15.0
+* Remove `newLinePosition` option from `insertAfter` dsl
+
+## 2.17.3 (2023-10-15)
+
+* Update `@xinminlabs/node-mutation` to 1.14.1
+* Update `insert`, `delete` and `remove` options
+
 ## 2.17.2 (2023-10-09)
 
 * Allow `indent` negative value
