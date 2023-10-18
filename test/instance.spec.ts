@@ -276,11 +276,12 @@ describe("Instance", () => {
           this.insert(";", { at: "end", conflictPosition: 0 });
         });
         this.findNodeSync(".mixin", () => {
-          const conflictPosition = -this.currentNode.start.column;
+          const column = NodeMutation.getAdapter().getStartLoc(this.currentNode).column;
+          const conflictPosition = -column;
           this.insert(" {", { at: "end", to: "arguments" });
-          this.insertAfter("}", {
+          this.insert(`}\n${" ".repeat(column)}`, {
             to: "block",
-            newLinePosition: "after",
+            at: "end",
             conflictPosition,
           });
         });

@@ -901,7 +901,6 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
-   * @param {string} [options.newLinePosition] - before or after to insert newLine
    * @param {boolean} [option.andComma] - insert additional comma
    * @param {boolean} [option.andSpace] - insert additional space
    */
@@ -909,11 +908,7 @@ class Instance<T> {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    const codeWithNewLine =
-      options.newLinePosition === "after"
-        ? `${column}${code}\n`
-        : `\n${column}${code}`;
-    this.currentMutation.insert(this.currentNode, codeWithNewLine, {
+    this.currentMutation.insert(this.currentNode, `\n${column}${code}`, {
       ...options,
       ...{ at: "end" },
     });
@@ -940,8 +935,7 @@ class Instance<T> {
     const column = " ".repeat(
       NodeMutation.getAdapter().getStartLoc(this.currentNode).column
     );
-    const codeWithNewLine = `${code}\n${column}`;
-    this.currentMutation.insert(this.currentNode, codeWithNewLine, {
+    this.currentMutation.insert(this.currentNode, `${code}\n${column}`, {
       ...options,
       ...{ at: "beginning" },
     });
