@@ -109,6 +109,7 @@ class Rewriter<T> {
    * Sync to process the rewriter.
    */
   processSync(): void {
+    this.prepare();
     this.affectedFiles = new Set<string>();
     this.func.call(this, this);
   }
