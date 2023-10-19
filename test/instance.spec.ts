@@ -276,8 +276,8 @@ describe("Instance", () => {
           this.insert(";", { at: "end", conflictPosition: 0 });
         });
         this.findNodeSync(".mixin", () => {
-          const column = NodeMutation.getAdapter().getStartLoc(this.currentNode).column;
-          const conflictPosition = -column;
+          const column = this.currentNode.start.column - 1;
+          const conflictPosition = 1 - column;
           this.insert(" {", { at: "end", to: "arguments" });
           this.insert(`}\n${" ".repeat(column)}`, {
             to: "block",
@@ -286,7 +286,9 @@ describe("Instance", () => {
           });
         });
         this.findNodeSync(".ruleset", () => {
-          const conflictPosition = -this.currentNode.start.column;
+          const column = this.currentNode.start.column - 1;
+          const conflictPosition = 1 - column;
+          console.log('conflict position', conflictPosition)
           this.insert(" {", { at: "end", to: "selector" });
           this.insertAfter("}", {
             to: "block",
