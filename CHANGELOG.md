@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.17.6 (2023-10-20)
+
+* Update `@xinminlabs/node-mutation` to 1.15.3
+* Fix `insertAfter` to child node
+
 ## 2.17.5 (2023-10-18)
 
 * Update `@xinminlabs/node-mutation` to 1.15.1
