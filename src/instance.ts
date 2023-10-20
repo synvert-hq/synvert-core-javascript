@@ -906,7 +906,7 @@ class Instance<T> {
    */
   insertAfter(code: string, options: NewLineInsertOptions = {}): void {
     const column = " ".repeat(
-      NodeMutation.getAdapter().getStartLoc(this.currentNode).column
+      NodeMutation.getAdapter().getStartLoc(this.currentNode, options.to).column
     );
     this.currentMutation.insert(this.currentNode, `\n${column}${code}`, {
       ...options,
@@ -933,7 +933,7 @@ class Instance<T> {
    */
   insertBefore(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
-      NodeMutation.getAdapter().getStartLoc(this.currentNode).column
+      NodeMutation.getAdapter().getStartLoc(this.currentNode, options.to).column
     );
     this.currentMutation.insert(this.currentNode, `${code}\n${column}`, {
       ...options,

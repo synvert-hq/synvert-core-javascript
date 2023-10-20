@@ -288,10 +288,10 @@ describe("Instance", () => {
         this.findNodeSync(".ruleset", () => {
           const column = this.currentNode.start.column - 1;
           const conflictPosition = 1 - column;
-          console.log('conflict position', conflictPosition)
           this.insert(" {", { at: "end", to: "selector" });
-          this.insertAfter("}", {
+          this.insert(`\n${" ".repeat(column)}}`, {
             to: "block",
+            at: "end",
             conflictPosition,
           });
         });
