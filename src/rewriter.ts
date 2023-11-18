@@ -100,7 +100,7 @@ class Rewriter<T> {
   constructor(
     public group: string,
     public name: string,
-    private func: (rewriter: Rewriter<T>) => void
+    private func: (rewriter: Rewriter<T>) => void,
   ) {
     Rewriter.register(group, name, this);
   }
@@ -336,7 +336,7 @@ class Rewriter<T> {
    */
   withinFilesSync(
     filePattern: string,
-    func: (instance: Instance<T>) => void
+    func: (instance: Instance<T>) => void,
   ): void {
     if (!this.options.runInstance) return;
     if (this.nodeVersion && !this.nodeVersion.match()) return;
@@ -389,7 +389,7 @@ class Rewriter<T> {
    */
   async withinFiles(
     filePattern: string,
-    func: (instance: Instance<T>) => void
+    func: (instance: Instance<T>) => void,
   ): Promise<void> {
     if (!this.options.runInstance) return;
     if (this.nodeVersion && !(await this.nodeVersion.match())) return;
@@ -408,7 +408,7 @@ class Rewriter<T> {
         filePaths.map((filePath) => {
           const instance = new Instance<T>(this, filePath, func);
           return instance.process();
-        })
+        }),
       );
     } else {
       if (
@@ -425,7 +425,7 @@ class Rewriter<T> {
         filePaths.map((filePath) => {
           const instance = new Instance<T>(this, filePath, func);
           return instance.test();
-        })
+        }),
       );
       this.mergeTestResults(results);
     }
@@ -544,7 +544,7 @@ class Rewriter<T> {
    */
   renameFileSync(
     filePattern: string,
-    convertFunc: string | ((filePath: string) => string)
+    convertFunc: string | ((filePath: string) => string),
   ): void {
     if (!this.options.runInstance) return;
 
@@ -570,7 +570,7 @@ class Rewriter<T> {
         typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
       fs.renameSync(
         path.join(Configuration.rootPath, filePath),
-        path.join(Configuration.rootPath, newFilePath)
+        path.join(Configuration.rootPath, newFilePath),
       );
     });
   }
@@ -582,7 +582,7 @@ class Rewriter<T> {
    */
   async renameFile(
     filePattern: string,
-    convertFunc: string | ((filePath: string) => string)
+    convertFunc: string | ((filePath: string) => string),
   ): Promise<void> {
     if (!this.options.runInstance) return;
 
@@ -608,7 +608,7 @@ class Rewriter<T> {
         typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
       await promisesFs.rename(
         path.join(Configuration.rootPath, filePath),
-        path.join(Configuration.rootPath, newFilePath)
+        path.join(Configuration.rootPath, newFilePath),
       );
     });
   }

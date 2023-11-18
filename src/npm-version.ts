@@ -15,7 +15,10 @@ class NpmVersion {
    * @param {string} name - npm name
    * @param {string} version - npm version, e.g. ">= 1.0.0"
    */
-  constructor(public name: string, public version: string) {}
+  constructor(
+    public name: string,
+    public version: string,
+  ) {}
 
   /**
    * Sync to check if the specified npm version in package-lock.json or
@@ -32,7 +35,7 @@ class NpmVersion {
       return compareVersions.compare(
         packageVersion,
         version,
-        operator as compareVersions.CompareOperator
+        operator as compareVersions.CompareOperator,
       );
     }
     if (this.yarnLockExistSync()) {
@@ -40,7 +43,7 @@ class NpmVersion {
       return compareVersions.compare(
         packageVersion,
         version,
-        operator as compareVersions.CompareOperator
+        operator as compareVersions.CompareOperator,
       );
     }
 
@@ -63,7 +66,7 @@ class NpmVersion {
       return compareVersions.compare(
         packageVersion,
         version,
-        operator as compareVersions.CompareOperator
+        operator as compareVersions.CompareOperator,
       );
     }
     if (await this.yarnLockExist()) {
@@ -71,7 +74,7 @@ class NpmVersion {
       return compareVersions.compare(
         packageVersion,
         version,
-        operator as compareVersions.CompareOperator
+        operator as compareVersions.CompareOperator,
       );
     }
 

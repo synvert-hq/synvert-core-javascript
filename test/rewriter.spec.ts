@@ -33,7 +33,7 @@ describe("static register", () => {
         "snippet name",
         function () {
           this.configure({ sourceType: SourceType.SCRIPT });
-        }
+        },
       );
       expect(rewriter.options.sourceType).toBe(SourceType.MODULE);
       rewriter.processSync();
@@ -56,10 +56,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {}`;
       const output = `class Synvert {}`;
@@ -78,10 +78,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {} //` + "a".repeat(10240);
       mock({ "code.js": input });
@@ -99,10 +99,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {}`;
       const output = `class Synvert {}`;
@@ -121,10 +121,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {} //` + "a".repeat(10240);
       mock({ "code.js": input });
@@ -148,10 +148,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
@@ -169,10 +169,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
@@ -196,10 +196,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
@@ -224,10 +224,10 @@ describe("static register", () => {
               { nodeType: "ClassDeclaration", name: "FooBar" },
               () => {
                 this.replace("name", { with: "Synvert" });
-              }
+              },
             );
           });
-        }
+        },
       );
       const input = `class FooBar {}`;
       mock({ "code.js": input });
@@ -251,7 +251,7 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.addFileSync("foobar.js", "foobar");
-          }
+          },
         );
         rewriter.processSync();
         expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("foobar");
@@ -265,7 +265,7 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.addFileSync("foobar.js", "foobar");
-          }
+          },
         );
         rewriter.processSync();
         expect(fs.readFileSync("foobar.js", "utf-8")).toEqual("old");
@@ -278,7 +278,7 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.addFileSync("foobar.js", "foobar");
-          }
+          },
         );
         const results = rewriter.testSync();
         expect(results[0].filePath).toEqual("foobar.js");
@@ -297,11 +297,11 @@ describe("static register", () => {
           "snippet name",
           async function () {
             await this.addFile("foobar.js", "foobar");
-          }
+          },
         );
         await rewriter.process();
         expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual(
-          "foobar"
+          "foobar",
         );
         await promisesFs.rm("foobar.js");
       });
@@ -312,7 +312,7 @@ describe("static register", () => {
           "snippet name",
           async function () {
             this.addFileSync("foobar.js", "foobar");
-          }
+          },
         );
         const results = await rewriter.test();
         expect(results[0].filePath).toEqual("foobar.js");
@@ -334,7 +334,7 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.removeFileSync("foobar.js");
-          }
+          },
         );
         rewriter.processSync();
         expect(isValidFileSync("foobar.js")).toBeFalsy();
@@ -346,7 +346,7 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.removeFileSync("foobar.js");
-          }
+          },
         );
         rewriter.processSync();
         expect(isValidFileSync("foobar.js")).toBeFalsy();
@@ -359,7 +359,7 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.removeFileSync("foobar.js");
-          }
+          },
         );
         const results = rewriter.testSync();
         expect(results[0].filePath).toEqual("foobar.js");
@@ -380,7 +380,7 @@ describe("static register", () => {
           "snippet name",
           async function () {
             await this.removeFile("foobar.js");
-          }
+          },
         );
         await rewriter.process();
         expect(await isValidFile("foobar.js")).toBeFalsy();
@@ -393,7 +393,7 @@ describe("static register", () => {
           "snippet name",
           async function () {
             this.removeFileSync("foobar.js");
-          }
+          },
         );
         const results = await rewriter.test();
         expect(results[0].filePath).toEqual("foobar.js");
@@ -419,7 +419,7 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.renameFileSync("foo.js", "bar.js");
-          }
+          },
         );
         mock({ "foo.js": "foobar" });
         rewriter.processSync();
@@ -432,9 +432,9 @@ describe("static register", () => {
           "snippet name",
           function () {
             this.renameFileSync("*.js", (filename: string) =>
-              filename.replace(".js", ".ts")
+              filename.replace(".js", ".ts"),
             );
-          }
+          },
         );
         mock({ "foo.js": "foo", "bar.js": "bar" });
         rewriter.processSync();
@@ -450,7 +450,7 @@ describe("static register", () => {
           "snippet name",
           async function () {
             await this.renameFile("foo.js", "bar.js");
-          }
+          },
         );
         mock({ "foo.js": "foobar" });
         await rewriter.process();
@@ -463,9 +463,9 @@ describe("static register", () => {
           "snippet name",
           async function () {
             await this.renameFile("*.js", (filename: string) =>
-              filename.replace(".js", ".ts")
+              filename.replace(".js", ".ts"),
             );
-          }
+          },
         );
         mock({ "foo.js": "foo", "bar.js": "bar" });
         await rewriter.process();
@@ -480,7 +480,7 @@ describe("static register", () => {
       const rewriter = new Rewriter<Node>(
         "snippet group",
         "snippet name",
-        function () {}
+        function () {},
       );
       expect(rewriter.group).toBe("snippet group");
       expect(rewriter.name).toBe("snippet name");
@@ -498,11 +498,11 @@ describe("static register", () => {
 
           foo.bar
           `);
-        }
+        },
       );
       rewriter.process();
       expect(rewriter.description()).toBe(
-        `this is a snippet description.\n\nfoo.bar\n`
+        `this is a snippet description.\n\nfoo.bar\n`,
       );
     });
   });

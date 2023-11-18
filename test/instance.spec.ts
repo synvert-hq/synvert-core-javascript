@@ -18,7 +18,7 @@ describe("Instance", () => {
   const rewriter = new Rewriter<Node>(
     "snippet group",
     "snippet name",
-    () => {}
+    () => {},
   );
 
   describe("#filePath", () => {
@@ -44,7 +44,7 @@ describe("Instance", () => {
           ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
           () => {
             this.replace("expression.name", { with: "trimStart" });
-          }
+          },
         );
         this.withNodeSync(
           {
@@ -56,7 +56,7 @@ describe("Instance", () => {
           },
           () => {
             this.replace("expression.name", { with: "trimEnd" });
-          }
+          },
         );
       });
     });
@@ -115,7 +115,7 @@ describe("Instance", () => {
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
               this.replace("expression.name", { with: "trimStart" });
-            }
+            },
           );
           this.withNodeSync(
             {
@@ -127,9 +127,9 @@ describe("Instance", () => {
             },
             () => {
               this.replace("expression.name", { with: "trimEnd" });
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -165,7 +165,7 @@ describe("Instance", () => {
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
               this.replace("expression.name", { with: "trimStart" });
-            }
+            },
           );
           this.withNodeSync(
             {
@@ -177,9 +177,9 @@ describe("Instance", () => {
             },
             () => {
               this.replace("expression.name", { with: "trimEnd" });
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -210,7 +210,7 @@ describe("Instance", () => {
       const rewriter = new Rewriter<Node>(
         "scss",
         "convert_to_sass",
-        function () {}
+        function () {},
       );
       rewriter.configure({ parser: Parser.GONZALES_PE });
       instance = new Instance<Node>(rewriter, "code.scss", function () {
@@ -265,7 +265,7 @@ describe("Instance", () => {
       const rewriter = new Rewriter<Node>(
         "sass",
         "convert_to_scss",
-        function () {}
+        function () {},
       );
       rewriter.configure({ parser: Parser.GONZALES_PE });
       instance = new Instance<Node>(rewriter, "code.sass", function () {
@@ -342,7 +342,7 @@ describe("Instance", () => {
           ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
           () => {
             this.replace("expression.name", { with: "trimStart" });
-          }
+          },
         );
         await this.withNode(
           {
@@ -354,7 +354,7 @@ describe("Instance", () => {
           },
           () => {
             this.replace("expression.name", { with: "trimEnd" });
-          }
+          },
         );
       });
     });
@@ -413,7 +413,7 @@ describe("Instance", () => {
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
               this.replace("expression.name", { with: "trimStart" });
-            }
+            },
           );
           await this.withNode(
             {
@@ -425,9 +425,9 @@ describe("Instance", () => {
             },
             () => {
               this.replace("expression.name", { with: "trimEnd" });
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -463,7 +463,7 @@ describe("Instance", () => {
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
               this.replace("expression.name", { with: "trimStart" });
-            }
+            },
           );
           await this.withNode(
             {
@@ -475,9 +475,9 @@ describe("Instance", () => {
             },
             () => {
               this.replace("expression.name", { with: "trimEnd" });
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -502,7 +502,7 @@ describe("Instance", () => {
       mock({ "code.html.erb": input });
       await instance.process();
       expect(await promisesFs.readFile("code.html.erb", "utf8")).toEqual(
-        output
+        output,
       );
     });
   });
@@ -525,7 +525,7 @@ describe("Instance", () => {
           },
           () => {
             this.noop();
-          }
+          },
         );
       });
       const input = `
@@ -562,7 +562,7 @@ describe("Instance", () => {
           },
           () => {
             this.noop();
-          }
+          },
         );
       });
       const input = `
@@ -594,9 +594,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -640,9 +640,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -693,9 +693,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         const foo1 = bar.trimLeft();
@@ -734,9 +734,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         const foo1 = bar.trimLeft();
@@ -767,9 +767,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -813,9 +813,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -926,7 +926,7 @@ describe("Instance", () => {
         "code.ts",
         async function () {
           await this.callHelper("helpers/helper");
-        }
+        },
       );
       const input = `
         const foo1 = bar.trimLeft();
@@ -1020,7 +1020,7 @@ describe("Instance", () => {
     test("add leading spaces", () => {
       expect(instance.addLeadingSpaces("foo")).toEqual("  foo");
       expect(instance.addLeadingSpaces("foo", { tabSize: 2 })).toEqual(
-        "    foo"
+        "    foo",
       );
     });
   });
@@ -1062,7 +1062,7 @@ describe("Instance", () => {
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {});
       expect(instance.indent(oldCode, 2, { skipFirstLine: true })).toEqual(
-        newCode
+        newCode,
       );
     });
 

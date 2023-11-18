@@ -42,27 +42,27 @@ export const arrayBody = <T>(node: T): T[] => {
 };
 
 const NEW_REWRITER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression[modifiers=undefined]]`
+  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression[modifiers=undefined]]`,
 );
 
 const NEW_HELPER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`
+  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`,
 );
 
 const NEW_INSTANCE_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`
+    [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`,
 );
 
 const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
     [name IN (${SCOPE_METHODS} ${CONDITION_METHODS})]]
-    [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`
+    [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`,
 );
 
 const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`
+    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`,
 );
 
 /**
@@ -70,7 +70,7 @@ const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
  */
 export const rewriteSnippetToAsyncVersion = (
   snippet: string,
-  insertRequire: boolean = true
+  insertRequire: boolean = true,
 ): string => {
   return makeSureTypescriptAdapter(() => {
     let newSnippet = addProperScopeToSnippet(snippet);
@@ -80,16 +80,16 @@ export const rewriteSnippetToAsyncVersion = (
     const node = parseCode(newSnippet);
     const mutation = new NodeMutation<ts.Node>(newSnippet);
     NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" }),
     );
     NEW_HELPER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" }),
     );
     NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" }),
     );
     SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" }),
     );
     ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {
       if (
@@ -105,7 +105,7 @@ export const rewriteSnippetToAsyncVersion = (
 
 const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`
+    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`,
 );
 
 /**
@@ -113,7 +113,7 @@ const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
  */
 export const rewriteSnippetToSyncVersion = (
   snippet: string,
-  insertRequire: boolean = true
+  insertRequire: boolean = true,
 ): string => {
   return makeSureTypescriptAdapter(() => {
     let newSnippet = addProperScopeToSnippet(snippet);
@@ -123,7 +123,7 @@ export const rewriteSnippetToSyncVersion = (
     const node = parseCode(newSnippet);
     const mutation = new NodeMutation<ts.Node>(newSnippet);
     SYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "Sync", { at: "end", to: "expression" })
+      mutation.insert(node, "Sync", { at: "end", to: "expression" }),
     );
     const { affected, newSource } = mutation.process();
     return affected ? newSource! : newSnippet;
@@ -131,7 +131,7 @@ export const rewriteSnippetToSyncVersion = (
 };
 
 const NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY = new NodeQuery<ts.Node>(
-  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="synvert-core"]]]]])`
+  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="synvert-core"]]]]])`,
 );
 
 const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
@@ -147,19 +147,19 @@ const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
 };
 
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`
+  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`,
 );
 
 const NEW_HELPER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.ArrowFunction]`
+  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.ArrowFunction]`,
 );
 const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
+  `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`,
 );
 const GLOBAL_DSL_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression IN (${ALL_METHODS})],
   .DeleteExpression[expression=.ParenthesizedExpression[expression.nodeType IN (StringLiteral ArrayLiteralExpression)]],
-  .DeleteExpression[expression=.ParenthesizedExpression[expression=.BinaryExpression[left.nodeType IN (StringLiteral ArrayLiteralExpression)][right.nodeType=ObjectLiteralExpression]]]`
+  .DeleteExpression[expression=.ParenthesizedExpression[expression=.BinaryExpression[left.nodeType IN (StringLiteral ArrayLiteralExpression)][right.nodeType=ObjectLiteralExpression]]]`,
 );
 
 const addProperScopeToSnippet = (snippet: string): string => {
@@ -190,7 +190,7 @@ const parseCode = (snippet: string): ts.Node => {
     snippet,
     ts.ScriptTarget.Latest,
     true,
-    ts.ScriptKind.JS
+    ts.ScriptKind.JS,
   );
 };
 
@@ -223,7 +223,7 @@ export const globSync = (filePattern: string): string[] => {
       onlyFiles: true,
       unique: true,
       stats: true,
-    }
+    },
   );
   return fsStats
     .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
@@ -247,7 +247,7 @@ export const glob = async (filePattern: string): Promise<string[]> => {
       onlyFiles: true,
       unique: true,
       stats: true,
-    }
+    },
   );
   return fsStats
     .filter((fsStat) => fsStat.stats!.size < Configuration.maxFileSize)
@@ -270,7 +270,7 @@ export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
  * @returns {Promise<Rewriter>} a Rewriter object
  */
 export const evalSnippet = async <T>(
-  snippetName: string
+  snippetName: string,
 ): Promise<Rewriter<T>> => {
   return eval(await loadSnippet(snippetName));
 };
@@ -303,7 +303,7 @@ export const evalHelper = async <T>(helperName: string): Promise<Helper> => {
  */
 export const loadSnippetSync = (
   snippetName: string,
-  insertRequire: boolean = true
+  insertRequire: boolean = true,
 ): string => {
   const snippetContent = loadSnippetContentSync(snippetName);
   return rewriteSnippetToSyncVersion(snippetContent, insertRequire);
@@ -319,7 +319,7 @@ export const loadSnippetSync = (
  */
 export const loadSnippet = async (
   snippetName: string,
-  insertRequire: boolean = true
+  insertRequire: boolean = true,
 ): Promise<string> => {
   const snippetContent = await loadSnippetContent(snippetName);
   return rewriteSnippetToAsyncVersion(snippetContent, insertRequire);

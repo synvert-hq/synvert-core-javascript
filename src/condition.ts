@@ -31,7 +31,7 @@ abstract class Condition<T> {
     nqlOrRules: string | object,
     options: ConditionOptions<T>,
     func: (instance: Instance<T>) => void,
-    elseFunc?: (instance: Instance<T>) => void
+    elseFunc?: (instance: Instance<T>) => void,
   ) {
     this.nodeQuery = new NodeQuery<T>(nqlOrRules);
     this.options = options;
