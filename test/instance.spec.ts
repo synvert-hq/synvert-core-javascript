@@ -108,7 +108,7 @@ describe("Instance", () => {
 
     test("writes new code to html file", () => {
       instance = new Instance<Node>(
-        new Rewriter<Node>("grup", "name", function () {}),
+        new Rewriter<Node>("group", "name", function () {}),
         "code.html",
         function () {
           this.findNodeSync(
@@ -158,7 +158,7 @@ describe("Instance", () => {
 
     test("writes new code to erb file", () => {
       instance = new Instance<Node>(
-        new Rewriter<Node>("grup", "name", function () {}),
+        new Rewriter<Node>("group", "name", function () {}),
         "code.html.erb",
         function () {
           this.findNodeSync(

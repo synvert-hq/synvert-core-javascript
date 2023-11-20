@@ -234,7 +234,7 @@
 
 ## 1.22.1 (2022-10-28)
 
-* node-mutation `espree` adpater `getSource` supports `fixIndent` option
+* node-mutation `espree` adapter `getSource` supports `fixIndent` option
 
 ## 1.22.0 (2022-10-28)
 
@@ -331,7 +331,7 @@
 
 ## 1.9.0 (2022-08-31)
 
-* Return relative path instea of absolute path
+* Return relative path instead of absolute path
 * Use `fast-glob` instead of `node-glob`
 
 ## 1.8.0 (2022-08-30)
@@ -383,7 +383,7 @@
 
 ## 1.4.0 (2022-08-05)
 
-* Add `Rewrter.execute` method.
+* Add `Rewriter.execute` method.
 
 ## 1.3.0 (2022-07-02)
 
@@ -515,7 +515,7 @@
 ## 0.22.0 (2021-09-25)
 
 * Export `Synvert.version`
-* Return the range of source code in `rewrttenSource`
+* Return the range of source code in `rewrittenSource`
 * Fix `remove` endPos
 * Fix `remove` parameter
 * Compatible with npm lockfile version 1 and 2
@@ -575,7 +575,7 @@
 
 ## 0.11.0 (2021-08-29)
 
-* Ignore node_modues
+* Ignore node_modules
 * Set sourceType to module
 * Add `NotSupportedError`
 * Add `RewriterNotFoundError`
