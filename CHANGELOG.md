@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.8 (2023-11-24)
+
+* Update `@xinminlabs/node-mutation` to 1.15.11
+
 ## 2.17.7 (2023-11-18)
 
 * Update `@xinminlabs/node-mutation` to 1.15.9
