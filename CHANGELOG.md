@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.18.0 (2023-12-01)
+
+* Update `@xinminlabs/node-query` to 1.19.0
+* Update `@xinminlabs/node-mutation` to 1.16.0
+* Initialize `NodeQuery` and `NodeMutation` with `adapter`
+
 ## 2.17.8 (2023-11-24)
 
 * Update `@xinminlabs/node-mutation` to 1.15.11
