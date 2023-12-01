@@ -31,7 +31,7 @@ class NodeVersion {
     }
     const version = fs.readFileSync(
       path.join(Configuration.rootPath, versionFile),
-      "utf-8"
+      "utf-8",
     );
     return compareVersions.compare(version, this.version, ">=");
   }
@@ -53,7 +53,7 @@ class NodeVersion {
     }
     const version = await promisesFs.readFile(
       path.join(Configuration.rootPath, versionFile),
-      "utf-8"
+      "utf-8",
     );
     return compareVersions.compare(version, this.version, ">=");
   }

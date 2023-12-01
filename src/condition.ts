@@ -31,7 +31,7 @@ abstract class Condition<T> {
     nqlOrRules: string | object,
     options: ConditionOptions<T>,
     func: (instance: Instance<T>) => void,
-    elseFunc?: (instance: Instance<T>) => void
+    elseFunc?: (instance: Instance<T>) => void,
   ) {
     this.nodeQuery = new NodeQuery<T>(nqlOrRules, { adapter: instance.parser });
     this.options = options;
@@ -165,7 +165,9 @@ class IfAllCondition<T> extends Condition<T> {
     if (typeof this.options.match === "function") {
       return this.options.match(node);
     } else {
-      return new NodeQuery<T>(this.options.match!, { adapter: this.instance.parser }).matchNode(node);
+      return new NodeQuery<T>(this.options.match!, {
+        adapter: this.instance.parser,
+      }).matchNode(node);
     }
   }
 }

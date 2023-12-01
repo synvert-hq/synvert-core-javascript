@@ -12,7 +12,7 @@ describe("Instance", () => {
   const rewriter = new Rewriter<Node>(
     "snippet group",
     "snippet name",
-    function () {}
+    function () {},
   );
   rewriter.options.parser = Parser.TYPESCRIPT;
 
@@ -30,7 +30,7 @@ describe("Instance", () => {
 
     test("get mutation adapter", () => {
       const instance = new Instance<Node>(rewriter, "code.ts", function () {});
-      mock({ "code.ts": ""});
+      mock({ "code.ts": "" });
       instance.processSync();
       expect(instance.mutationAdapter).not.toBeNull();
     });
@@ -45,7 +45,7 @@ describe("Instance", () => {
           ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
           () => {
             this.replace("expression.name", { with: "trimStart" });
-          }
+          },
         );
         this.withNodeSync(
           {
@@ -57,7 +57,7 @@ describe("Instance", () => {
           },
           () => {
             this.replace("expression.name", { with: "trimEnd" });
-          }
+          },
         );
       });
     });
@@ -116,7 +116,7 @@ describe("Instance", () => {
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
               this.replace("expression.name", { with: "trimStart" });
-            }
+            },
           );
           this.withNodeSync(
             {
@@ -128,9 +128,9 @@ describe("Instance", () => {
             },
             () => {
               this.replace("expression.name", { with: "trimEnd" });
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -160,30 +160,26 @@ describe("Instance", () => {
     test("writes new code to erb file", () => {
       const rewriter2 = new Rewriter<Node>("group", "name", function () {});
       rewriter.options.parser = Parser.TYPESCRIPT;
-      instance = new Instance<Node>(
-        rewriter2,
-        "code.html.erb",
-        function () {
-          this.findNodeSync(
-            ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
-            () => {
-              this.replace("expression.name", { with: "trimStart" });
-            }
-          );
-          this.withNodeSync(
-            {
-              nodeType: "CallExpression",
-              expression: {
-                nodeType: "PropertyAccessExpression",
-                name: "trimRight",
-              },
+      instance = new Instance<Node>(rewriter2, "code.html.erb", function () {
+        this.findNodeSync(
+          ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
+          () => {
+            this.replace("expression.name", { with: "trimStart" });
+          },
+        );
+        this.withNodeSync(
+          {
+            nodeType: "CallExpression",
+            expression: {
+              nodeType: "PropertyAccessExpression",
+              name: "trimRight",
             },
-            () => {
-              this.replace("expression.name", { with: "trimEnd" });
-            }
-          );
-        }
-      );
+          },
+          () => {
+            this.replace("expression.name", { with: "trimEnd" });
+          },
+        );
+      });
       const input = `
         <html>
           <body>
@@ -344,7 +340,7 @@ describe("Instance", () => {
           ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
           () => {
             this.replace("expression.name", { with: "trimStart" });
-          }
+          },
         );
         await this.withNode(
           {
@@ -356,7 +352,7 @@ describe("Instance", () => {
           },
           () => {
             this.replace("expression.name", { with: "trimEnd" });
-          }
+          },
         );
       });
     });
@@ -415,7 +411,7 @@ describe("Instance", () => {
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
               this.replace("expression.name", { with: "trimStart" });
-            }
+            },
           );
           await this.withNode(
             {
@@ -427,9 +423,9 @@ describe("Instance", () => {
             },
             () => {
               this.replace("expression.name", { with: "trimEnd" });
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -465,7 +461,7 @@ describe("Instance", () => {
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
               this.replace("expression.name", { with: "trimStart" });
-            }
+            },
           );
           await this.withNode(
             {
@@ -477,9 +473,9 @@ describe("Instance", () => {
             },
             () => {
               this.replace("expression.name", { with: "trimEnd" });
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -504,7 +500,7 @@ describe("Instance", () => {
       mock({ "code.html.erb": input });
       await instance.process();
       expect(await promisesFs.readFile("code.html.erb", "utf8")).toEqual(
-        output
+        output,
       );
     });
   });
@@ -527,7 +523,7 @@ describe("Instance", () => {
           },
           () => {
             this.noop();
-          }
+          },
         );
       });
       const input = `
@@ -564,7 +560,7 @@ describe("Instance", () => {
           },
           () => {
             this.noop();
-          }
+          },
         );
       });
       const input = `
@@ -596,9 +592,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -642,9 +638,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -695,9 +691,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         const foo1 = bar.trimLeft();
@@ -736,9 +732,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         const foo1 = bar.trimLeft();
@@ -769,9 +765,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -815,9 +811,9 @@ describe("Instance", () => {
             },
             () => {
               this.noop();
-            }
+            },
           );
-        }
+        },
       );
       const input = `
         <html>
@@ -924,7 +920,7 @@ describe("Instance", () => {
         "code.ts",
         async function () {
           await this.callHelper("helpers/helper");
-        }
+        },
       );
       const input = `
         const foo1 = bar.trimLeft();
@@ -1018,7 +1014,7 @@ describe("Instance", () => {
     test("add leading spaces", () => {
       expect(instance.addLeadingSpaces("foo")).toEqual("  foo");
       expect(instance.addLeadingSpaces("foo", { tabSize: 2 })).toEqual(
-        "    foo"
+        "    foo",
       );
     });
   });
@@ -1060,7 +1056,7 @@ describe("Instance", () => {
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {});
       expect(instance.indent(oldCode, 2, { skipFirstLine: true })).toEqual(
-        newCode
+        newCode,
       );
     });
 
