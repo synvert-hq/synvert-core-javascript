@@ -9,11 +9,11 @@ export function encode(str: string): string {
   return str
     .replace(
       /(<\/script>|<%.*?end.*?>).*?(<script.*?>|<%=.*?javascript_tag.*?%>)/gis,
-      convertMatchToSpaces
+      convertMatchToSpaces,
     )
     .replace(
       /^.*?(<script.*?>|<%=.*?javascript_tag.*?%>)/is,
-      convertMatchToSpaces
+      convertMatchToSpaces,
     )
     .replace(/(<\/script>|<%.*?end.*?>).*?$/is, convertMatchToSpaces);
 }

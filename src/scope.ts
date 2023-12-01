@@ -34,13 +34,13 @@ class WithinScope<T> extends Scope<T> {
     instance: Instance<T>,
     nqlOrRules: string | object,
     options: QueryOptions,
-    private func: (instance: Instance<T>) => void
+    private func: (instance: Instance<T>) => void,
   ) {
     super(instance);
     this.nodeQuery = new NodeQuery<T>(nqlOrRules, { adapter: instance.parser });
     this.options = Object.assign(
       { includingSelf: true, stopAtFirstMatch: false, recursive: true },
-      options
+      options,
     );
   }
 
@@ -77,7 +77,7 @@ class WithinScope<T> extends Scope<T> {
     await instance.processWithNode(currentNode, async () => {
       const matchingNodes = this.nodeQuery.queryNodes(
         currentNode,
-        this.options
+        this.options,
       );
       for (const matchingNode of matchingNodes) {
         await instance.processWithNode(matchingNode, async () => {
@@ -102,7 +102,7 @@ class GotoScope<T> extends Scope<T> {
   constructor(
     instance: Instance<T>,
     private childNodeName: string,
-    private func: (instance: Instance<T>) => void
+    private func: (instance: Instance<T>) => void,
   ) {
     super(instance);
   }
@@ -116,7 +116,10 @@ class GotoScope<T> extends Scope<T> {
 
     let childNode = currentNode;
     this.childNodeName.split(".").forEach((childNodeName) => {
-      childNode = Array.isArray(childNode) && /-?d+/.test(childNodeName) ? childNode[Number.parseInt(childNodeName)] : (childNode as any)[childNodeName];
+      childNode =
+        Array.isArray(childNode) && /-?d+/.test(childNodeName)
+          ? childNode[Number.parseInt(childNodeName)]
+          : (childNode as any)[childNodeName];
     });
     if (!childNode) return;
 
@@ -131,7 +134,10 @@ class GotoScope<T> extends Scope<T> {
 
     let childNode = currentNode;
     this.childNodeName.split(".").forEach((childNodeName) => {
-      childNode = Array.isArray(childNode) && /-?d+/.test(childNodeName) ? childNode[Number.parseInt(childNodeName)] : (childNode as any)[childNodeName];
+      childNode =
+        Array.isArray(childNode) && /-?d+/.test(childNodeName)
+          ? childNode[Number.parseInt(childNodeName)]
+          : (childNode as any)[childNodeName];
     });
     if (!childNode) return;
 

@@ -14,7 +14,7 @@ describe("Condition", () => {
   const rewriter = new Rewriter<Node>(
     "snippet group",
     "snippet name",
-    () => {}
+    () => {},
   );
   const instance = new Instance<Node>(rewriter, "", function () {});
 
@@ -45,7 +45,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(false);
       });
@@ -62,7 +62,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -79,7 +79,7 @@ describe("Condition", () => {
           { in: "expression" },
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -99,7 +99,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -127,7 +127,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(false);
@@ -145,7 +145,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -163,7 +163,7 @@ describe("Condition", () => {
           { in: "expression" },
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -184,7 +184,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -220,7 +220,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -237,7 +237,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(false);
       });
@@ -254,7 +254,7 @@ describe("Condition", () => {
           { in: "expression.expression" },
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -274,7 +274,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -302,7 +302,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -320,7 +320,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(false);
@@ -338,7 +338,7 @@ describe("Condition", () => {
           { in: "expression.expression" },
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -359,7 +359,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -396,7 +396,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(false);
       });
@@ -428,7 +428,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -446,7 +446,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -480,7 +480,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(false);
@@ -513,7 +513,7 @@ describe("Condition", () => {
           {},
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -532,7 +532,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -564,7 +564,7 @@ describe("Condition", () => {
           { match: { elements: { in: ["a", "b"] } } },
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(false);
       });
@@ -580,7 +580,7 @@ describe("Condition", () => {
           },
           function () {
             run = false;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -596,7 +596,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         ).processSync();
         expect(run).toBe(true);
       });
@@ -620,7 +620,7 @@ describe("Condition", () => {
           { match: { elements: { in: ["a", "b"] } } },
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(false);
@@ -637,7 +637,7 @@ describe("Condition", () => {
           },
           function () {
             run = false;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);
@@ -654,7 +654,7 @@ describe("Condition", () => {
           },
           function () {
             run = true;
-          }
+          },
         );
         await condition.process();
         expect(run).toBe(true);

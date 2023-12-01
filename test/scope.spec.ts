@@ -8,7 +8,7 @@ describe("Scope", () => {
   const rewriter = new Rewriter<Node>(
     "snippet group",
     "snippet name",
-    () => {}
+    () => {},
   );
   const instance = new Instance<Node>(rewriter, "", function () {});
 
@@ -30,7 +30,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           ).processSync();
           expect(run).toBe(false);
         });
@@ -43,7 +43,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           ).processSync();
           expect(run).toBe(true);
         });
@@ -58,7 +58,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           ).processSync();
           expect(run).toBe(false);
         });
@@ -71,7 +71,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           ).processSync();
           expect(run).toBe(true);
         });
@@ -92,7 +92,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           );
           await scope.process();
           expect(run).toBe(false);
@@ -106,7 +106,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           );
           await scope.process();
           expect(run).toBe(true);
@@ -122,7 +122,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           );
           await scope.process();
           expect(run).toBe(false);
@@ -136,7 +136,7 @@ describe("Scope", () => {
             {},
             function () {
               run = true;
-            }
+            },
           );
           await scope.process();
           expect(run).toBe(true);
