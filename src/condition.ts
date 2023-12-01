@@ -24,7 +24,7 @@ abstract class Condition<T> {
    * @param {string|Object} nqlOrRules - nql or rules to find nodes
    * @param {ConditionOptions} options - to do find in specific child node, e.g. `{ in: 'callee' }`
    * @param {Function} func - a function to be called if nql or rules are matched.
-   * @param {Function} elseFunc - a fucntion to be called if nql or rules are not matched.
+   * @param {Function} elseFunc - a function to be called if nql or rules are not matched.
    */
   constructor(
     protected instance: Instance<T>,
@@ -33,7 +33,7 @@ abstract class Condition<T> {
     func: (instance: Instance<T>) => void,
     elseFunc?: (instance: Instance<T>) => void
   ) {
-    this.nodeQuery = new NodeQuery<T>(nqlOrRules);
+    this.nodeQuery = new NodeQuery<T>(nqlOrRules, { adapter: instance.parser });
     this.options = options;
     this.func = func;
     this.elseFunc = elseFunc;
@@ -129,7 +129,7 @@ class IfOnlyExistCondition<T> extends Condition<T> {
     const targetNode = this.targetNode();
     if (!targetNode) return false;
 
-    const body = arrayBody(targetNode);
+    const body = arrayBody(targetNode, this.nodeQuery.adapter);
     return body.length === 1 && this.nodeQuery.matchNode(body[0]);
   }
 }
@@ -165,7 +165,7 @@ class IfAllCondition<T> extends Condition<T> {
     if (typeof this.options.match === "function") {
       return this.options.match(node);
     } else {
-      return new NodeQuery<T>(this.options.match!).matchNode(node);
+      return new NodeQuery<T>(this.options.match!, { adapter: this.instance.parser }).matchNode(node);
     }
   }
 }

@@ -44,14 +44,12 @@ const DEFAULT_ENGINES: { [extname: string]: Engine } = {
  * checks if the nodes match some conditions, then insert, replace or delete code.
  * One instance can contains one or many Scope and Condition.
  * @property {string} filePath - file path to run instance
- * @property {MutationAdapter} mutationAdapter - mutation adapter
  * @borrows Instance#withinNodeSync as Instance#withNodeSync
  * @borrows Instance#findNodeSync as Instance#withNodeSync
  * @borrows Instance#withinNode as Instance#withNode
  * @borrows Instance#findNode as Instance#withNode
  */
 class Instance<T> {
-  public mutationAdapter: MutationAdapter<any>;
   public currentNode!: T;
   private currentMutation!: NodeMutation<T>;
   public options: any;
@@ -72,7 +70,6 @@ class Instance<T> {
     public filePath: string,
     private func: (instance: Instance<T>) => void
   ) {
-    this.mutationAdapter = NodeMutation.getAdapter();
     let strategy = Strategy.KEEP_RUNNING;
     NodeMutation.configure({ strategy, tabWidth: Configuration.tabWidth });
   }
@@ -94,8 +91,7 @@ class Instance<T> {
     // It keeps running until no conflict.
     while (true) {
       const source = fs.readFileSync(currentFilePath, "utf-8");
-      this.currentMutation = new NodeMutation<T>(source);
-      this.mutationAdapter = NodeMutation.getAdapter();
+      this.currentMutation = new NodeMutation<T>(source, { adapter: this.rewriter.parser });
       try {
         const node = this.parseCode(currentFilePath, source);
 
@@ -138,8 +134,7 @@ class Instance<T> {
     // It keeps running until no conflict.
     while (true) {
       const source = await promisesFs.readFile(currentFilePath, "utf-8");
-      this.currentMutation = new NodeMutation<T>(source);
-      this.mutationAdapter = NodeMutation.getAdapter();
+      this.currentMutation = new NodeMutation<T>(source, { adapter: this.rewriter.parser });
       try {
         const node = this.parseCode(currentFilePath, source);
 
@@ -182,8 +177,7 @@ class Instance<T> {
     }
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = fs.readFileSync(currentFilePath, "utf-8");
-    this.currentMutation = new NodeMutation<T>(source);
-    this.mutationAdapter = NodeMutation.getAdapter();
+    this.currentMutation = new NodeMutation<T>(source, { adapter: this.rewriter.parser });
     const node = this.parseCode(currentFilePath, source);
 
     this.processWithNodeSync(node, this.func);
@@ -213,8 +207,7 @@ class Instance<T> {
     }
     const currentFilePath = path.join(Configuration.rootPath, this.filePath);
     const source = await promisesFs.readFile(currentFilePath, "utf-8");
-    this.currentMutation = new NodeMutation<T>(source);
-    this.mutationAdapter = NodeMutation.getAdapter();
+    this.currentMutation = new NodeMutation<T>(source, { adapter: this.rewriter.parser });
     const node = this.parseCode(currentFilePath, source);
 
     await this.processWithNode(node, this.func);
@@ -271,6 +264,24 @@ class Instance<T> {
     this.currentNode = node;
     await func.call(this, this);
     this.currentNode = originalNode;
+  }
+
+  /**
+   * Get rewriter's parser.
+   *
+   * @returns {string} parser
+   */
+  get parser(): string {
+    return this.rewriter.parser;
+  }
+
+  /**
+   * Get currentMutation's adapter.
+   *
+   * @returns {MutationAdapter<T>}
+   */
+  get mutationAdapter(): MutationAdapter<T> {
+    return this.currentMutation.adapter;
   }
 
   /**
@@ -906,7 +917,7 @@ class Instance<T> {
    */
   insertAfter(code: string, options: NewLineInsertOptions = {}): void {
     const column = " ".repeat(
-      NodeMutation.getAdapter().getStartLoc(this.currentNode, options.to).column
+      this.currentMutation.adapter.getStartLoc(this.currentNode, options.to).column
     );
     this.currentMutation.insert(this.currentNode, `\n${column}${code}`, {
       ...options,
@@ -933,7 +944,7 @@ class Instance<T> {
    */
   insertBefore(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
-      NodeMutation.getAdapter().getStartLoc(this.currentNode, options.to).column
+      this.currentMutation.adapter.getStartLoc(this.currentNode, options.to).column
     );
     this.currentMutation.insert(this.currentNode, `${code}\n${column}`, {
       ...options,

@@ -176,6 +176,10 @@ class Rewriter<T> {
     this.affectedFiles.add(filePath);
   }
 
+  get parser(): string {
+    return this.options.parser;
+  }
+
   /*******
    * DSL *
    *******/

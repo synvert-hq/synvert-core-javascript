@@ -1,15 +1,11 @@
-import ts from "typescript";
+import ts, { SyntaxKind } from "typescript";
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import fg from "fast-glob";
 import fetchSync from "sync-fetch";
 import { URL } from "url";
-import NodeQuery, {
-  TypescriptAdapter as TypescriptQueryAdapter,
-} from "@xinminlabs/node-query";
-import NodeMutation, {
-  TypescriptAdapter as TypescriptMutationAdapter,
-} from "@xinminlabs/node-mutation";
+import NodeQuery, { Adapter as NodeQueryAdapter } from "@xinminlabs/node-query";
+import NodeMutation from "@xinminlabs/node-mutation";
 
 import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
@@ -26,8 +22,8 @@ const ACTION_METHODS =
   "group append prepend insert insertAfter insertBefore remove replace replaceWith noop";
 const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
 
-export const arrayBody = <T>(node: T): T[] => {
-  switch (NodeQuery.getAdapter().getNodeType(node)) {
+export const arrayBody = <T>(node: T, nodeQueryAdapter: NodeQueryAdapter<T>): T[] => {
+  switch (nodeQueryAdapter.getNodeType(node)) {
     case "SourceFile":
       return (node as any)["statements"];
     case "ClassDeclaration":
@@ -42,27 +38,32 @@ export const arrayBody = <T>(node: T): T[] => {
 };
 
 const NEW_REWRITER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression[modifiers=undefined]]`
+  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.FunctionExpression[modifiers=undefined]]`,
+  { adapter: "typescript" },
 );
 
 const NEW_HELPER_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`
+  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`,
+  { adapter: "typescript" },
 );
 
 const NEW_INSTANCE_WITH_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`
+    [name IN (withinFiles withinFile)]][arguments.length=2][arguments.1=.FunctionExpression[modifiers=undefined]]`,
+  { adapter: "typescript" },
 );
 
 const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
     [name IN (${SCOPE_METHODS} ${CONDITION_METHODS})]]
-    [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`
+    [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`,
+  { adapter: "typescript" },
 );
 
 const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`
+    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`,
+  { adapter: "typescript" },
 );
 
 /**
@@ -72,40 +73,37 @@ export const rewriteSnippetToAsyncVersion = (
   snippet: string,
   insertRequire: boolean = true
 ): string => {
-  return makeSureTypescriptAdapter(() => {
-    let newSnippet = addProperScopeToSnippet(snippet);
-    if (insertRequire) {
-      newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
+  let newSnippet = addProperScopeToSnippet(snippet);
+  if (insertRequire) {
+    newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
+  }
+  const node = parseCode(newSnippet);
+  const mutation = new NodeMutation<ts.Node>(newSnippet, { adapter: "typescript" });
+  NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+  );
+  NEW_HELPER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+  );
+  NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+  );
+  SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
+  );
+  ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {
+    if (node.parent.kind != SyntaxKind.AwaitExpression) {
+      mutation.insert(node, "await ", { at: "beginning" });
     }
-    const node = parseCode(newSnippet);
-    const mutation = new NodeMutation<ts.Node>(newSnippet);
-    NEW_REWRITER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-    );
-    NEW_HELPER_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-    );
-    NEW_INSTANCE_WITH_FUNCTION_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-    );
-    SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" })
-    );
-    ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {
-      if (
-        NodeQuery.getAdapter().getNodeType(node.parent) !== "AwaitExpression"
-      ) {
-        mutation.insert(node, "await ", { at: "beginning" });
-      }
-    });
-    const { affected, newSource } = mutation.process();
-    return affected ? newSource! : newSnippet;
   });
+  const { affected, newSource } = mutation.process();
+  return affected ? newSource! : newSnippet;
 };
 
 const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`
+    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`,
+  { adapter: "typescript" },
 );
 
 /**
@@ -115,28 +113,27 @@ export const rewriteSnippetToSyncVersion = (
   snippet: string,
   insertRequire: boolean = true
 ): string => {
-  return makeSureTypescriptAdapter(() => {
-    let newSnippet = addProperScopeToSnippet(snippet);
-    if (insertRequire) {
-      newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
-    }
-    const node = parseCode(newSnippet);
-    const mutation = new NodeMutation<ts.Node>(newSnippet);
-    SYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
-      mutation.insert(node, "Sync", { at: "end", to: "expression" })
-    );
-    const { affected, newSource } = mutation.process();
-    return affected ? newSource! : newSnippet;
-  });
+  let newSnippet = addProperScopeToSnippet(snippet);
+  if (insertRequire) {
+    newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
+  }
+  const node = parseCode(newSnippet);
+  const mutation = new NodeMutation<ts.Node>(newSnippet, { adapter: "typescript" });
+  SYNC_METHODS_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "Sync", { at: "end", to: "expression" })
+  );
+  const { affected, newSource } = mutation.process();
+  return affected ? newSource! : newSnippet;
 };
 
 const NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY = new NodeQuery<ts.Node>(
-  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="synvert-core"]]]]])`
+  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="synvert-core"]]]]])`,
+  { adapter: "typescript" },
 );
 
 const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
   const node = parseCode(snippet);
-  const mutation = new NodeMutation<ts.Node>(snippet);
+  const mutation = new NodeMutation<ts.Node>(snippet, { adapter: "typescript" });
   NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY.queryNodes(node).forEach((node) => {
     mutation.insert(node, `const Synvert = require("synvert-core");\n`, {
       at: "beginning",
@@ -147,24 +144,28 @@ const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
 };
 
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`
+  `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`,
+  { adapter: "typescript" },
 );
 
 const NEW_HELPER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.ArrowFunction]`
+  `.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.ArrowFunction]`,
+  { adapter: "typescript" },
 );
 const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
-  `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`
+  `.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`,
+  { adapter: "typescript" },
 );
 const GLOBAL_DSL_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression IN (${ALL_METHODS})],
   .DeleteExpression[expression=.ParenthesizedExpression[expression.nodeType IN (StringLiteral ArrayLiteralExpression)]],
-  .DeleteExpression[expression=.ParenthesizedExpression[expression=.BinaryExpression[left.nodeType IN (StringLiteral ArrayLiteralExpression)][right.nodeType=ObjectLiteralExpression]]]`
+  .DeleteExpression[expression=.ParenthesizedExpression[expression=.BinaryExpression[left.nodeType IN (StringLiteral ArrayLiteralExpression)][right.nodeType=ObjectLiteralExpression]]]`,
+  { adapter: "typescript" },
 );
 
 const addProperScopeToSnippet = (snippet: string): string => {
   const node = parseCode(snippet);
-  const mutation = new NodeMutation<ts.Node>(snippet);
+  const mutation = new NodeMutation<ts.Node>(snippet, { adapter: "typescript" });
   NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY.queryNodes(node).forEach((node) => {
     mutation.delete(node, "arguments.2.equalsGreaterThanToken");
     mutation.insert(node, "function ", { at: "beginning", to: "arguments.2" });
@@ -192,19 +193,6 @@ const parseCode = (snippet: string): ts.Node => {
     true,
     ts.ScriptKind.JS
   );
-};
-
-const makeSureTypescriptAdapter = (func: () => string): string => {
-  const originalQueryAdapter = NodeQuery.getAdapter();
-  const originalMutationAdapter = NodeMutation.getAdapter();
-  try {
-    NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-    NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
-    return func();
-  } finally {
-    NodeQuery.configure({ adapter: originalQueryAdapter });
-    NodeMutation.configure({ adapter: originalMutationAdapter });
-  }
 };
 
 /**

@@ -5,12 +5,6 @@ import { Node } from "typescript";
 
 import Rewriter from "../src/rewriter";
 import Instance from "../src/instance";
-import NodeQuery, {
-  TypescriptAdapter as TypescriptQueryAdapter,
-} from "@xinminlabs/node-query";
-import NodeMutation, {
-  TypescriptAdapter as TypescriptMutationAdapter,
-} from "@xinminlabs/node-mutation";
 import { Parser } from "../src/types/options";
 import Configuration from "../src/configuration";
 
@@ -18,8 +12,9 @@ describe("Instance", () => {
   const rewriter = new Rewriter<Node>(
     "snippet group",
     "snippet name",
-    () => {}
+    function () {}
   );
+  rewriter.options.parser = Parser.TYPESCRIPT;
 
   describe("#filePath", () => {
     test("get file path", () => {
@@ -29,8 +24,14 @@ describe("Instance", () => {
   });
 
   describe("#mutationAdapter", () => {
+    afterEach(() => {
+      mock.restore();
+    });
+
     test("get mutation adapter", () => {
       const instance = new Instance<Node>(rewriter, "code.ts", function () {});
+      mock({ "code.ts": ""});
+      instance.processSync();
       expect(instance.mutationAdapter).not.toBeNull();
     });
   });
@@ -62,8 +63,8 @@ describe("Instance", () => {
     });
 
     afterEach(() => {
-      rewriter.configure({ parser: Parser.TYPESCRIPT });
       mock.restore();
+      rewriter.options.parser = Parser.TYPESCRIPT;
     });
 
     test("writes new code to file", () => {
@@ -157,8 +158,10 @@ describe("Instance", () => {
     });
 
     test("writes new code to erb file", () => {
+      const rewriter2 = new Rewriter<Node>("group", "name", function () {});
+      rewriter.options.parser = Parser.TYPESCRIPT;
       instance = new Instance<Node>(
-        new Rewriter<Node>("group", "name", function () {}),
+        rewriter2,
         "code.html.erb",
         function () {
           this.findNodeSync(
@@ -210,9 +213,9 @@ describe("Instance", () => {
       const rewriter = new Rewriter<Node>(
         "scss",
         "convert_to_sass",
-        function () {}
+        function () {},
       );
-      rewriter.configure({ parser: Parser.GONZALES_PE });
+      rewriter.options.parser = Parser.GONZALES_PE;
       instance = new Instance<Node>(rewriter, "code.scss", function () {
         this.findNodeSync(".declarationDelimiter", () => {
           this.remove();
@@ -257,7 +260,6 @@ describe("Instance", () => {
       `;
       mock({ "code.scss": input });
       instance.processSync();
-      const content = fs.readFileSync("code.scss", "utf8");
       expect(fs.readFileSync("code.scss", "utf8")).toEqual(output + "\n");
     });
 
@@ -265,9 +267,9 @@ describe("Instance", () => {
       const rewriter = new Rewriter<Node>(
         "sass",
         "convert_to_scss",
-        function () {}
+        function () {},
       );
-      rewriter.configure({ parser: Parser.GONZALES_PE });
+      rewriter.options.parser = Parser.GONZALES_PE;
       instance = new Instance<Node>(rewriter, "code.sass", function () {
         this.findNodeSync(".atrule .string", () => {
           this.insert(";", { at: "end" });
@@ -892,10 +894,6 @@ describe("Instance", () => {
   });
 
   describe.skip("#calHelper", () => {
-    beforeEach(() => {
-      NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-      NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
-    });
     afterEach(() => {
       mock.restore();
     });

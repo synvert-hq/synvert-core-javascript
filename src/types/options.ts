@@ -9,7 +9,7 @@ export enum SourceType {
 export enum Parser {
   TYPESCRIPT = "typescript",
   ESPREE = "espree",
-  GONZALES_PE = "gonzales_pe",
+  GONZALES_PE = "gonzales-pe",
 }
 
 export type RewriterOptions = {

@@ -1,5 +1,4 @@
 import NodeQuery from "@xinminlabs/node-query";
-import { getTargetNode } from "@xinminlabs/node-query/lib/compiler/helpers";
 
 import type { QueryOptions } from "@xinminlabs/node-query";
 import Instance from "./instance";
@@ -38,7 +37,7 @@ class WithinScope<T> extends Scope<T> {
     private func: (instance: Instance<T>) => void
   ) {
     super(instance);
-    this.nodeQuery = new NodeQuery<T>(nqlOrRules);
+    this.nodeQuery = new NodeQuery<T>(nqlOrRules, { adapter: instance.parser });
     this.options = Object.assign(
       { includingSelf: true, stopAtFirstMatch: false, recursive: true },
       options
@@ -115,7 +114,10 @@ class GotoScope<T> extends Scope<T> {
     const currentNode = this.instance.currentNode;
     if (!currentNode) return;
 
-    const childNode = getTargetNode(currentNode, this.childNodeName);
+    let childNode = currentNode;
+    this.childNodeName.split(".").forEach((childNodeName) => {
+      childNode = Array.isArray(childNode) && /-?d+/.test(childNodeName) ? childNode[Number.parseInt(childNodeName)] : (childNode as any)[childNodeName];
+    });
     if (!childNode) return;
 
     this.instance.processWithOtherNodeSync(childNode as T, () => {
@@ -127,7 +129,10 @@ class GotoScope<T> extends Scope<T> {
     const currentNode = this.instance.currentNode;
     if (!currentNode) return;
 
-    const childNode = getTargetNode(currentNode, this.childNodeName);
+    let childNode = currentNode;
+    this.childNodeName.split(".").forEach((childNodeName) => {
+      childNode = Array.isArray(childNode) && /-?d+/.test(childNodeName) ? childNode[Number.parseInt(childNodeName)] : (childNode as any)[childNodeName];
+    });
     if (!childNode) return;
 
     await this.instance.processWithOtherNode(childNode as T, async () => {
