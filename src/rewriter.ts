@@ -15,21 +15,11 @@ import {
   globSync,
 } from "./utils";
 import Configuration from "./configuration";
-import NodeQuery, {
-  EspreeAdapter as EspreeQueryAdapter,
-  TypescriptAdapter as TypescriptQueryAdapter,
-  GonzalesPeAdapter as GonzalesPeQueryAdapter,
-} from "@xinminlabs/node-query";
-import NodeMutation, {
-  EspreeAdapter as EspreeMutationAdapter,
-  TypescriptAdapter as TypescriptMutationAdapter,
-  GonzalesPeAdapter as GonzalesPeMutationAdapter,
-} from "@xinminlabs/node-mutation";
 
 /**
  * Rewriter is the top level namespace in a synvert snippet.
  *
- * One rewriter checks if the dependency version matche, and it can contain one or many Instances,
+ * One rewriter checks if the dependency version matches, and it can contain one or many Instances,
  * which define the behavior what files need to find and what codes need to rewrite.
  * @borrows Rewriter#withinFiles as Rewriter#withinFile
  */
@@ -64,7 +54,7 @@ class Rewriter<T> {
    * @static
    * @param {string} group - the rewriter group.
    * @param {string} name - the unique rewriter name.
-   * @param {Rewirter} rewriter - the rewriter to register.
+   * @param {Rewriter} rewriter - the rewriter to register.
    */
   static register(group: string, name: string, rewriter: Rewriter<any>) {
     this.rewriters[group] = this.rewriters[group] || {};
@@ -74,8 +64,8 @@ class Rewriter<T> {
   /**
    * Fetch a rewriter by group and name.
    * @static
-   * @param {string} group rewrtier group.
-   * @param {string} name rewrtier name.
+   * @param {string} group rewriter group.
+   * @param {string} name rewriter name.
    * @returns {Rewriter} the matching rewriter.
    */
   static fetch(group: string, name: string): Rewriter<any> | undefined {
@@ -109,7 +99,6 @@ class Rewriter<T> {
    * Sync to process the rewriter.
    */
   processSync(): void {
-    this.prepare();
     this.affectedFiles = new Set<string>();
     this.func.call(this, this);
   }
@@ -119,28 +108,25 @@ class Rewriter<T> {
    * @async
    */
   async process(): Promise<void> {
-    this.prepare();
     this.affectedFiles = new Set<string>();
     await this.func.call(this, this);
   }
 
   /**
-   * Sync to process rwriter with sandbox mode.
+   * Sync to process rewriter with sandbox mode.
    * It will run the func but doesn't change any file.
    */
   processWithSandboxSync(): void {
-    this.prepare();
     this.options.runInstance = false;
     this.func.call(this, this);
   }
 
   /**
-   * Async to process rwriter with sandbox mode.
+   * Async to process rewriter with sandbox mode.
    * It will run the func but doesn't change any file.
    * @async
    */
   async processWithSandbox(): Promise<void> {
-    this.prepare();
     this.options.runInstance = false;
     await this.func.call(this, this);
   }
@@ -150,7 +136,6 @@ class Rewriter<T> {
    * @returns {TestResultExt[]} test results
    */
   testSync(): TestResultExt[] {
-    this.prepare();
     this.options.writeToFile = false;
     this.func.call(this, this);
     return this.testResults;
@@ -162,7 +147,6 @@ class Rewriter<T> {
    * @returns {TestResultExt[]} test results
    */
   async test(): Promise<TestResultExt[]> {
-    this.prepare();
     this.options.writeToFile = false;
     await this.func.call(this, this);
     return this.testResults;
@@ -198,20 +182,6 @@ class Rewriter<T> {
     }
     if (options.parser) {
       this.options.parser = options.parser;
-      switch (this.options.parser) {
-        case Parser.ESPREE:
-          NodeQuery.configure({ adapter: new EspreeQueryAdapter() });
-          NodeMutation.configure({ adapter: new EspreeMutationAdapter() });
-          break;
-        case Parser.GONZALES_PE:
-          NodeQuery.configure({ adapter: new GonzalesPeQueryAdapter() });
-          NodeMutation.configure({ adapter: new GonzalesPeMutationAdapter() });
-          break;
-        default:
-          NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-          NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
-          break;
-      }
     }
   }
 
@@ -336,7 +306,7 @@ class Rewriter<T> {
    *   })
    * })
    * @param {string} filePattern - pattern to find files, e.g. lib/*.js
-   * @param {Functioin} func - a function rewrites code in the matching files.
+   * @param {Function} func - a function rewrites code in the matching files.
    */
   withinFilesSync(
     filePattern: string,
@@ -389,7 +359,7 @@ class Rewriter<T> {
    *   })
    * })
    * @param {string} filePattern - pattern to find files, e.g. lib/*.js
-   * @param {Functioin} func - a function rewrites code in the matching files.
+   * @param {Function} func - a function rewrites code in the matching files.
    */
   async withinFiles(
     filePattern: string,
@@ -618,16 +588,8 @@ class Rewriter<T> {
   }
 
   /**
-   * Prepare to run or test a rewriter.
-   */
-  private prepare() {
-    NodeQuery.configure({ adapter: new TypescriptQueryAdapter() });
-    NodeMutation.configure({ adapter: new TypescriptMutationAdapter() });
-  }
-
-  /**
    * Merge test results.
-   * @param {TestResultExt[]} results test results to be mreged
+   * @param {TestResultExt[]} results test results to be merged
    */
   private mergeTestResults(results: TestResultExt[]): void {
     this.testResults = [

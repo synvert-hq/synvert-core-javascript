@@ -9,7 +9,6 @@ import {
 } from "./utils";
 import { SnippetNotFoundError } from "./errors";
 import { Parser } from "./types/options";
-import type { TestResultExt } from "./types/result";
 
 const ALL_FILES = "**/*.{js,jsx,ts,tsx,html,html.erb}";
 const ALL_JS_FILES = "**/*.{js,jsx}";
@@ -44,5 +43,4 @@ export {
   rewriteSnippetToSyncVersion,
   SnippetNotFoundError,
   Parser,
-  TestResultExt,
 };
