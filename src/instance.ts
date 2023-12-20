@@ -1046,6 +1046,7 @@ class Instance<T> {
 
   /**
    * Group actions.
+   * @async
    * @example
    * group(() => {
    *   delete("leftCurlyBracket");
@@ -1053,8 +1054,11 @@ class Instance<T> {
    * });
    * @param {Function} func
    */
-  group(func: () => {}): void {
-    this.currentMutation.group(func);
+  async group(func: () => void | Promise<void>) {
+    const result = this.currentMutation.group(func);
+    if (result instanceof Promise) {
+      await result;
+    }
   }
 
   /**

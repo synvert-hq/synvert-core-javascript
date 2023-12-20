@@ -63,9 +63,16 @@ const SCOPES_AND_CONDITIONS_QUERY = new NodeQuery<ts.Node>(
   { adapter: "typescript" },
 );
 
+const GROUPS_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
+    [name=group]]
+    [arguments.-1.nodeType IN (FunctionExpression ArrowFunction)][arguments.-1.modifiers=undefined]`,
+  { adapter: "typescript" },
+);
+
 const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   `.CallExpression[expression=.PropertyAccessExpression[expression=.ThisKeyword]
-    [name IN (${REWRITER_METHODS} callHelper ${SCOPE_METHODS} ${CONDITION_METHODS})]]`,
+    [name IN (${REWRITER_METHODS} callHelper group ${SCOPE_METHODS} ${CONDITION_METHODS})]]`,
   { adapter: "typescript" },
 );
 
@@ -94,6 +101,9 @@ export const rewriteSnippetToAsyncVersion = (
     mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" }),
   );
   SCOPES_AND_CONDITIONS_QUERY.queryNodes(node).forEach((node) =>
+    mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" }),
+  );
+  GROUPS_QUERY.queryNodes(node).forEach((node) =>
     mutation.insert(node, "async ", { at: "beginning", to: "arguments.-1" }),
   );
   ASYNC_METHODS_QUERY.queryNodes(node).forEach((node) => {

@@ -67,7 +67,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
-            this.group(() => {
+            await this.group(async () => {
               this.replace("expression.name", { with: "foobar" });
               this.delete("expression.expression");
             });
@@ -86,7 +86,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
-            this.group(() => {
+            await this.group(async () => {
               this.replace("expression.name", { with: "foobar" });
               this.delete("expression.expression");
             });
