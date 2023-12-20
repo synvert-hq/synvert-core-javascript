@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.18.1 (2023-12-20)
+
+* Update `@xinminlabs/node-mutation` to 1.17.1
+* Make `group` dsl work both sync and async
+
 ## 2.18.0 (2023-12-01)
 
 * Update `@xinminlabs/node-query` to 1.19.0
