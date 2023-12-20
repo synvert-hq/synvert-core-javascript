@@ -21,7 +21,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             group(() => {
-              replace("expresion.name", { with: "foobar" });
+              replace("expression.name", { with: "foobar" });
               delete("expression.expression");
             });
           });
@@ -40,7 +40,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             group(() => {
-              replace("expresion.name", { with: "foobar" });
+              replace("expression.name", { with: "foobar" });
               delete("expression.expression");
             });
           });
@@ -68,7 +68,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
             this.group(() => {
-              this.replace("expresion.name", { with: "foobar" });
+              this.replace("expression.name", { with: "foobar" });
               this.delete("expression.expression");
             });
           });
@@ -87,7 +87,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
           await this.callHelper("helper/foobar")
           await this.findNode(".CallExpression", async () => {
             this.group(() => {
-              this.replace("expresion.name", { with: "foobar" });
+              this.replace("expression.name", { with: "foobar" });
               this.delete("expression.expression");
             });
           });
@@ -124,7 +124,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           callHelper("helper/foobar")
           findNode(".CallExpression", () => {
             group(() => {
-              replace("expresion.name", { with: "foobar" });
+              replace("expression.name", { with: "foobar" });
               delete("expression.expression");
             });
           });
@@ -148,7 +148,7 @@ describe("rewriteSnippetToSyncVersion", () => {
           this.callHelperSync("helper/foobar")
           this.findNodeSync(".CallExpression", () => {
             this.group(() => {
-              this.replace("expresion.name", { with: "foobar" });
+              this.replace("expression.name", { with: "foobar" });
               this.delete("expression.expression");
             });
           });
