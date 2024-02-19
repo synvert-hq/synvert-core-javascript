@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.19.0 (2024-02-19)
+
+* Add `Configuration.respectGitignore`
+* Glob files with `git check-ignore` if `Configuration.respectIgnore` is true
+
 ## 2.18.1 (2023-12-20)
 
 * Update `@xinminlabs/node-mutation` to 1.17.1
