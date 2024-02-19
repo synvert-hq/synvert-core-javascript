@@ -240,46 +240,52 @@ export const globSync = (filePattern: string): string[] => {
     .map((fsStat) => fsStat.path);
 
   if (Configuration.respectGitignore) {
-    const ignoredPathsString = execSync('git check-ignore --stdin', {
+    const ignoredPathsString = execSync("git check-ignore --stdin", {
       input: allPaths.join("\n"),
       cwd: Configuration.rootPath,
-      encoding: 'utf-8',
+      encoding: "utf-8",
     });
-    const ignoredPaths = new Set(ignoredPathsString.split('\n').filter(Boolean));
+    const ignoredPaths = new Set(
+      ignoredPathsString.split("\n").filter(Boolean),
+    );
 
-    return allPaths.filter(path => !ignoredPaths.has(path));
+    return allPaths.filter((path) => !ignoredPaths.has(path));
   }
 
   return allPaths;
 };
 
-function runShellCommand(command: string, args: string[], input?: string): Promise<{ stdout: string, stderr: string }> {
-  return new Promise<{ stdout: string, stderr: string }>((resolve) => {
+function runShellCommand(
+  command: string,
+  args: string[],
+  input?: string,
+): Promise<{ stdout: string; stderr: string }> {
+  return new Promise<{ stdout: string; stderr: string }>((resolve) => {
     const child = spawn(command, args, { cwd: Configuration.rootPath });
     if (child.stdin && input) {
       child.stdin.write(input);
       child.stdin.end();
     }
-    let output = '';
+    let output = "";
     if (child.stdout) {
-      child.stdout.on('data', data => {
+      child.stdout.on("data", (data) => {
         output += data;
       });
     }
     let error = "";
     if (child.stderr) {
-      child.stderr.on('data', data => {
+      child.stderr.on("data", (data) => {
         error += data;
       });
     }
-    child.on('error', (e) => {
+    child.on("error", (e) => {
       return resolve({ stdout: "", stderr: e.message });
     });
-    child.on('exit', () => {
+    child.on("exit", () => {
       return resolve({ stdout: output, stderr: error });
     });
   });
-};
+}
 
 /**
  * Async to glob matching files.
@@ -305,10 +311,14 @@ export const glob = async (filePattern: string): Promise<string[]> => {
     .map((fsStat) => fsStat.path);
 
   if (Configuration.respectGitignore) {
-    const { stdout } = await runShellCommand('git', ['check-ignore', '--stdin'], allPaths.join("\n"));
-    const ignoredPaths = new Set(stdout.split('\n').filter(Boolean));
+    const { stdout } = await runShellCommand(
+      "git",
+      ["check-ignore", "--stdin"],
+      allPaths.join("\n"),
+    );
+    const ignoredPaths = new Set(stdout.split("\n").filter(Boolean));
 
-    return allPaths.filter(path => !ignoredPaths.has(path));
+    return allPaths.filter((path) => !ignoredPaths.has(path));
   }
 
   return allPaths;
