@@ -311,9 +311,7 @@ describe("addFile", () => {
         },
       );
       await rewriter.process();
-      expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual(
-        "foobar",
-      );
+      expect(await promisesFs.readFile("foobar.js", "utf-8")).toEqual("foobar");
       await promisesFs.rm("foobar.js");
     });
 
