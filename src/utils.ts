@@ -5,8 +5,8 @@ import path from "path";
 import fg from "fast-glob";
 import fetchSync from "sync-fetch";
 import { URL } from "url";
-import NodeQuery, { Adapter as NodeQueryAdapter } from "@xinminlabs/node-query";
-import NodeMutation from "@xinminlabs/node-mutation";
+import NodeQuery, { Adapter as NodeQueryAdapter } from "@synvert-hq/node-query";
+import NodeMutation from "@synvert-hq/node-mutation";
 
 import { SnippetNotFoundError } from "./errors";
 import Rewriter from "./rewriter";
@@ -447,7 +447,7 @@ const remoteSnippetExists = async (snippetPath: string): Promise<boolean> => {
 };
 
 const remoteSnippetUrl = (snippetName: string) =>
-  `https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/${snippetName}.js`;
+  `https://github.com/synvert-hq/synvert-snippets-javascript/blob/main/lib/${snippetName}.js`;
 
 const snippetsHome = (): string => {
   return (

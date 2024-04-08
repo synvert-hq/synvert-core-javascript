@@ -231,7 +231,7 @@ class Rewriter<T> {
    * new Synvert.Rewriter("jquery", "migrate", () => {
    *   this.addSnippetSync("jquery", "deprecate-event-shorthand");
    *   this.addSnippetSync("jquery", "deprecate-ready-event");
-   *   this.addSnippetSync("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
+   *   this.addSnippetSync("https://github.com/synvert-hq/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
    *   this.addSnippetSync("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
    *   this.addSnippetSync("javascript/no-useless-constructor")
    * });
@@ -267,7 +267,7 @@ class Rewriter<T> {
    * new Synvert.Rewriter("jquery", "migrate", async () => {
    *   await this.addSnippet("jquery", "deprecate-event-shorthand");
    *   await this.addSnippet("jquery", "deprecate-ready-event");
-   *   await this.addSnippet("https://github.com/xinminlabs/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
+   *   await this.addSnippet("https://github.com/synvert-hq/synvert-snippets-javascript/blob/main/lib/javascript/no-useless-constructor.js")
    *   await this.addSnippet("/Users/flyerhzm/.synvert-javascript/lib/javascript/no-useless-constructor.js")
    *   await this.addSnippet("javascript/no-useless-constructor")
    * });

@@ -1,5 +1,5 @@
 import { t } from "typy";
-import NodeQuery from "@xinminlabs/node-query";
+import NodeQuery from "@synvert-hq/node-query";
 
 import Instance from "./instance";
 import { arrayBody } from "./utils";

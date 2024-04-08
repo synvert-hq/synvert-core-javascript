@@ -1,6 +1,6 @@
 import ts from "typescript";
-import * as espree from "@xinminlabs/espree";
-import gonzales from "@xinminlabs/gonzales-pe";
+import * as espree from "@synvert-hq/espree";
+import gonzales from "@synvert-hq/gonzales-pe";
 import fs, { promises as promisesFs } from "fs";
 import path from "path";
 import debug from "debug";
@@ -16,7 +16,7 @@ import {
   ConditionOptions,
 } from "./condition";
 import { evalHelperSync, evalHelper } from "./utils";
-import { QueryOptions } from "@xinminlabs/node-query";
+import { QueryOptions } from "@synvert-hq/node-query";
 import NodeMutation, {
   Strategy,
   InsertOptions,
@@ -24,7 +24,7 @@ import NodeMutation, {
   DeleteOptions,
   RemoveOptions,
   Adapter as MutationAdapter,
-} from "@xinminlabs/node-mutation";
+} from "@synvert-hq/node-mutation";
 import { Parser, NewLineInsertOptions } from "./types/options";
 import { TestResultExt } from "./types/result";
 import * as HtmlEngine from "./engines/html";

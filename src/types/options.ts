@@ -1,4 +1,4 @@
-import { InsertOptions } from "@xinminlabs/node-mutation";
+import { InsertOptions } from "@synvert-hq/node-mutation";
 
 // This is for espree
 export enum SourceType {

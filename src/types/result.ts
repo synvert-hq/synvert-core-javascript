@@ -1,4 +1,4 @@
-import { TestResult } from "@xinminlabs/node-mutation";
+import { TestResult } from "@synvert-hq/node-mutation";
 
 export type TestResultExt = TestResult & {
   filePath: string;

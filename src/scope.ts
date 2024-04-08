@@ -1,6 +1,6 @@
-import NodeQuery from "@xinminlabs/node-query";
+import NodeQuery from "@synvert-hq/node-query";
 
-import type { QueryOptions } from "@xinminlabs/node-query";
+import type { QueryOptions } from "@synvert-hq/node-query";
 import Instance from "./instance";
 
 /**
