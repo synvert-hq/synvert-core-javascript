@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.19.2 (2024-04-08)
+
+* Rename package to `@synvert-hq/synvert-core`
+
 ## 2.19.1 (2024-04-08)
 
 * Moving from `@xinminlabs` to `@synvert-hq`
