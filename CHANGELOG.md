@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.19.1 (2024-04-08)
+
+* Moving from `@xinminlabs` to `@synvert-hq`
+
 ## 2.19.0 (2024-02-19)
 
 * Add `Configuration.respectGitignore`
