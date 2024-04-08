@@ -8,7 +8,7 @@
 Synvert core provides a set of DSLs to rewrite javascript code. e.g.
 
 ```javascript
-const Synvert = require("synvert-core");
+const Synvert = require("@synvert-hq/synvert-core");
 
 new Synvert.Rewriter("jquery", "deprecate-event-shorthand", () => {
   description('jQuery event shorthand is deprecated.');

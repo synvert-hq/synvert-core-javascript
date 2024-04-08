@@ -1,6 +1,6 @@
 import ts, { SyntaxKind } from "typescript";
 import fs, { promises as promisesFs } from "fs";
-import { spawn, execSync } from "node:child_process";
+import { spawn, execSync } from "child_process";
 import path from "path";
 import fg from "fast-glob";
 import fetchSync from "sync-fetch";
@@ -145,7 +145,7 @@ export const rewriteSnippetToSyncVersion = (
 };
 
 const NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY = new NodeQuery<ts.Node>(
-  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="synvert-core"]]]]])`,
+  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="@synvert-hq/synvert-core"]]]]])`,
   { adapter: "typescript" },
 );
 
@@ -155,7 +155,7 @@ const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
     adapter: "typescript",
   });
   NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY.queryNodes(node).forEach((node) => {
-    mutation.insert(node, `const Synvert = require("synvert-core");\n`, {
+    mutation.insert(node, `const Synvert = require("@synvert-hq/synvert-core");\n`, {
       at: "beginning",
     });
   });

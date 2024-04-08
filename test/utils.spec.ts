@@ -7,7 +7,7 @@ import {
 describe("rewriteSnippetToAsyncVersion", () => {
   test("rewrites snippet", () => {
     const originalSnippet = dedent`
-      const Synvert = require("synvert-core");
+      const Synvert = require("@synvert-hq/synvert-core");
 
       new Synvert.Rewriter("group", "name1", () => {
         description("foobar");
@@ -54,7 +54,7 @@ describe("rewriteSnippetToAsyncVersion", () => {
       });
     `;
     const newSnippet = dedent`
-      const Synvert = require("synvert-core");
+      const Synvert = require("@synvert-hq/synvert-core");
 
       new Synvert.Rewriter("group", "name1", async function () {
         this.description("foobar");
@@ -135,7 +135,7 @@ describe("rewriteSnippetToSyncVersion", () => {
       });
     `;
     const newSnippet = dedent`
-      const Synvert = require("synvert-core");
+      const Synvert = require("@synvert-hq/synvert-core");
       new Synvert.Rewriter("group", "name", function () {
         this.description("foobar");
 
