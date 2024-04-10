@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.19.4 (2024-04-10)
+
+* Use `spawnSync` for git command
+
 ## 2.19.3 (2024-04-08)
 
 * Require `@synvert-hq/synvert-core`
