@@ -1,6 +1,6 @@
 import ts, { SyntaxKind } from "typescript";
 import fs, { promises as promisesFs } from "fs";
-import { spawn, execSync } from "child_process";
+import { spawn, spawnSync } from "child_process";
 import path from "path";
 import fg from "fast-glob";
 import fetchSync from "sync-fetch";
@@ -217,6 +217,19 @@ const parseCode = (snippet: string): ts.Node => {
   );
 };
 
+function runShellCommandSync(
+  command: string,
+  args: string[],
+  input?: string,
+): { stdout: string; stderr: string } {
+  const child = spawnSync(command, args, { cwd: Configuration.rootPath, input: input });
+
+  let output = child.stdout ? child.stdout.toString() : "";
+  let error = child.stderr ? child.stderr.toString() : "";
+
+  return { stdout: output, stderr: error };
+}
+
 /**
  * Sync to glob matching files.
  * @param {string} filePattern file pattern
@@ -240,14 +253,12 @@ export const globSync = (filePattern: string): string[] => {
     .map((fsStat) => fsStat.path);
 
   if (Configuration.respectGitignore) {
-    const ignoredPathsString = execSync("git check-ignore --stdin", {
-      input: allPaths.join("\n"),
-      cwd: Configuration.rootPath,
-      encoding: "utf-8",
-    });
-    const ignoredPaths = new Set(
-      ignoredPathsString.split("\n").filter(Boolean),
+    const { stdout } = runShellCommandSync(
+      "git",
+      ["check-ignore", "--stdin"],
+      allPaths.join("\n"),
     );
+    const ignoredPaths = new Set(stdout.split("\n").filter(Boolean));
 
     return allPaths.filter((path) => !ignoredPaths.has(path));
   }
