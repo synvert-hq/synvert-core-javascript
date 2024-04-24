@@ -48,4 +48,10 @@ describe("Configuration", () => {
     Configuration.tabWidth = 4;
     expect(Configuration.tabWidth).toEqual(4);
   });
+
+  it("strict", () => {
+    expect(Configuration.strict).toEqual(true);
+    Configuration.strict = false;
+    expect(Configuration.strict).toEqual(false);
+  })
 });

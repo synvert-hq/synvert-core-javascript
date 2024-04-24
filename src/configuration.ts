@@ -11,6 +11,7 @@ class Configuration {
   static singleQuote = false;
   static semi = true;
   static tabWidth = 2;
+  static strict = true;
 }
 
 export default Configuration;
