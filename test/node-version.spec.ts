@@ -1,6 +1,7 @@
 import mock from "mock-fs";
 
 import NodeVersion from "../src/node-version";
+import Configuration from "../src/configuration";
 
 describe("matchSync", () => {
   describe(".node-version", () => {
@@ -20,6 +21,13 @@ describe("matchSync", () => {
     test("compares versions", () => {
       const nodeVersion = new NodeVersion("12.0.0");
       expect(nodeVersion.matchSync()).toBe(false);
+    });
+
+    test("returns true if Configuration.strict is false", () => {
+      Configuration.strict = false;
+      const nodeVersion = new NodeVersion("12.0.0");
+      expect(nodeVersion.matchSync()).toBe(true);
+      Configuration.strict = true;
     });
   });
 
@@ -62,6 +70,13 @@ describe("match", () => {
     test("does not match versions", async () => {
       const nodeVersion = new NodeVersion("12.0.0");
       expect(await nodeVersion.match()).toBe(false);
+    });
+
+    test("return true if Configuration.strict is false", async () => {
+      Configuration.strict = false;
+      const nodeVersion = new NodeVersion("12.0.0");
+      expect(await nodeVersion.match()).toBe(true);
+      Configuration.strict = true;
     });
   });
 

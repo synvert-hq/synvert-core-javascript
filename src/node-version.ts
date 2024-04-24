@@ -20,6 +20,9 @@ class NodeVersion {
    * @returns {boolean} true if matches
    */
   matchSync(): boolean {
+    if (!Configuration.strict) {
+      return true;
+    }
     let versionFile;
     if (isValidFileSync(path.join(Configuration.rootPath, ".node-version"))) {
       versionFile = ".node-version";
@@ -42,6 +45,9 @@ class NodeVersion {
    * @returns {boolean} true if matches
    */
   async match(): Promise<boolean> {
+    if (!Configuration.strict) {
+      return true;
+    }
     let versionFile;
     if (await isValidFile(path.join(Configuration.rootPath, ".node-version"))) {
       versionFile = ".node-version";
