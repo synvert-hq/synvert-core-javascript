@@ -26,6 +26,9 @@ class NpmVersion {
    * @returns {boolean} true if matches, otherwise false.
    */
   matchSync(): boolean {
+    if (!Configuration.strict) {
+      return true;
+    }
     if (!this.packageExistSync()) {
       return true;
     }
@@ -57,6 +60,9 @@ class NpmVersion {
    * @returns {Promise<boolean>} true if matches, otherwise false.
    */
   async match(): Promise<boolean> {
+    if (!Configuration.strict) {
+      return true;
+    }
     if (!(await this.packageExist())) {
       return true;
     }
