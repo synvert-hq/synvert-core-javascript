@@ -155,9 +155,13 @@ const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
     adapter: "typescript",
   });
   NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY.queryNodes(node).forEach((node) => {
-    mutation.insert(node, `const Synvert = require("@synvert-hq/synvert-core");\n`, {
-      at: "beginning",
-    });
+    mutation.insert(
+      node,
+      `const Synvert = require("@synvert-hq/synvert-core");\n`,
+      {
+        at: "beginning",
+      },
+    );
   });
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : snippet;
@@ -222,7 +226,10 @@ function runShellCommandSync(
   args: string[],
   input?: string,
 ): { stdout: string; stderr: string } {
-  const child = spawnSync(command, args, { cwd: Configuration.rootPath, input: input });
+  const child = spawnSync(command, args, {
+    cwd: Configuration.rootPath,
+    input: input,
+  });
 
   let output = child.stdout ? child.stdout.toString() : "";
   let error = child.stderr ? child.stderr.toString() : "";

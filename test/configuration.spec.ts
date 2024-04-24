@@ -53,5 +53,5 @@ describe("Configuration", () => {
     expect(Configuration.strict).toEqual(true);
     Configuration.strict = false;
     expect(Configuration.strict).toEqual(false);
-  })
+  });
 });
