@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.20.0 (2024-04-24)
+
+* Add `Configuration.strict`
+* Skip NpmVersion match if `Configuration.strict` is false
+* Skip NodeVersion match if `Configuration.strict` is false
+
 ## 2.19.4 (2024-04-10)
 
 * Use `spawnSync` for git command
