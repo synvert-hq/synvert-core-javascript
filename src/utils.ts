@@ -481,7 +481,9 @@ const convertToGithubRawUrl = (url: string): string => {
       .replace("/blob/", "/");
   }
   if (url.startsWith("https://gist.github.com")) {
-    return url.replace("gist.github.com/", "gist.githubusercontent.com/") + "/raw";
+    return (
+      url.replace("gist.github.com/", "gist.githubusercontent.com/") + "/raw"
+    );
   }
 
   return url;
