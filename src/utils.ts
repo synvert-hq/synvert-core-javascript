@@ -475,12 +475,16 @@ const snippetsHome = (): string => {
 };
 
 const convertToGithubRawUrl = (url: string): string => {
-  if (!url.includes("//github.com/")) {
-    return url;
+  if (url.startsWith("https://github.com/")) {
+    return url
+      .replace("//github.com/", "//raw.githubusercontent.com/")
+      .replace("/blob/", "/");
   }
-  return url
-    .replace("//github.com/", "//raw.githubusercontent.com/")
-    .replace("/blob/", "/");
+  if (url.startsWith("https://gist.github.com")) {
+    return url.replace("gist.github.com/", "gist.githubusercontent.com/") + "/raw";
+  }
+
+  return url;
 };
 
 const loadSnippetContent = async (snippetName: string): Promise<string> => {
