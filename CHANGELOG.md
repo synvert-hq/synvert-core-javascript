@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.20.1 (2024-04-25)
+
+* Eval snippet on gist.github.com
+
 ## 2.20.0 (2024-04-24)
 
 * Add `Configuration.strict`
