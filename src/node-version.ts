@@ -34,14 +34,16 @@ class NodeVersion {
         path.join(Configuration.rootPath, ".nvmrc"),
         "utf-8",
       );
-    } else if (isValidFileSync(path.join(Configuration.rootPath, "package.json"))) {
+    } else if (
+      isValidFileSync(path.join(Configuration.rootPath, "package.json"))
+    ) {
       const packageFileContent = fs.readFileSync(
         path.join(Configuration.rootPath, "package.json"),
         "utf-8",
       );
-      const packageJson = JSON.parse(packageFileContent)
+      const packageJson = JSON.parse(packageFileContent);
       if (packageJson.engines && packageJson.engines.node) {
-        version = packageJson.engines.node.replace(/[^0-9.]/g, '');
+        version = packageJson.engines.node.replace(/[^0-9.]/g, "");
       }
     }
     if (!version) {
@@ -70,14 +72,16 @@ class NodeVersion {
         path.join(Configuration.rootPath, ".nvmrc"),
         "utf-8",
       );
-    } else if (await isValidFile(path.join(Configuration.rootPath, "package.json"))) {
+    } else if (
+      await isValidFile(path.join(Configuration.rootPath, "package.json"))
+    ) {
       const packageFileContent = await promisesFs.readFile(
         path.join(Configuration.rootPath, "package.json"),
         "utf-8",
       );
-      const packageJson = JSON.parse(packageFileContent)
+      const packageJson = JSON.parse(packageFileContent);
       if (packageJson.engines && packageJson.engines.node) {
-        version = packageJson.engines.node.replace(/[^0-9.]/g, '');
+        version = packageJson.engines.node.replace(/[^0-9.]/g, "");
       }
     }
     if (!version) {
