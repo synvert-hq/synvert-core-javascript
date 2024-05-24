@@ -23,19 +23,30 @@ class NodeVersion {
     if (!Configuration.strict) {
       return true;
     }
-    let versionFile;
+    let version;
     if (isValidFileSync(path.join(Configuration.rootPath, ".node-version"))) {
-      versionFile = ".node-version";
+      version = fs.readFileSync(
+        path.join(Configuration.rootPath, ".node-version"),
+        "utf-8",
+      );
     } else if (isValidFileSync(path.join(Configuration.rootPath, ".nvmrc"))) {
-      versionFile = ".nvmrc";
+      version = fs.readFileSync(
+        path.join(Configuration.rootPath, ".nvmrc"),
+        "utf-8",
+      );
+    } else if (isValidFileSync(path.join(Configuration.rootPath, "package.json"))) {
+      const packageFileContent = fs.readFileSync(
+        path.join(Configuration.rootPath, "package.json"),
+        "utf-8",
+      );
+      const packageJson = JSON.parse(packageFileContent)
+      if (packageJson.engines && packageJson.engines.node) {
+        version = packageJson.engines.node.replace(/[^0-9.]/g, '');
+      }
     }
-    if (!versionFile) {
+    if (!version) {
       return true;
     }
-    const version = fs.readFileSync(
-      path.join(Configuration.rootPath, versionFile),
-      "utf-8",
-    );
     return compareVersions.compare(version, this.version, ">=");
   }
 
@@ -48,19 +59,30 @@ class NodeVersion {
     if (!Configuration.strict) {
       return true;
     }
-    let versionFile;
+    let version;
     if (await isValidFile(path.join(Configuration.rootPath, ".node-version"))) {
-      versionFile = ".node-version";
+      version = await promisesFs.readFile(
+        path.join(Configuration.rootPath, ".node-version"),
+        "utf-8",
+      );
     } else if (await isValidFile(path.join(Configuration.rootPath, ".nvmrc"))) {
-      versionFile = ".nvmrc";
+      version = await promisesFs.readFile(
+        path.join(Configuration.rootPath, ".nvmrc"),
+        "utf-8",
+      );
+    } else if (await isValidFile(path.join(Configuration.rootPath, "package.json"))) {
+      const packageFileContent = await promisesFs.readFile(
+        path.join(Configuration.rootPath, "package.json"),
+        "utf-8",
+      );
+      const packageJson = JSON.parse(packageFileContent)
+      if (packageJson.engines && packageJson.engines.node) {
+        version = packageJson.engines.node.replace(/[^0-9.]/g, '');
+      }
     }
-    if (!versionFile) {
+    if (!version) {
       return true;
     }
-    const version = await promisesFs.readFile(
-      path.join(Configuration.rootPath, versionFile),
-      "utf-8",
-    );
     return compareVersions.compare(version, this.version, ">=");
   }
 }
