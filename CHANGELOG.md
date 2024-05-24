@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.21.0 (2024-05-24)
+
+* Read node version from `package.json`
+
 ## 2.20.1 (2024-04-25)
 
 * Eval snippet on gist.github.com
