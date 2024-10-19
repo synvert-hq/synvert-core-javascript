@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.21.1 (2024-10-19)
+
+* Support node v22 on github actions
+
 ## 2.21.0 (2024-05-24)
 
 * Read node version from `package.json`
