@@ -134,11 +134,6 @@ export const rewriteSnippetToSyncVersion = (snippet: string): string => {
   return affected ? newSource! : newSnippet;
 };
 
-const NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY = new NodeQuery<ts.Node>(
-  `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="@synvert-hq/synvert-core"]]]]])`,
-  { adapter: "typescript" },
-);
-
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`,
   { adapter: "typescript" },
@@ -315,24 +310,32 @@ export const glob = async (filePattern: string): Promise<string[]> => {
 };
 
 /**
+ * Helper function to safely evaluate snippet/helper content
+ * @param content The snippet content to evaluate
+ * @param type The type to replace ('Rewriter' or 'Helper')
+ * @returns The evaluated instance
+ */
+const evaluateContent = <T>(content: string, type: 'Rewriter' | 'Helper'): T => {
+  const fn = new Function('Synvert', `
+    let instance;
+    ${content.replace(
+      `new Synvert.${type}`,
+      `return new Synvert.${type}`
+    )}
+    return instance;
+  `);
+
+  return fn(Synvert);
+};
+
+/**
  * Sync to eval the snippet by name.
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Rewriter} a Rewriter object
  */
 export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
   const snippetContent = loadSnippetSync(snippetName);
-
-  const fn = new Function('Synvert', `
-    let rewriterInstance;
-    ${snippetContent.replace(
-      'new Synvert.Rewriter',
-      'return new Synvert.Rewriter'
-    )}
-    return rewriterInstance;
-  `);
-
-  const result = fn(Synvert);
-  return result;
+  return evaluateContent(snippetContent, 'Rewriter');
 };
 
 /**
@@ -341,22 +344,9 @@ export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Promise<Rewriter>} a Rewriter object
  */
-export const evalSnippet = async <T>(
-  snippetName: string,
-): Promise<Rewriter<T>> => {
+export const evalSnippet = async <T>(snippetName: string): Promise<Rewriter<T>> => {
   const snippetContent = await loadSnippet(snippetName);
-
-  const fn = new Function('Synvert', `
-    let rewriterInstance;
-    ${snippetContent.replace(
-      'new Synvert.Rewriter',
-      'return new Synvert.Rewriter'
-    )}
-    return rewriterInstance;
-  `);
-
-  const result = fn(Synvert);
-  return result;
+  return evaluateContent(snippetContent, 'Rewriter');
 };
 
 /**
@@ -366,18 +356,7 @@ export const evalSnippet = async <T>(
  */
 export const evalHelperSync = (helperName: string): Helper => {
   const helperContent = loadSnippetSync(helperName);
-
-  const fn = new Function('Synvert', `
-    let helperInstance;
-    ${helperContent.replace(
-      'new Synvert.Helper',
-      'return new Synvert.Helper'
-    )}
-    return helperInstance;
-  `);
-
-  const result = fn(Synvert);
-  return result;
+  return evaluateContent(helperContent, 'Helper');
 };
 
 /**
@@ -388,18 +367,7 @@ export const evalHelperSync = (helperName: string): Helper => {
  */
 export const evalHelper = async <T>(helperName: string): Promise<Helper> => {
   const helperContent = await loadSnippet(helperName);
-
-  const fn = new Function('Synvert', `
-    let helperInstance;
-    ${helperContent.replace(
-      'new Synvert.Helper',
-      'return new Synvert.Helper'
-    )}
-    return helperInstance;
-  `);
-
-  const result = fn(Synvert);
-  return result;
+  return evaluateContent(helperContent, 'Helper');
 };
 
 /**
