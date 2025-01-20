@@ -88,6 +88,7 @@ const node_query_1 = __importDefault(require("@synvert-hq/node-query"));
 const node_mutation_1 = __importDefault(require("@synvert-hq/node-mutation"));
 const errors_1 = require("./errors");
 const configuration_1 = __importDefault(require("./configuration"));
+const Synvert = require("./synvert");
 const REWRITER_METHODS = "addFile removeFile renameFile withinFiles withinFile addSnippet";
 const SCOPE_METHODS = "withinNode withNode findNode gotoNode";
 const CONDITION_METHODS = "ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes";
@@ -124,11 +125,8 @@ const ASYNC_METHODS_QUERY = new node_query_1.default(`.CallExpression[expression
 /**
  * Rewrite javascript snippet to async version.
  */
-const rewriteSnippetToAsyncVersion = (snippet, insertRequire = true) => {
+const rewriteSnippetToAsyncVersion = (snippet) => {
     let newSnippet = addProperScopeToSnippet(snippet);
-    if (insertRequire) {
-        newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
-    }
     const node = parseCode(newSnippet);
     const mutation = new node_mutation_1.default(newSnippet, {
         adapter: "typescript",
@@ -152,11 +150,8 @@ const SYNC_METHODS_QUERY = new node_query_1.default(`.CallExpression[expression=
 /**
  * Rewrite javascript snippet to sync version.
  */
-const rewriteSnippetToSyncVersion = (snippet, insertRequire = true) => {
+const rewriteSnippetToSyncVersion = (snippet) => {
     let newSnippet = addProperScopeToSnippet(snippet);
-    if (insertRequire) {
-        newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
-    }
     const node = parseCode(newSnippet);
     const mutation = new node_mutation_1.default(newSnippet, {
         adapter: "typescript",
@@ -167,19 +162,6 @@ const rewriteSnippetToSyncVersion = (snippet, insertRequire = true) => {
 };
 exports.rewriteSnippetToSyncVersion = rewriteSnippetToSyncVersion;
 const NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY = new node_query_1.default(`:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="@synvert-hq/synvert-core"]]]]])`, { adapter: "typescript" });
-const insertRequireSynvertCoreToSnippet = (snippet) => {
-    const node = parseCode(snippet);
-    const mutation = new node_mutation_1.default(snippet, {
-        adapter: "typescript",
-    });
-    NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY.queryNodes(node).forEach((node) => {
-        mutation.insert(node, `const Synvert = require("@synvert-hq/synvert-core");\n`, {
-            at: "beginning",
-        });
-    });
-    const { affected, newSource } = mutation.process();
-    return affected ? newSource : snippet;
-};
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new node_query_1.default(`.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`, { adapter: "typescript" });
 const NEW_HELPER_WITH_ARROW_FUNCTION_QUERY = new node_query_1.default(`.NewExpression[expression=Synvert.Helper][arguments.length=2][arguments.1=.ArrowFunction]`, { adapter: "typescript" });
 const NEW_INSTANCE_WITH_ARROW_FUNCTION_QUERY = new node_query_1.default(`.CallExpression[expression IN (withinFiles withinFile)][arguments.length=2][arguments.1=.ArrowFunction]`, { adapter: "typescript" });
@@ -305,7 +287,14 @@ exports.glob = glob;
  * @returns {Rewriter} a Rewriter object
  */
 const evalSnippetSync = (snippetName) => {
-    return eval((0, exports.loadSnippetSync)(snippetName));
+    const snippetContent = (0, exports.loadSnippetSync)(snippetName);
+    const fn = new Function('Synvert', `
+    let rewriterInstance;
+    ${snippetContent.replace('new Synvert.Rewriter', 'return new Synvert.Rewriter')}
+    return rewriterInstance;
+  `);
+    const result = fn(Synvert);
+    return result;
 };
 exports.evalSnippetSync = evalSnippetSync;
 /**
@@ -315,7 +304,14 @@ exports.evalSnippetSync = evalSnippetSync;
  * @returns {Promise&lt;Rewriter>} a Rewriter object
  */
 const evalSnippet = (snippetName) => __awaiter(void 0, void 0, void 0, function* () {
-    return eval(yield (0, exports.loadSnippet)(snippetName));
+    const snippetContent = yield (0, exports.loadSnippet)(snippetName);
+    const fn = new Function('Synvert', `
+    let rewriterInstance;
+    ${snippetContent.replace('new Synvert.Rewriter', 'return new Synvert.Rewriter')}
+    return rewriterInstance;
+  `);
+    const result = fn(Synvert);
+    return result;
 });
 exports.evalSnippet = evalSnippet;
 /**
@@ -324,7 +320,14 @@ exports.evalSnippet = evalSnippet;
  * @returns {Helper} a Helper object
  */
 const evalHelperSync = (helperName) => {
-    return eval((0, exports.loadSnippetSync)(helperName));
+    const helperContent = (0, exports.loadSnippetSync)(helperName);
+    const fn = new Function('Synvert', `
+    let helperInstance;
+    ${helperContent.replace('new Synvert.Helper', 'return new Synvert.Helper')}
+    return helperInstance;
+  `);
+    const result = fn(Synvert);
+    return result;
 };
 exports.evalHelperSync = evalHelperSync;
 /**
@@ -334,32 +337,37 @@ exports.evalHelperSync = evalHelperSync;
  * @returns {Promise&lt;Helper>} a Helper object
  */
 const evalHelper = (helperName) => __awaiter(void 0, void 0, void 0, function* () {
-    return eval(yield (0, exports.loadSnippet)(helperName));
+    const helperContent = yield (0, exports.loadSnippet)(helperName);
+    const fn = new Function('Synvert', `
+    let helperInstance;
+    ${helperContent.replace('new Synvert.Helper', 'return new Synvert.Helper')}
+    return helperInstance;
+  `);
+    const result = fn(Synvert);
+    return result;
 });
 exports.evalHelper = evalHelper;
 /**
  * Sync to load snippet by snippet name.
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
- * @param {boolean} insertRequire - insert require statement or not
  * @returns {string} snippet helper content
  * @throws {SnippetNotFoundError} snippet not found
  */
-const loadSnippetSync = (snippetName, insertRequire = true) => {
+const loadSnippetSync = (snippetName) => {
     const snippetContent = loadSnippetContentSync(snippetName);
-    return (0, exports.rewriteSnippetToSyncVersion)(snippetContent, insertRequire);
+    return (0, exports.rewriteSnippetToSyncVersion)(snippetContent);
 };
 exports.loadSnippetSync = loadSnippetSync;
 /**
  * Sync to load snippet by snippet name.
  * @async
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
- * @param {boolean} insertRequire - insert require statement or not
  * @returns {Promise&lt;string>} snippet helper content
  * @throws {SnippetNotFoundError} snippet not found
  */
-const loadSnippet = (snippetName, insertRequire = true) => __awaiter(void 0, void 0, void 0, function* () {
+const loadSnippet = (snippetName) => __awaiter(void 0, void 0, void 0, function* () {
     const snippetContent = yield loadSnippetContent(snippetName);
-    return (0, exports.rewriteSnippetToAsyncVersion)(snippetContent, insertRequire);
+    return (0, exports.rewriteSnippetToAsyncVersion)(snippetContent);
 });
 exports.loadSnippet = loadSnippet;
 /**
@@ -485,7 +493,7 @@ const loadSnippetContentSync = (snippetName) => {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Jan 17 2025 11:17:41 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Mon Jan 20 2025 12:05:47 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
