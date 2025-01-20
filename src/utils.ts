@@ -320,7 +320,19 @@ export const glob = async (filePattern: string): Promise<string[]> => {
  * @returns {Rewriter} a Rewriter object
  */
 export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
-  return eval(loadSnippetSync(snippetName));
+  const snippetContent = loadSnippetSync(snippetName);
+
+  const fn = new Function('Synvert', `
+    let rewriterInstance;
+    ${snippetContent.replace(
+      'new Synvert.Rewriter',
+      'return new Synvert.Rewriter'
+    )}
+    return rewriterInstance;
+  `);
+
+  const result = fn(Synvert);
+  return result;
 };
 
 /**
@@ -332,7 +344,19 @@ export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
 export const evalSnippet = async <T>(
   snippetName: string,
 ): Promise<Rewriter<T>> => {
-  return eval(await loadSnippet(snippetName));
+  const snippetContent = await loadSnippet(snippetName);
+
+  const fn = new Function('Synvert', `
+    let rewriterInstance;
+    ${snippetContent.replace(
+      'new Synvert.Rewriter',
+      'return new Synvert.Rewriter'
+    )}
+    return rewriterInstance;
+  `);
+
+  const result = fn(Synvert);
+  return result;
 };
 
 /**
