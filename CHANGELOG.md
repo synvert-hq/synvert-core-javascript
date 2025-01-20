@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.22.0 (2025-01-20)
+
+* Add `evaluateContent` to safely evaluate snippet/helper content
+
 ## 2.21.2 (2025-01-20)
 
 * Rewrite `evalHelper` to avoid using `eval`
