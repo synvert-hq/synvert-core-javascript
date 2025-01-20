@@ -6,6 +6,7 @@ import {
   evalSnippetSync,
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
+  evaluateContent,
 } from "./utils";
 import { SnippetNotFoundError } from "./errors";
 import { Parser } from "./types/options";
@@ -41,6 +42,7 @@ export {
   evalSnippetSync,
   rewriteSnippetToAsyncVersion,
   rewriteSnippetToSyncVersion,
+  evaluateContent,
   SnippetNotFoundError,
   Parser,
 };

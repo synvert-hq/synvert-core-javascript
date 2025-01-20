@@ -315,7 +315,7 @@ export const glob = async (filePattern: string): Promise<string[]> => {
  * @param type The type to replace ('Rewriter' or 'Helper')
  * @returns The evaluated instance
  */
-const evaluateContent = <T>(content: string, type: 'Rewriter' | 'Helper'): T => {
+export const evaluateContent = <T>(content: string, type: 'Rewriter' | 'Helper'): T => {
   const fn = new Function('Synvert', `
     let instance;
     ${content.replace(
