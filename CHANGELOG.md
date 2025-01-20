@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.21.2 (2025-01-20)
+
+* Rewrite `evalHelper` to avoid using `eval`
+* Rewrite `evalSnippet` to avoid using `eval`
+
 ## 2.21.1 (2024-10-19)
 
 * Support node v22 on github actions
