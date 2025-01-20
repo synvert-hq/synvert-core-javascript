@@ -843,7 +843,7 @@ describe("Instance", () => {
     });
   });
 
-  describe.skip("#calHelperSync", () => {
+  describe("#calHelperSync", () => {
     afterEach(() => {
       mock.restore();
     });
@@ -889,7 +889,7 @@ describe("Instance", () => {
     });
   });
 
-  describe.skip("#calHelper", () => {
+  describe("#calHelper", () => {
     afterEach(() => {
       mock.restore();
     });

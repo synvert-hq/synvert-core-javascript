@@ -13,6 +13,8 @@ import Rewriter from "./rewriter";
 import Configuration from "./configuration";
 import Helper from "./helper";
 
+const Synvert = require("./synvert");
+
 const REWRITER_METHODS =
   "addFile removeFile renameFile withinFiles withinFile addSnippet";
 const SCOPE_METHODS = "withinNode withNode findNode gotoNode";
@@ -80,14 +82,8 @@ const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
 /**
  * Rewrite javascript snippet to async version.
  */
-export const rewriteSnippetToAsyncVersion = (
-  snippet: string,
-  insertRequire: boolean = true,
-): string => {
+export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
   let newSnippet = addProperScopeToSnippet(snippet);
-  if (insertRequire) {
-    newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
-  }
   const node = parseCode(newSnippet);
   const mutation = new NodeMutation<ts.Node>(newSnippet, {
     adapter: "typescript",
@@ -125,14 +121,8 @@ const SYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
 /**
  * Rewrite javascript snippet to sync version.
  */
-export const rewriteSnippetToSyncVersion = (
-  snippet: string,
-  insertRequire: boolean = true,
-): string => {
+export const rewriteSnippetToSyncVersion = (snippet: string): string => {
   let newSnippet = addProperScopeToSnippet(snippet);
-  if (insertRequire) {
-    newSnippet = insertRequireSynvertCoreToSnippet(newSnippet);
-  }
   const node = parseCode(newSnippet);
   const mutation = new NodeMutation<ts.Node>(newSnippet, {
     adapter: "typescript",
@@ -148,24 +138,6 @@ const NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY = new NodeQuery<ts.Node>(
   `:not_has(.FirstStatement[declarationList=.VariableDeclarationList[declarations.length=1][declarations.0=.VariableDeclaration[name=Synvert][initializer=.CallExpression[expression=require][arguments.length=1][arguments.0=.StringLiteral[text="@synvert-hq/synvert-core"]]]]])`,
   { adapter: "typescript" },
 );
-
-const insertRequireSynvertCoreToSnippet = (snippet: string): string => {
-  const node = parseCode(snippet);
-  const mutation = new NodeMutation<ts.Node>(snippet, {
-    adapter: "typescript",
-  });
-  NOT_HAS_REQUIRE_SYNVERT_CORE_QUERY.queryNodes(node).forEach((node) => {
-    mutation.insert(
-      node,
-      `const Synvert = require("@synvert-hq/synvert-core");\n`,
-      {
-        at: "beginning",
-      },
-    );
-  });
-  const { affected, newSource } = mutation.process();
-  return affected ? newSource! : snippet;
-};
 
 const NEW_REWRITER_WITH_ARROW_FUNCTION_QUERY = new NodeQuery<ts.Node>(
   `.NewExpression[expression=Synvert.Rewriter][arguments.length=3][arguments.2=.ArrowFunction]`,
@@ -369,7 +341,19 @@ export const evalSnippet = async <T>(
  * @returns {Helper} a Helper object
  */
 export const evalHelperSync = (helperName: string): Helper => {
-  return eval(loadSnippetSync(helperName));
+  const helperContent = loadSnippetSync(helperName);
+
+  const fn = new Function('Synvert', `
+    let helperInstance;
+    ${helperContent.replace(
+      'new Synvert.Helper',
+      'return new Synvert.Helper'
+    )}
+    return helperInstance;
+  `);
+
+  const result = fn(Synvert);
+  return result;
 };
 
 /**
@@ -379,38 +363,42 @@ export const evalHelperSync = (helperName: string): Helper => {
  * @returns {Promise<Helper>} a Helper object
  */
 export const evalHelper = async <T>(helperName: string): Promise<Helper> => {
-  return eval(await loadSnippet(helperName));
+  const helperContent = await loadSnippet(helperName);
+
+  const fn = new Function('Synvert', `
+    let helperInstance;
+    ${helperContent.replace(
+      'new Synvert.Helper',
+      'return new Synvert.Helper'
+    )}
+    return helperInstance;
+  `);
+
+  const result = fn(Synvert);
+  return result;
 };
 
 /**
  * Sync to load snippet by snippet name.
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
- * @param {boolean} insertRequire - insert require statement or not
  * @returns {string} snippet helper content
  * @throws {SnippetNotFoundError} snippet not found
  */
-export const loadSnippetSync = (
-  snippetName: string,
-  insertRequire: boolean = true,
-): string => {
+export const loadSnippetSync = (snippetName: string): string => {
   const snippetContent = loadSnippetContentSync(snippetName);
-  return rewriteSnippetToSyncVersion(snippetContent, insertRequire);
+  return rewriteSnippetToSyncVersion(snippetContent);
 };
 
 /**
  * Sync to load snippet by snippet name.
  * @async
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
- * @param {boolean} insertRequire - insert require statement or not
  * @returns {Promise<string>} snippet helper content
  * @throws {SnippetNotFoundError} snippet not found
  */
-export const loadSnippet = async (
-  snippetName: string,
-  insertRequire: boolean = true,
-): Promise<string> => {
+export const loadSnippet = async (snippetName: string): Promise<string> => {
   const snippetContent = await loadSnippetContent(snippetName);
-  return rewriteSnippetToAsyncVersion(snippetContent, insertRequire);
+  return rewriteSnippetToAsyncVersion(snippetContent);
 };
 
 /**

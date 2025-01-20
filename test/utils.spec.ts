@@ -135,7 +135,6 @@ describe("rewriteSnippetToSyncVersion", () => {
       });
     `;
     const newSnippet = dedent`
-      const Synvert = require("@synvert-hq/synvert-core");
       new Synvert.Rewriter("group", "name", function () {
         this.description("foobar");
 
