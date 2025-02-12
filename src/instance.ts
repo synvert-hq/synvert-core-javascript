@@ -19,6 +19,7 @@ import { evalHelperSync, evalHelper } from "./utils";
 import { QueryOptions } from "@synvert-hq/node-query";
 import NodeMutation, {
   Strategy,
+  IndentOptions,
   InsertOptions,
   ReplaceOptions,
   DeleteOptions,
@@ -883,6 +884,19 @@ class Instance<T> {
    */
   prepend(code: string): void {
     this.currentMutation.prepend(this.currentNode, code);
+  }
+
+  /**
+   * Indent the code.
+   * @example
+   * // const foo = bar
+   * // will be converted to
+   * //   const foo = bar
+   * // after executing
+   * indent({ tabSize: 1 })
+   */
+  indent(options: IndentOptions): void {
+    this.currentMutation.indent(this.currentNode, options);
   }
 
   /**

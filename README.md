@@ -96,6 +96,7 @@ Actions:
 * [delete](https://synvert-hq.github.io/synvert-core-javascript/Instance#delete) - delete code the code of specified child nodes
 * [remove](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#remove) - remove the whole code of current node
 * [replaceWith](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#replaceWith) - replace the whole code of current node
+* [indent](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#indent) - indent the code of current node
 * [noop](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#noop) - no operation
 * [group](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#group) - group actions
 
