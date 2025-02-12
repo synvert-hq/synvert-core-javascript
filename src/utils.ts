@@ -22,8 +22,8 @@ const CONDITION_METHODS =
   "ifExistNode unlessExistNode ifOnlyExistNode ifAllNodes";
 // delete is a reserved word, we define another expression in GLOBAL_DSL_QUERY
 const ACTION_METHODS =
-  "group append prepend insert insertAfter insertBefore remove replace replaceWith noop";
-const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indent`;
+  "group append prepend indent insert insertAfter insertBefore remove replace replaceWith noop";
+const ALL_METHODS = `configure description ifNode ifNpm ${REWRITER_METHODS} ${SCOPE_METHODS} ${CONDITION_METHODS} ${ACTION_METHODS} callHelper wrapWithQuotes appendSemicolon addLeadingSpaces indentCode`;
 
 export const arrayBody = <T>(
   node: T,
@@ -365,7 +365,7 @@ export const evalHelperSync = (helperName: string): Helper => {
  * @param {string} helperName - helper name, it can be a http url, file path or helper name.
  * @returns {Promise<Helper>} a Helper object
  */
-export const evalHelper = async <T>(helperName: string): Promise<Helper> => {
+export const evalHelper = async (helperName: string): Promise<Helper> => {
   const helperContent = await loadSnippet(helperName);
   return evaluateContent(helperContent, 'Helper');
 };
