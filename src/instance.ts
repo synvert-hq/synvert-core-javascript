@@ -1134,16 +1134,16 @@ class Instance<T> {
    * @example
    * //   foo
    * //   bar
-   * indent("foo\nbar", 2)
+   * indentCode("foo\nbar", 2)
    * @param {string} str
-   * @param {number} spaceCount
+   * @param {number} tabSize
    * @param {object} options
    * @param {number} options.skipFirstLine skip first line, default is false
    * @returns {string} indented str
    */
-  indent(
+  indentCode(
     str: string,
-    spaceCount: number,
+    tabSize: number,
     { skipFirstLine }: { skipFirstLine: boolean } = { skipFirstLine: false },
   ): string {
     let firstLine = true;
@@ -1157,10 +1157,10 @@ class Instance<T> {
           firstLine = !firstLine;
           return line;
         }
-        if (spaceCount > 0) {
-          return " ".repeat(spaceCount) + line;
+        if (tabSize > 0) {
+          return " ".repeat(tabSize * Configuration.tabWidth) + line;
         } else {
-          return line.slice(-spaceCount);
+          return line.slice(-tabSize * Configuration.tabWidth);
         }
       })
       .join("\n");

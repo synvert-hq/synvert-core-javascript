@@ -106,7 +106,7 @@ Others:
 * [wrapWithQuotes](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#wrapWithQuotes) - wrap string code with single or double quotes
 * [appendSemicolon](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#appendSemicolon) - append semicolon to the end of the code
 * [addLeadingSpaces](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#addLeadingSpaces) - add leading spaces to the code
-* [indent](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#indent) - indent each line in a string code
+* [indentCode](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#indentCode) - indent each line in a string code
 
 Properties:
 * [filePath](https://synvert-hq.github.io/synvert-core-javascript/Instance.html#filePath) - get the file path

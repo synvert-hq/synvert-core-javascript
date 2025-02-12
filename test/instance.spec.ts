@@ -1036,7 +1036,7 @@ describe("Instance", () => {
         }
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {});
-      expect(instance.indent(oldCode, 2)).toEqual(newCode);
+      expect(instance.indentCode(oldCode, 1)).toEqual(newCode);
     });
 
     describe("skipFirstLine", () => {
@@ -1055,7 +1055,7 @@ describe("Instance", () => {
         }
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {});
-      expect(instance.indent(oldCode, 2, { skipFirstLine: true })).toEqual(
+      expect(instance.indentCode(oldCode, 1, { skipFirstLine: true })).toEqual(
         newCode,
       );
     });
@@ -1076,7 +1076,7 @@ describe("Instance", () => {
       }
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {});
-      expect(instance.indent(oldCode, -2)).toEqual(newCode);
+      expect(instance.indentCode(oldCode, -1)).toEqual(newCode);
     });
   });
 });
