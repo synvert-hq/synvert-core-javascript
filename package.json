@@ -23,7 +23,7 @@
   "dependencies": {
     "@synvert-hq/espree": "^10.0.1",
     "@synvert-hq/gonzales-pe": "^1.1.0",
-    "@synvert-hq/node-mutation": "^1.17.3",
+    "@synvert-hq/node-mutation": "^1.18.0",
     "@synvert-hq/node-query": "^1.19.4",
     "@yarnpkg/lockfile": "^1.1.0",
     "compare-versions": "^3.6.0",
