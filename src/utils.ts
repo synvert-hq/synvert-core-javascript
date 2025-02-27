@@ -315,15 +315,18 @@ export const glob = async (filePattern: string): Promise<string[]> => {
  * @param type The type to replace ('Rewriter' or 'Helper')
  * @returns The evaluated instance
  */
-export const evaluateContent = <T>(content: string, type: 'Rewriter' | 'Helper'): T => {
-  const fn = new Function('Synvert', `
+export const evaluateContent = <T>(
+  content: string,
+  type: "Rewriter" | "Helper",
+): T => {
+  const fn = new Function(
+    "Synvert",
+    `
     let instance;
-    ${content.replace(
-      `new Synvert.${type}`,
-      `return new Synvert.${type}`
-    )}
+    ${content.replace(`new Synvert.${type}`, `return new Synvert.${type}`)}
     return instance;
-  `);
+  `,
+  );
 
   return fn(Synvert);
 };
@@ -335,7 +338,7 @@ export const evaluateContent = <T>(content: string, type: 'Rewriter' | 'Helper')
  */
 export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
   const snippetContent = loadSnippetSync(snippetName);
-  return evaluateContent(snippetContent, 'Rewriter');
+  return evaluateContent(snippetContent, "Rewriter");
 };
 
 /**
@@ -344,9 +347,11 @@ export const evalSnippetSync = <T>(snippetName: string): Rewriter<T> => {
  * @param {string} snippetName - snippet name, it can be a http url, file path or short snippet name.
  * @returns {Promise<Rewriter>} a Rewriter object
  */
-export const evalSnippet = async <T>(snippetName: string): Promise<Rewriter<T>> => {
+export const evalSnippet = async <T>(
+  snippetName: string,
+): Promise<Rewriter<T>> => {
   const snippetContent = await loadSnippet(snippetName);
-  return evaluateContent(snippetContent, 'Rewriter');
+  return evaluateContent(snippetContent, "Rewriter");
 };
 
 /**
@@ -356,7 +361,7 @@ export const evalSnippet = async <T>(snippetName: string): Promise<Rewriter<T>> 
  */
 export const evalHelperSync = (helperName: string): Helper => {
   const helperContent = loadSnippetSync(helperName);
-  return evaluateContent(helperContent, 'Helper');
+  return evaluateContent(helperContent, "Helper");
 };
 
 /**
@@ -367,7 +372,7 @@ export const evalHelperSync = (helperName: string): Helper => {
  */
 export const evalHelper = async (helperName: string): Promise<Helper> => {
   const helperContent = await loadSnippet(helperName);
-  return evaluateContent(helperContent, 'Helper');
+  return evaluateContent(helperContent, "Helper");
 };
 
 /**
