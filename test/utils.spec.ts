@@ -19,10 +19,12 @@ describe("rewriteSnippetToAsyncVersion", () => {
         addSnippet("foo", "bar");
         withinFiles(Synvert.ALL_FILES, () => {
           callHelper("helper/foobar")
-          findNode(".CallExpression", () => {
-            group(() => {
-              replace("expression.name", { with: "foobar" });
-              delete("expression.expression");
+          callHelper("helper/findNode", () => {
+            findNode(".CallExpression", () => {
+              group(() => {
+                replace("expression.name", { with: "foobar" });
+                delete("expression.expression");
+              });
             });
           });
         });
@@ -38,10 +40,12 @@ describe("rewriteSnippetToAsyncVersion", () => {
         addSnippet("foo", "bar");
         withinFiles(Synvert.ALL_FILES, function () {
           callHelper("helper/foobar")
-          findNode(".CallExpression", () => {
-            group(() => {
-              replace("expression.name", { with: "foobar" });
-              delete("expression.expression");
+          callHelper("helper/findNode", () => {
+            findNode(".CallExpression", () => {
+              group(() => {
+                replace("expression.name", { with: "foobar" });
+                delete("expression.expression");
+              });
             });
           });
         });
@@ -66,10 +70,12 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.addSnippet("foo", "bar");
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
-          await this.findNode(".CallExpression", async () => {
-            await this.group(async () => {
-              this.replace("expression.name", { with: "foobar" });
-              this.delete("expression.expression");
+          await this.callHelper("helper/findNode", async () => {
+            await this.findNode(".CallExpression", async () => {
+              await this.group(async () => {
+                this.replace("expression.name", { with: "foobar" });
+                this.delete("expression.expression");
+              });
             });
           });
         });
@@ -85,10 +91,12 @@ describe("rewriteSnippetToAsyncVersion", () => {
         await this.addSnippet("foo", "bar");
         await this.withinFiles(Synvert.ALL_FILES, async function () {
           await this.callHelper("helper/foobar")
-          await this.findNode(".CallExpression", async () => {
-            await this.group(async () => {
-              this.replace("expression.name", { with: "foobar" });
-              this.delete("expression.expression");
+          await this.callHelper("helper/findNode", async () => {
+            await this.findNode(".CallExpression", async () => {
+              await this.group(async () => {
+                this.replace("expression.name", { with: "foobar" });
+                this.delete("expression.expression");
+              });
             });
           });
         });
@@ -122,10 +130,12 @@ describe("rewriteSnippetToSyncVersion", () => {
         addSnippet("foo", "bar");
         withinFiles(Synvert.ALL_FILES, () => {
           callHelper("helper/foobar")
-          findNode(".CallExpression", () => {
-            group(() => {
-              replace("expression.name", { with: "foobar" });
-              delete("expression.expression");
+          callHelper("helper/findNode", () => {
+            findNode(".CallExpression", () => {
+              group(() => {
+                replace("expression.name", { with: "foobar" });
+                delete("expression.expression");
+              });
             });
           });
         });
@@ -145,10 +155,12 @@ describe("rewriteSnippetToSyncVersion", () => {
         this.addSnippetSync("foo", "bar");
         this.withinFilesSync(Synvert.ALL_FILES, function () {
           this.callHelperSync("helper/foobar")
-          this.findNodeSync(".CallExpression", () => {
-            this.group(() => {
-              this.replace("expression.name", { with: "foobar" });
-              this.delete("expression.expression");
+          this.callHelperSync("helper/findNode", () => {
+            this.findNodeSync(".CallExpression", () => {
+              this.group(() => {
+                this.replace("expression.name", { with: "foobar" });
+                this.delete("expression.expression");
+              });
             });
           });
         });
