@@ -849,8 +849,9 @@ describe("Instance", () => {
     });
 
     test("calls helper", () => {
+      let helperFunctionCalled = false;
       const helper = `
-        new Synvert.Helper("helpers/helper", function () {
+        new Synvert.Helper("helpers/helper", function (options, fn) {
           findNode(
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
@@ -866,10 +867,13 @@ describe("Instance", () => {
               replace("expression.name", { with: "trimEnd" });
             }
           );
+          fn();
         });
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {
-        this.callHelperSync("helpers/helper");
+        this.callHelperSync("helpers/helper", function() {
+          helperFunctionCalled = true;
+        });
       });
       const input = `
         const foo1 = bar.trimLeft();
@@ -886,6 +890,7 @@ describe("Instance", () => {
       process.env.SYNVERT_SNIPPETS_HOME = ".";
       instance.processSync();
       expect(fs.readFileSync("code.ts", "utf8")).toEqual(output);
+      expect(helperFunctionCalled).toBe(true);
     });
   });
 
@@ -896,7 +901,7 @@ describe("Instance", () => {
 
     test("calls helper", async () => {
       const helper = `
-        new Synvert.Helper("helpers/helper", function () {
+        new Synvert.Helper("helpers/helper", function (options, fn) {
           findNode(
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
@@ -912,14 +917,18 @@ describe("Instance", () => {
               replace("expression.name", { with: "trimEnd" });
             }
           );
+          fn();
         });
       `;
       rewriter.options.parser = Parser.TYPESCRIPT;
+      let helperFunctionCalled = false;
       const instance = new Instance<Node>(
         rewriter,
         "code.ts",
         async function () {
-          await this.callHelper("helpers/helper");
+          await this.callHelper("helpers/helper", async function () {
+            helperFunctionCalled = true;
+          });
         },
       );
       const input = `
@@ -937,6 +946,7 @@ describe("Instance", () => {
       process.env.SYNVERT_SNIPPETS_HOME = ".";
       await instance.process();
       expect(await promisesFs.readFile("code.ts", "utf8")).toEqual(output);
+      expect(helperFunctionCalled).toBe(true);
     });
   });
 

@@ -359,7 +359,7 @@ export const evalSnippet = async <T>(
  * @param {string} helperName - helper name, it can be a http url, file path or helper name.
  * @returns {Helper} a Helper object
  */
-export const evalHelperSync = (helperName: string): Helper => {
+export const evalHelperSync = <T>(helperName: string): Helper<T> => {
   const helperContent = loadSnippetSync(helperName);
   return evaluateContent(helperContent, "Helper");
 };
@@ -370,7 +370,7 @@ export const evalHelperSync = (helperName: string): Helper => {
  * @param {string} helperName - helper name, it can be a http url, file path or helper name.
  * @returns {Promise<Helper>} a Helper object
  */
-export const evalHelper = async (helperName: string): Promise<Helper> => {
+export const evalHelper = async <T>(helperName: string): Promise<Helper<T>> => {
   const helperContent = await loadSnippet(helperName);
   return evaluateContent(helperContent, "Helper");
 };

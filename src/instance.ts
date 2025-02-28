@@ -1078,28 +1078,48 @@ class Instance<T> {
   /**
    * Sync to call a helper to run shared code.
    * @param {string} helperName - snippet helper name, it can be a http url, file path or a helper name
-   * @param options - options can be anything it needs to be passed to the helper
+   * @param {Object|Function} options - options can be anything it needs to be passed to the helper, or a function to be called
+   * @param {Function} [func] - function to be called after the helper
    */
-  callHelperSync(helperName: string, options: any): void {
+  callHelperSync(
+    helperName: string,
+    options: any | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+  ): void {
     const helper = Helper.fetch(helperName) || evalHelperSync(helperName);
     if (!helper) {
       return;
     }
-    helper.func.call(this, options);
+
+    if (typeof options === "function") {
+      helper.func.call(this, {}, options.bind(this));
+    } else {
+      helper.func.call(this, options, func?.bind(this));
+    }
   }
 
   /**
    * Async to call a helper to run shared code.
    * @async
    * @param {string} helperName - snippet helper name, it can be a http url, file path or a helper name
-   * @param options - options can be anything it needs to be passed to the helper
+   * @param {Object|Function} options - options can be anything it needs to be passed to the helper, or a function to be called
+   * @param {Function} [func] - function to be called after the helper
    */
-  async callHelper(helperName: string, options: any): Promise<void> {
+  async callHelper(
+    helperName: string,
+    options: any | ((instance: Instance<T>) => void),
+    func?: (instance: Instance<T>) => void,
+  ): Promise<void> {
     const helper = Helper.fetch(helperName) || (await evalHelper(helperName));
     if (!helper) {
       return;
     }
-    await helper.func.call(this, options);
+
+    if (typeof options === "function") {
+      await helper.func.call(this, {}, options.bind(this));
+    } else {
+      await helper.func.call(this, options, func?.bind(this));
+    }
   }
 
   /**
@@ -1150,8 +1170,9 @@ class Instance<T> {
    * //   bar
    * indentCode("foo\nbar", 2)
    * @param {string} str
-   * @param {number} tabSize
    * @param {object} options
+   * @param {number} options.tabSize tab size
+   * @param {number} options.spaceSize space size
    * @param {number} options.skipFirstLine skip first line, default is false
    * @returns {string} indented str
    */
