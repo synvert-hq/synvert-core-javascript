@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.23.0 (2025-02-28)
+
+* Rename `indent` to `indentCode`
+* Add `indent` dsl
+* Insert `async` to `callHelper` arguments.-1
+
 ## 2.22.0 (2025-01-20)
 
 * Add `evaluateContent` to safely evaluate snippet/helper content
