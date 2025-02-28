@@ -470,7 +470,7 @@ One instance can contains one or many Scope and Condition.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line762">line 762</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line774">line 774</a>
     </li></ul></dd>
     
 
@@ -852,7 +852,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line749">line 749</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line761">line 761</a>
     </li></ul></dd>
     
 
@@ -965,7 +965,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
 
     
 
-    <h4 class="name" id="callHelper"><span class="type-signature">(async) </span>callHelper<span class="signature">(helperName, options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="callHelper"><span class="type-signature">(async) </span>callHelper<span class="signature">(helperName, options, func<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1008,7 +1008,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line721">line 721</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line728">line 728</a>
     </li></ul></dd>
     
 
@@ -1040,6 +1040,8 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -1065,6 +1067,14 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -1083,14 +1093,66 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
 
             <td class="type">
             
+                
+<span class="param-type"><code>Object</code></span>
+|
+
+<span class="param-type"><code>function</code></span>
+
+
+            
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
 
             <td class="description last">
-                options can be anything it needs to be passed to the helper
+                options can be anything it needs to be passed to the helper, or a function to be called
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                function to be called after the helper
                 
             </td>
         </tr>
@@ -1121,7 +1183,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
 
     
 
-    <h4 class="name" id="callHelperSync"><span class="type-signature"></span>callHelperSync<span class="signature">(helperName, options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="callHelperSync"><span class="type-signature"></span>callHelperSync<span class="signature">(helperName, options, func<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1164,7 +1226,7 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line708">line 708</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line709">line 709</a>
     </li></ul></dd>
     
 
@@ -1196,6 +1258,8 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -1221,6 +1285,14 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -1239,14 +1311,66 @@ withNode({ nodeType: "MethodDefinition", key: "foo" }, () => {
 
             <td class="type">
             
+                
+<span class="param-type"><code>Object</code></span>
+|
+
+<span class="param-type"><code>function</code></span>
+
+
+            
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
 
             <td class="description last">
-                options can be anything it needs to be passed to the helper
+                options can be anything it needs to be passed to the helper, or a function to be called
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>function</code></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                function to be called after the helper
                 
             </td>
         </tr>
@@ -3526,7 +3650,7 @@ indent({ tabSize: 1 })</code></pre>
 
     
 
-    <h4 class="name" id="indentCode"><span class="type-signature"></span>indentCode<span class="signature">(str, tabSize, options)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="indentCode"><span class="type-signature"></span>indentCode<span class="signature">(str, options)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -3569,7 +3693,7 @@ indent({ tabSize: 1 })</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line777">line 777</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line790">line 790</a>
     </li></ul></dd>
     
 
@@ -3639,32 +3763,6 @@ indent({ tabSize: 1 })</code></pre>
 
         <tr>
             
-                <td class="name"><code>tabSize</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>number</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>options</code></td>
             
 
@@ -3704,6 +3802,58 @@ indent({ tabSize: 1 })</code></pre>
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>tabSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                tab size
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>spaceSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                space size
+                
+            </td>
+        </tr>
+
     
 
         <tr>
@@ -8359,7 +8509,7 @@ withinNodeSync(".CallExpression[callee=.MemberExpression[object=$][property=ajax
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line735">line 735</a>
+        <a href="instance.js.html">instance.js</a>, <a href="instance.js.html#line747">line 747</a>
     </li></ul></dd>
     
 
@@ -8488,7 +8638,7 @@ withinNodeSync(".CallExpression[callee=.MemberExpression[object=$][property=ajax
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Feb 28 2025 07:58:48 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Feb 28 2025 13:04:27 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
