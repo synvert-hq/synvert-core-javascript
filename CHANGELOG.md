@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.0 (2025-02-28)
+
+* Allow passing function to helper
+
 ## 2.23.0 (2025-02-28)
 
 * Rename `indent` to `indentCode`
