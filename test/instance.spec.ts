@@ -871,7 +871,7 @@ describe("Instance", () => {
         });
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {
-        this.callHelperSync("helpers/helper", function() {
+        this.callHelperSync("helpers/helper", function () {
           helperFunctionCalled = true;
         });
       });
