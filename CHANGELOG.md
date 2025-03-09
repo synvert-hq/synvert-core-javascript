@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.1 (2025-03-09)
+
+* Add `await` to `helperFn`
+
 ## 2.24.0 (2025-02-28)
 
 * Allow passing function to helper
