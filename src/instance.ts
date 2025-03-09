@@ -943,7 +943,7 @@ class Instance<T> {
       this.currentMutation.adapter.getStartLoc(this.currentNode, options.to)
         .column,
     );
-    const newCode = options.fixIndent ? "\n" + code.split("\n").map((line) => `${column}${line}`).join("\n") : `\n${column}${code}`;
+    const newCode = options.fixIndent ? "\n" + code.split("\n").map((line) => line.length === 0 ? line : `${column}${line}`).join("\n") : `\n${column}${code}`;
     this.currentMutation.insert(this.currentNode, newCode, {
       ...options,
       ...{ at: "end" },
@@ -973,7 +973,7 @@ class Instance<T> {
       this.currentMutation.adapter.getStartLoc(this.currentNode, options.to)
         .column,
     );
-    const newCode = options.fixIndent ? code.split("\n").map((line, index) => index === 0 ? line : `${column}${line}`).join("\n") + `\n${column}` : `${code}\n${column}`;
+    const newCode = options.fixIndent ? code.split("\n").map((line, index) => index === 0 || line.length === 0 ? line : `${column}${line}`).join("\n") + `\n${column}` : `${code}\n${column}`;
     this.currentMutation.insert(this.currentNode, newCode, {
       ...options,
       ...{ at: "beginning" },
