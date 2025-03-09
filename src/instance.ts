@@ -912,9 +912,9 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.at = "end"] - insert position, beginning or end
-   * @param {string} [option.to] - selector to find the child ast node
-   * @param {boolean} [option.andComma] - insert additional comma
-   * @param {boolean} [option.andSpace] - insert additional space
+   * @param {string} [options.to] - selector to find the child ast node
+   * @param {boolean} [options.andComma] - insert additional comma
+   * @param {boolean} [options.andSpace] - insert additional space
    */
   insert(code: string, options: InsertOptions): void {
     this.currentMutation.insert(this.currentNode, code, options);
@@ -934,9 +934,9 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
-   * @param {boolean} [option.andComma] - insert additional comma
-   * @param {boolean} [option.andSpace] - insert additional space
-   * @param {boolean} [option.fixIndent] - fix indent of the code
+   * @param {boolean} [options.andComma] - insert additional comma
+   * @param {boolean} [options.andSpace] - insert additional space
+   * @param {boolean} [options.fixIndent] - fix indent of the code
    */
   insertAfter(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
@@ -970,9 +970,9 @@ class Instance<T> {
    * @param {string} code - code need to be inserted
    * @param {Object} options
    * @param {string} [options.to] - selector to find the child ast node
-   * @param {boolean} [option.andComma] - insert additional comma
-   * @param {boolean} [option.andSpace] - insert additional space
-   * @param {boolean} [option.fixIndent] - fix indent of the code
+   * @param {boolean} [options.andComma] - insert additional comma
+   * @param {boolean} [options.andSpace] - insert additional space
+   * @param {boolean} [options.fixIndent] - fix indent of the code
    */
   insertBefore(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
@@ -1006,7 +1006,7 @@ class Instance<T> {
    * @param {string|string[]} selectors - name of child nodes
    * @param {Object} options
    * @param {boolean} [options.wholeLine = false] - remove the whole line
-   * @param {boolean} [option.andComma] - delete additional comma
+   * @param {boolean} [options.andComma] - delete additional comma
    */
   delete(selectors: string | string[], options: DeleteOptions): void {
     this.currentMutation.delete(this.currentNode, selectors, options);
@@ -1028,7 +1028,7 @@ class Instance<T> {
    *   remove();
    * });
    * @param {Object} options
-   * @param {boolean} [option.andComma] - remove additional comma
+   * @param {boolean} [options.andComma] - remove additional comma
    */
   remove(options: RemoveOptions): void {
     this.currentMutation.remove(this.currentNode, options);
