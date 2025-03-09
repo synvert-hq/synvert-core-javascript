@@ -26,7 +26,7 @@ import NodeMutation, {
   RemoveOptions,
   Adapter as MutationAdapter,
 } from "@synvert-hq/node-mutation";
-import { Parser } from "./types/options";
+import { Parser, NewLineInsertOptions } from "./types/options";
 import { TestResultExt } from "./types/result";
 import * as HtmlEngine from "./engines/html";
 import * as RailsErbEngine from "./engines/rails_erb";
@@ -938,7 +938,7 @@ class Instance<T> {
    * @param {boolean} [options.andSpace] - insert additional space
    * @param {boolean} [options.fixIndent] - fix indent of the code
    */
-  insertAfter(code: string, options: InsertOptions = {}): void {
+  insertAfter(code: string, options: NewLineInsertOptions = {}): void {
     const column = " ".repeat(
       this.currentMutation.adapter.getStartLoc(this.currentNode, options.to)
         .column,
@@ -974,7 +974,7 @@ class Instance<T> {
    * @param {boolean} [options.andSpace] - insert additional space
    * @param {boolean} [options.fixIndent] - fix indent of the code
    */
-  insertBefore(code: string, options: InsertOptions = {}): void {
+  insertBefore(code: string, options: NewLineInsertOptions = {}): void {
     const column = " ".repeat(
       this.currentMutation.adapter.getStartLoc(this.currentNode, options.to)
         .column,

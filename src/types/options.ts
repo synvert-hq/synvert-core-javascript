@@ -18,3 +18,7 @@ export type RewriterOptions = {
   runInstance?: boolean;
   writeToFile?: boolean;
 };
+
+export interface NewLineInsertOptions extends InsertOptions {
+  fixIndent?: boolean;
+}
