@@ -79,6 +79,11 @@ const ASYNC_METHODS_QUERY = new NodeQuery<ts.Node>(
   { adapter: "typescript" },
 );
 
+const CALL_HELPER_FUNCTION_QUERY = new NodeQuery<ts.Node>(
+  `.CallExpression[expression=helperFn]`,
+  { adapter: "typescript" },
+);
+
 /**
  * Rewrite javascript snippet to async version.
  */
@@ -107,6 +112,9 @@ export const rewriteSnippetToAsyncVersion = (snippet: string): string => {
     if (node.parent.kind != SyntaxKind.AwaitExpression) {
       mutation.insert(node, "await ", { at: "beginning" });
     }
+  });
+  CALL_HELPER_FUNCTION_QUERY.queryNodes(node).forEach((node) => {
+    mutation.insert(node, "await ", { at: "beginning" });
   });
   const { affected, newSource } = mutation.process();
   return affected ? newSource! : newSnippet;

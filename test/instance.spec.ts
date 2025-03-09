@@ -851,7 +851,7 @@ describe("Instance", () => {
     test("calls helper", () => {
       let helperFunctionCalled = false;
       const helper = `
-        new Synvert.Helper("helpers/helper", function (options, fn) {
+        new Synvert.Helper("helpers/helper", function (options, helperFn) {
           findNode(
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
@@ -867,7 +867,7 @@ describe("Instance", () => {
               replace("expression.name", { with: "trimEnd" });
             }
           );
-          fn();
+          helperFn();
         });
       `;
       const instance = new Instance<Node>(rewriter, "code.ts", function () {
@@ -901,7 +901,7 @@ describe("Instance", () => {
 
     test("calls helper", async () => {
       const helper = `
-        new Synvert.Helper("helpers/helper", function (options, fn) {
+        new Synvert.Helper("helpers/helper", function (options, helperFn) {
           findNode(
             ".CallExpression[expression=.PropertyAccessExpression[name=trimLeft]]",
             () => {
@@ -917,7 +917,7 @@ describe("Instance", () => {
               replace("expression.name", { with: "trimEnd" });
             }
           );
-          fn();
+          helperFn();
         });
       `;
       rewriter.options.parser = Parser.TYPESCRIPT;
