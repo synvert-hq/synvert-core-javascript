@@ -26,7 +26,7 @@ import NodeMutation, {
   RemoveOptions,
   Adapter as MutationAdapter,
 } from "@synvert-hq/node-mutation";
-import { Parser, NewLineInsertOptions } from "./types/options";
+import { Parser } from "./types/options";
 import { TestResultExt } from "./types/result";
 import * as HtmlEngine from "./engines/html";
 import * as RailsErbEngine from "./engines/rails_erb";
@@ -936,13 +936,15 @@ class Instance<T> {
    * @param {string} [options.to] - selector to find the child ast node
    * @param {boolean} [option.andComma] - insert additional comma
    * @param {boolean} [option.andSpace] - insert additional space
+   * @param {boolean} [option.fixIndent] - fix indent of the code
    */
-  insertAfter(code: string, options: NewLineInsertOptions = {}): void {
+  insertAfter(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
       this.currentMutation.adapter.getStartLoc(this.currentNode, options.to)
         .column,
     );
-    this.currentMutation.insert(this.currentNode, `\n${column}${code}`, {
+    const newCode = options.fixIndent ? "\n" + code.split("\n").map((line) => `${column}${line}`).join("\n") : `\n${column}${code}`;
+    this.currentMutation.insert(this.currentNode, newCode, {
       ...options,
       ...{ at: "end" },
     });
@@ -964,13 +966,15 @@ class Instance<T> {
    * @param {string} [options.to] - selector to find the child ast node
    * @param {boolean} [option.andComma] - insert additional comma
    * @param {boolean} [option.andSpace] - insert additional space
+   * @param {boolean} [option.fixIndent] - fix indent of the code
    */
   insertBefore(code: string, options: InsertOptions = {}): void {
     const column = " ".repeat(
       this.currentMutation.adapter.getStartLoc(this.currentNode, options.to)
         .column,
     );
-    this.currentMutation.insert(this.currentNode, `${code}\n${column}`, {
+    const newCode = options.fixIndent ? code.split("\n").map((line, index) => index === 0 ? line : `${column}${line}`).join("\n") + `\n${column}` : `${code}\n${column}`;
+    this.currentMutation.insert(this.currentNode, newCode, {
       ...options,
       ...{ at: "beginning" },
     });
