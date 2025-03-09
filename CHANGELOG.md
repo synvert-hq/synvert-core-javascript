@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.3 (2025-03-09)
+
+* Add type `NewLineInsertOptions`
+
 ## 2.24.2 (2025-03-09)
 
 * Add `fixIndent` to `InsertOption`
