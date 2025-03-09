@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.2 (2025-03-09)
+
+* Add `fixIndent` to `InsertOption`
+
 ## 2.24.1 (2025-03-09)
 
 * Add `await` to `helperFn`
