@@ -56,22 +56,23 @@ var __setModuleDefault = (this &amp;&amp; this.__setModuleDefault) || (Object.cr
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this &amp;&amp; this.__importStar) || function (mod) {
-    if (mod &amp;&amp; mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" &amp;&amp; Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this &amp;&amp; this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+var __importStar = (this &amp;&amp; this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod &amp;&amp; mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i &lt; k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
     return (mod &amp;&amp; mod.__esModule) ? mod : { "default": mod };
 };
@@ -156,11 +157,9 @@ class Rewriter {
      * Async to process the rewriter.
      * @async
      */
-    process() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.affectedFiles = new Set();
-            yield this.func.call(this, this);
-        });
+    async process() {
+        this.affectedFiles = new Set();
+        await this.func.call(this, this);
     }
     /**
      * Sync to process rewriter with sandbox mode.
@@ -175,11 +174,9 @@ class Rewriter {
      * It will run the func but doesn't change any file.
      * @async
      */
-    processWithSandbox() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.options.runInstance = false;
-            yield this.func.call(this, this);
-        });
+    async processWithSandbox() {
+        this.options.runInstance = false;
+        await this.func.call(this, this);
     }
     /**
      * Sync to test the rewriter.
@@ -195,12 +192,10 @@ class Rewriter {
      * @async
      * @returns {TestResultExt[]} test results
      */
-    test() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.options.writeToFile = false;
-            yield this.func.call(this, this);
-            return this.testResults;
-        });
+    async test() {
+        this.options.writeToFile = false;
+        await this.func.call(this, this);
+        return this.testResults;
     }
     /**
      * Add an affected file.
@@ -309,32 +304,30 @@ class Rewriter {
      * @param {string} group - group of another rewriter, if there's no name parameter, the group can be http url, file path or snippet name.
      * @param {string} name - name of another rewriter.
      */
-    addSnippet(group, name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let rewriter = null;
-            if (typeof name === "string") {
-                rewriter =
-                    Rewriter.fetch(group, name) ||
-                        (yield (0, utils_1.evalSnippet)([group, name].join("/")));
-            }
-            else {
-                rewriter = yield (0, utils_1.evalSnippet)(group);
-            }
-            if (!rewriter || !(rewriter instanceof Rewriter))
-                return;
-            rewriter.options = this.options;
-            if (!rewriter.options.writeToFile) {
-                const results = yield rewriter.test();
-                this.mergeTestResults(results);
-            }
-            else if (rewriter.options.runInstance) {
-                yield rewriter.process();
-            }
-            else {
-                yield rewriter.processWithSandbox();
-            }
-            this.subSnippets.push(rewriter);
-        });
+    async addSnippet(group, name) {
+        let rewriter = null;
+        if (typeof name === "string") {
+            rewriter =
+                Rewriter.fetch(group, name) ||
+                    (await (0, utils_1.evalSnippet)([group, name].join("/")));
+        }
+        else {
+            rewriter = await (0, utils_1.evalSnippet)(group);
+        }
+        if (!rewriter || !(rewriter instanceof Rewriter))
+            return;
+        rewriter.options = this.options;
+        if (!rewriter.options.writeToFile) {
+            const results = await rewriter.test();
+            this.mergeTestResults(results);
+        }
+        else if (rewriter.options.runInstance) {
+            await rewriter.process();
+        }
+        else {
+            await rewriter.processWithSandbox();
+        }
+        this.subSnippets.push(rewriter);
     }
     /**
      * Sync to find specified files.
@@ -393,42 +386,40 @@ class Rewriter {
      * @param {string} filePattern - pattern to find files, e.g. lib/*.js
      * @param {Function} func - a function rewrites code in the matching files.
      */
-    withinFiles(filePattern, func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.options.runInstance)
-                return;
-            if (this.nodeVersion &amp;&amp; !(yield this.nodeVersion.match()))
-                return;
-            if (this.npmVersion &amp;&amp; !(yield this.npmVersion.match()))
-                return;
-            if (this.options.writeToFile) {
-                if ((yield (0, utils_1.isValidFile)(configuration_1.default.rootPath)) &amp;&amp;
-                    (0, minimatch_1.default)(configuration_1.default.rootPath, filePattern)) {
-                    const instance = new instance_1.default(this, filePattern, func);
-                    return yield instance.process();
-                }
-                const filePaths = yield (0, utils_1.glob)(filePattern);
-                yield Promise.all(filePaths.map((filePath) => {
-                    const instance = new instance_1.default(this, filePath, func);
-                    return instance.process();
-                }));
+    async withinFiles(filePattern, func) {
+        if (!this.options.runInstance)
+            return;
+        if (this.nodeVersion &amp;&amp; !(await this.nodeVersion.match()))
+            return;
+        if (this.npmVersion &amp;&amp; !(await this.npmVersion.match()))
+            return;
+        if (this.options.writeToFile) {
+            if ((await (0, utils_1.isValidFile)(configuration_1.default.rootPath)) &amp;&amp;
+                (0, minimatch_1.default)(configuration_1.default.rootPath, filePattern)) {
+                const instance = new instance_1.default(this, filePattern, func);
+                return await instance.process();
             }
-            else {
-                if ((yield (0, utils_1.isValidFile)(configuration_1.default.rootPath)) &amp;&amp;
-                    (0, minimatch_1.default)(configuration_1.default.rootPath, filePattern)) {
-                    const instance = new instance_1.default(this, filePattern, func);
-                    const result = yield instance.test();
-                    this.mergeTestResults([result]);
-                    return;
-                }
-                const filePaths = yield (0, utils_1.glob)(filePattern);
-                const results = yield Promise.all(filePaths.map((filePath) => {
-                    const instance = new instance_1.default(this, filePath, func);
-                    return instance.test();
-                }));
-                this.mergeTestResults(results);
+            const filePaths = await (0, utils_1.glob)(filePattern);
+            await Promise.all(filePaths.map((filePath) => {
+                const instance = new instance_1.default(this, filePath, func);
+                return instance.process();
+            }));
+        }
+        else {
+            if ((await (0, utils_1.isValidFile)(configuration_1.default.rootPath)) &amp;&amp;
+                (0, minimatch_1.default)(configuration_1.default.rootPath, filePattern)) {
+                const instance = new instance_1.default(this, filePattern, func);
+                const result = await instance.test();
+                this.mergeTestResults([result]);
+                return;
             }
-        });
+            const filePaths = await (0, utils_1.glob)(filePattern);
+            const results = await Promise.all(filePaths.map((filePath) => {
+                const instance = new instance_1.default(this, filePath, func);
+                return instance.test();
+            }));
+            this.mergeTestResults(results);
+        }
     }
     /**
      * Sync to add a new file.
@@ -461,27 +452,25 @@ class Rewriter {
      * @param {string} fileName - file name
      * @param {string} content - file body
      */
-    addFile(fileName, content) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.options.runInstance)
-                return;
-            if (!this.options.writeToFile) {
-                const result = {
-                    affected: true,
-                    conflicted: false,
-                    filePath: fileName,
-                    actions: [{ type: "add_file", start: 0, end: 0, newCode: content }],
-                };
-                this.testResults.push(result);
-                return;
-            }
-            const filePath = path_1.default.join(configuration_1.default.rootPath, fileName);
-            if (yield (0, utils_1.isValidFile)(filePath)) {
-                return;
-            }
-            yield fs_1.promises.mkdir(path_1.default.dirname(filePath), { recursive: true });
-            yield fs_1.promises.writeFile(filePath, content);
-        });
+    async addFile(fileName, content) {
+        if (!this.options.runInstance)
+            return;
+        if (!this.options.writeToFile) {
+            const result = {
+                affected: true,
+                conflicted: false,
+                filePath: fileName,
+                actions: [{ type: "add_file", start: 0, end: 0, newCode: content }],
+            };
+            this.testResults.push(result);
+            return;
+        }
+        const filePath = path_1.default.join(configuration_1.default.rootPath, fileName);
+        if (await (0, utils_1.isValidFile)(filePath)) {
+            return;
+        }
+        await fs_1.promises.mkdir(path_1.default.dirname(filePath), { recursive: true });
+        await fs_1.promises.writeFile(filePath, content);
     }
     /**
      * Sync to remove a file.
@@ -510,25 +499,23 @@ class Rewriter {
      * @async
      * @param {string} fileName - file name
      */
-    removeFile(fileName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.options.runInstance)
-                return;
-            if (!this.options.writeToFile) {
-                const result = {
-                    affected: true,
-                    conflicted: false,
-                    filePath: fileName,
-                    actions: [{ type: "remove_file", start: 0, end: -1 }],
-                };
-                this.testResults.push(result);
-                return;
-            }
-            const filePath = path_1.default.join(configuration_1.default.rootPath, fileName);
-            if (yield (0, utils_1.isValidFile)(filePath)) {
-                yield fs_1.promises.rm(filePath);
-            }
-        });
+    async removeFile(fileName) {
+        if (!this.options.runInstance)
+            return;
+        if (!this.options.writeToFile) {
+            const result = {
+                affected: true,
+                conflicted: false,
+                filePath: fileName,
+                actions: [{ type: "remove_file", start: 0, end: -1 }],
+            };
+            this.testResults.push(result);
+            return;
+        }
+        const filePath = path_1.default.join(configuration_1.default.rootPath, fileName);
+        if (await (0, utils_1.isValidFile)(filePath)) {
+            await fs_1.promises.rm(filePath);
+        }
     }
     /**
      * Sync to rename filepath to new filepath.
@@ -563,29 +550,27 @@ class Rewriter {
      * @param {string} filePattern - pattern to find files, e.g. *.scss
      * @param {string|Function} convertFunc - new file path string or function to convert file path to new file path.
      */
-    renameFile(filePattern, convertFunc) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.options.runInstance)
-                return;
-            const filePaths = yield (0, utils_1.glob)(filePattern);
-            if (!this.options.writeToFile) {
-                filePaths.forEach((filePath) => {
-                    const newFilePath = typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
-                    const result = {
-                        affected: true,
-                        conflicted: false,
-                        filePath,
-                        newFilePath,
-                        actions: [{ type: "rename_file", start: 0, end: -1 }],
-                    };
-                    this.testResults.push(result);
-                });
-                return;
-            }
-            filePaths.map((filePath) => __awaiter(this, void 0, void 0, function* () {
+    async renameFile(filePattern, convertFunc) {
+        if (!this.options.runInstance)
+            return;
+        const filePaths = await (0, utils_1.glob)(filePattern);
+        if (!this.options.writeToFile) {
+            filePaths.forEach((filePath) => {
                 const newFilePath = typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
-                yield fs_1.promises.rename(path_1.default.join(configuration_1.default.rootPath, filePath), path_1.default.join(configuration_1.default.rootPath, newFilePath));
-            }));
+                const result = {
+                    affected: true,
+                    conflicted: false,
+                    filePath,
+                    newFilePath,
+                    actions: [{ type: "rename_file", start: 0, end: -1 }],
+                };
+                this.testResults.push(result);
+            });
+            return;
+        }
+        filePaths.map(async (filePath) => {
+            const newFilePath = typeof convertFunc === "string" ? convertFunc : convertFunc(filePath);
+            await fs_1.promises.rename(path_1.default.join(configuration_1.default.rootPath, filePath), path_1.default.join(configuration_1.default.rootPath, newFilePath));
         });
     }
     /**
@@ -631,7 +616,7 @@ exports.default = Rewriter;
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Mar 18 2026 08:04:33 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Mar 18 2026 12:55:30 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

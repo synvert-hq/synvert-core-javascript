@@ -56,22 +56,23 @@ var __setModuleDefault = (this &amp;&amp; this.__setModuleDefault) || (Object.cr
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this &amp;&amp; this.__importStar) || function (mod) {
-    if (mod &amp;&amp; mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" &amp;&amp; Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this &amp;&amp; this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+var __importStar = (this &amp;&amp; this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod &amp;&amp; mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i &lt; k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
     return (mod &amp;&amp; mod.__esModule) ? mod : { "default": mod };
 };
@@ -124,25 +125,23 @@ class NpmVersion {
      * @async
      * @returns {Promise&lt;boolean>} true if matches, otherwise false.
      */
-    match() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!configuration_1.default.strict) {
-                return true;
-            }
-            if (!(yield this.packageExist())) {
-                return true;
-            }
-            const [operator, version] = this.version.split(" ");
-            if (yield this.packageLockExist()) {
-                const packageVersion = yield this.npmPackageVersion();
-                return compare_versions_1.default.compare(packageVersion, version, operator);
-            }
-            if (yield this.yarnLockExist()) {
-                const packageVersion = yield this.yarnPackageVersion();
-                return compare_versions_1.default.compare(packageVersion, version, operator);
-            }
+    async match() {
+        if (!configuration_1.default.strict) {
             return true;
-        });
+        }
+        if (!(await this.packageExist())) {
+            return true;
+        }
+        const [operator, version] = this.version.split(" ");
+        if (await this.packageLockExist()) {
+            const packageVersion = await this.npmPackageVersion();
+            return compare_versions_1.default.compare(packageVersion, version, operator);
+        }
+        if (await this.yarnLockExist()) {
+            const packageVersion = await this.yarnPackageVersion();
+            return compare_versions_1.default.compare(packageVersion, version, operator);
+        }
+        return true;
     }
     /**
      * Get npm package version.
@@ -158,16 +157,14 @@ class NpmVersion {
             return packageLockTree.dependencies[this.name].version;
         }
     }
-    npmPackageVersion() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const packageLockTree = yield this.packageLockTree();
-            if (packageLockTree.packages) {
-                return packageLockTree.packages[`node_modules/${this.name}`].version;
-            }
-            else {
-                return packageLockTree.dependencies[this.name].version;
-            }
-        });
+    async npmPackageVersion() {
+        const packageLockTree = await this.packageLockTree();
+        if (packageLockTree.packages) {
+            return packageLockTree.packages[`node_modules/${this.name}`].version;
+        }
+        else {
+            return packageLockTree.dependencies[this.name].version;
+        }
     }
     /**
      * Get yarn package version.
@@ -179,12 +176,10 @@ class NpmVersion {
         const yarnLockTree = this.yarnLockTreeSync();
         return yarnLockTree[`${this.name}@${packageTree.dependencies[this.name]}`];
     }
-    yarnPackageVersion() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const packageTree = yield this.packageTree();
-            const yarnLockTree = yield this.yarnLockTree();
-            return yarnLockTree[`${this.name}@${packageTree.dependencies[this.name]}`];
-        });
+    async yarnPackageVersion() {
+        const packageTree = await this.packageTree();
+        const yarnLockTree = await this.yarnLockTree();
+        return yarnLockTree[`${this.name}@${packageTree.dependencies[this.name]}`];
     }
     /**
      * Get parse result of package.json.
@@ -193,11 +188,9 @@ class NpmVersion {
     packageTreeSync() {
         return JSON.parse(fs_1.default.readFileSync(this.packagePath(), "utf-8"));
     }
-    packageTree() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const content = yield fs_1.default.readFileSync(this.packagePath(), "utf-8");
-            return JSON.parse(content);
-        });
+    async packageTree() {
+        const content = await fs_1.default.readFileSync(this.packagePath(), "utf-8");
+        return JSON.parse(content);
     }
     /**
      * Check if package.json exists
@@ -207,10 +200,8 @@ class NpmVersion {
     packageExistSync() {
         return (0, utils_1.isValidFileSync)(this.packagePath());
     }
-    packageExist() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return (0, utils_1.isValidFile)(this.packagePath());
-        });
+    async packageExist() {
+        return (0, utils_1.isValidFile)(this.packagePath());
     }
     /**
      * Get package.json path.
@@ -227,11 +218,9 @@ class NpmVersion {
     packageLockTreeSync() {
         return JSON.parse(fs_1.default.readFileSync(this.packageLockPath(), "utf-8"));
     }
-    packageLockTree() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const content = yield fs_1.promises.readFile(this.packageLockPath(), "utf-8");
-            return JSON.parse(content);
-        });
+    async packageLockTree() {
+        const content = await fs_1.promises.readFile(this.packageLockPath(), "utf-8");
+        return JSON.parse(content);
     }
     /**
      * Check if package-lock.json exists.
@@ -241,10 +230,8 @@ class NpmVersion {
     packageLockExistSync() {
         return (0, utils_1.isValidFileSync)(this.packageLockPath());
     }
-    packageLockExist() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, utils_1.isValidFile)(this.packageLockPath());
-        });
+    async packageLockExist() {
+        return await (0, utils_1.isValidFile)(this.packageLockPath());
     }
     /**
      * Get package-lock.json path.
@@ -261,11 +248,9 @@ class NpmVersion {
     yarnLockTreeSync() {
         return lockfile_1.default.parse(fs_1.default.readFileSync(this.yarnLockPath(), "utf-8"));
     }
-    yarnLockTree() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const content = yield fs_1.promises.readFile(this.yarnLockPath(), "utf-8");
-            return lockfile_1.default.parse(content);
-        });
+    async yarnLockTree() {
+        const content = await fs_1.promises.readFile(this.yarnLockPath(), "utf-8");
+        return lockfile_1.default.parse(content);
     }
     /**
      * Check if yarn.lock exists.
@@ -275,10 +260,8 @@ class NpmVersion {
     yarnLockExistSync() {
         return (0, utils_1.isValidFileSync)(this.yarnLockPath());
     }
-    yarnLockExist() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield (0, utils_1.isValidFile)(this.yarnLockPath());
-        });
+    async yarnLockExist() {
+        return await (0, utils_1.isValidFile)(this.yarnLockPath());
     }
     /**
      * Get yarn.lock path.
@@ -302,7 +285,7 @@ exports.default = NpmVersion;
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Mar 18 2026 08:04:33 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Mar 18 2026 12:55:30 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

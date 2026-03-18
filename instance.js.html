@@ -56,22 +56,23 @@ var __setModuleDefault = (this &amp;&amp; this.__setModuleDefault) || (Object.cr
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this &amp;&amp; this.__importStar) || function (mod) {
-    if (mod &amp;&amp; mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" &amp;&amp; Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this &amp;&amp; this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+var __importStar = (this &amp;&amp; this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod &amp;&amp; mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i &lt; k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
     return (mod &amp;&amp; mod.__esModule) ? mod : { "default": mod };
 };
@@ -166,44 +167,42 @@ class Instance {
      * Process one file.
      * @async
      */
-    process() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.rewriter.options.parser === options_1.Parser.ESPREE &amp;&amp;
-                [".ts", ".tsx"].includes(path_1.default.extname(this.filePath))) {
-                return;
-            }
-            const currentFilePath = path_1.default.join(configuration_1.default.rootPath, this.filePath);
-            if (configuration_1.default.showRunProcess) {
-                console.log(this.filePath);
-            }
-            // It keeps running until no conflict.
-            while (true) {
-                const source = yield fs_1.promises.readFile(currentFilePath, "utf-8");
-                this.currentMutation = new node_mutation_1.default(source, {
-                    adapter: this.rewriter.parser,
-                });
-                try {
-                    const node = this.parseCode(currentFilePath, source);
-                    yield this.processWithNode(node, this.func);
-                    const result = this.currentMutation.process();
-                    (0, debug_1.default)("synvert-core:process")(result);
-                    if (result.affected) {
-                        this.rewriter.addAffectedFile(this.filePath);
-                        yield fs_1.promises.writeFile(currentFilePath, result.newSource);
-                    }
-                    if (!result.conflicted) {
-                        break;
-                    }
+    async process() {
+        if (this.rewriter.options.parser === options_1.Parser.ESPREE &amp;&amp;
+            [".ts", ".tsx"].includes(path_1.default.extname(this.filePath))) {
+            return;
+        }
+        const currentFilePath = path_1.default.join(configuration_1.default.rootPath, this.filePath);
+        if (configuration_1.default.showRunProcess) {
+            console.log(this.filePath);
+        }
+        // It keeps running until no conflict.
+        while (true) {
+            const source = await fs_1.promises.readFile(currentFilePath, "utf-8");
+            this.currentMutation = new node_mutation_1.default(source, {
+                adapter: this.rewriter.parser,
+            });
+            try {
+                const node = this.parseCode(currentFilePath, source);
+                await this.processWithNode(node, this.func);
+                const result = this.currentMutation.process();
+                (0, debug_1.default)("synvert-core:process")(result);
+                if (result.affected) {
+                    this.rewriter.addAffectedFile(this.filePath);
+                    await fs_1.promises.writeFile(currentFilePath, result.newSource);
                 }
-                catch (e) {
-                    console.log(e);
-                    if (e instanceof SyntaxError) {
-                        console.log(`May not parse source code: ${source}`);
-                    }
+                if (!result.conflicted) {
                     break;
                 }
             }
-        });
+            catch (e) {
+                console.log(e);
+                if (e instanceof SyntaxError) {
+                    console.log(`May not parse source code: ${source}`);
+                }
+                break;
+            }
+        }
     }
     /**
      * Test one file.
@@ -236,29 +235,27 @@ class Instance {
      * @async
      * @returns {Promise&lt;TestResultExt>}
      */
-    test() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.rewriter.options.parser === options_1.Parser.ESPREE &amp;&amp;
-                [".ts", ".tsx"].includes(path_1.default.extname(this.filePath))) {
-                return {
-                    conflicted: false,
-                    affected: false,
-                    actions: [],
-                    filePath: this.filePath,
-                };
-            }
-            const currentFilePath = path_1.default.join(configuration_1.default.rootPath, this.filePath);
-            const source = yield fs_1.promises.readFile(currentFilePath, "utf-8");
-            this.currentMutation = new node_mutation_1.default(source, {
-                adapter: this.rewriter.parser,
-            });
-            const node = this.parseCode(currentFilePath, source);
-            yield this.processWithNode(node, this.func);
-            const result = this.currentMutation.test();
-            result.filePath = this.filePath;
-            (0, debug_1.default)("synvert-core:test")(result);
-            return result;
+    async test() {
+        if (this.rewriter.options.parser === options_1.Parser.ESPREE &amp;&amp;
+            [".ts", ".tsx"].includes(path_1.default.extname(this.filePath))) {
+            return {
+                conflicted: false,
+                affected: false,
+                actions: [],
+                filePath: this.filePath,
+            };
+        }
+        const currentFilePath = path_1.default.join(configuration_1.default.rootPath, this.filePath);
+        const source = await fs_1.promises.readFile(currentFilePath, "utf-8");
+        this.currentMutation = new node_mutation_1.default(source, {
+            adapter: this.rewriter.parser,
         });
+        const node = this.parseCode(currentFilePath, source);
+        await this.processWithNode(node, this.func);
+        const result = this.currentMutation.test();
+        result.filePath = this.filePath;
+        (0, debug_1.default)("synvert-core:test")(result);
+        return result;
     }
     /**
      * Set currentNode to node and process.
@@ -276,12 +273,10 @@ class Instance {
      * @param {T} node - set to current node
      * @param {Function} func
      */
-    processWithNode(node, func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.currentNode = node;
-            yield func.call(this, this);
-            this.currentNode = node;
-        });
+    async processWithNode(node, func) {
+        this.currentNode = node;
+        await func.call(this, this);
+        this.currentNode = node;
     }
     /**
      * Set currentNode properly, process and set currentNode back to original currentNode.
@@ -300,13 +295,11 @@ class Instance {
      * @param {T} node - set to other node
      * @param {Function} func
      */
-    processWithOtherNode(node, func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const originalNode = this.currentNode;
-            this.currentNode = node;
-            yield func.call(this, this);
-            this.currentNode = originalNode;
-        });
+    async processWithOtherNode(node, func) {
+        const originalNode = this.currentNode;
+        this.currentNode = node;
+        await func.call(this, this);
+        this.currentNode = originalNode;
     }
     /**
      * Get rewriter's parser.
@@ -355,15 +348,13 @@ class Instance {
      * @param options {QueryOptions|Function} - query options.
      * @param func {Function} - to be called on the matching nodes.
      */
-    withinNode(nqlOrRules, options, func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (typeof options === "function") {
-                yield new scope_1.WithinScope(this, nqlOrRules, {}, options).process();
-            }
-            else {
-                yield new scope_1.WithinScope(this, nqlOrRules, options, func).process();
-            }
-        });
+    async withinNode(nqlOrRules, options, func) {
+        if (typeof options === "function") {
+            await new scope_1.WithinScope(this, nqlOrRules, {}, options).process();
+        }
+        else {
+            await new scope_1.WithinScope(this, nqlOrRules, options, func).process();
+        }
     }
     /**
      * Create a {@link GotoScope} to go to a child node,
@@ -387,10 +378,8 @@ class Instance {
      * @param {string} child_node_name - the name of the child nodes.
      * @param {Function} func - to continue operating on the matching nodes.
      */
-    gotoNode(childNodeName, func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield new scope_1.GotoScope(this, childNodeName, func).process();
-        });
+    async gotoNode(childNodeName, func) {
+        await new scope_1.GotoScope(this, childNodeName, func).process();
     }
     /**
      * Create a {@link IfExistCondition} to check if matching nodes exist in the child nodes,
@@ -421,13 +410,11 @@ class Instance {
      * @param {Function} func - call the function if the matching nodes exist in the child nodes.
      * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
      */
-    ifExistNode(nqlOrRules, options, func, elseFunc) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (typeof options === "function") {
-                return yield new condition_1.IfExistCondition(this, nqlOrRules, {}, options, func).process();
-            }
-            yield new condition_1.IfExistCondition(this, nqlOrRules, options, func, elseFunc).process();
-        });
+    async ifExistNode(nqlOrRules, options, func, elseFunc) {
+        if (typeof options === "function") {
+            return await new condition_1.IfExistCondition(this, nqlOrRules, {}, options, func).process();
+        }
+        await new condition_1.IfExistCondition(this, nqlOrRules, options, func, elseFunc).process();
     }
     /**
      * Create a {@link UnlessExistCondition} to check if matching nodes does not exist in the child nodes,
@@ -458,13 +445,11 @@ class Instance {
      * @param {Function} func - call the function if no matching node exists in the child nodes.
      * @param {Function} elseFunc - call the else function if the matching nodes exists in the child nodes.
      */
-    unlessExistNode(nqlOrRules, options, func, elseFunc) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (typeof options === "function") {
-                return yield new condition_1.UnlessExistCondition(this, nqlOrRules, {}, options, func).process();
-            }
-            yield new condition_1.UnlessExistCondition(this, nqlOrRules, options, func, elseFunc).process();
-        });
+    async unlessExistNode(nqlOrRules, options, func, elseFunc) {
+        if (typeof options === "function") {
+            return await new condition_1.UnlessExistCondition(this, nqlOrRules, {}, options, func).process();
+        }
+        await new condition_1.UnlessExistCondition(this, nqlOrRules, options, func, elseFunc).process();
     }
     /**
      * Create a {@link IfOnlyExistCondition} to check if current node has only one child node and the child node matches rules,
@@ -495,13 +480,11 @@ class Instance {
      * @param {Function} func - call the function if the matching nodes exist in the child nodes.
      * @param {Function} elseFunc - call the else function if no matching node exists in the child nodes.
      */
-    ifOnlyExistNode(nqlOrRules, options, func, elseFunc) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (typeof options === "function") {
-                return yield new condition_1.IfOnlyExistCondition(this, nqlOrRules, {}, options, func).process();
-            }
-            yield new condition_1.IfOnlyExistCondition(this, nqlOrRules, options, func, elseFunc).process();
-        });
+    async ifOnlyExistNode(nqlOrRules, options, func, elseFunc) {
+        if (typeof options === "function") {
+            return await new condition_1.IfOnlyExistCondition(this, nqlOrRules, {}, options, func).process();
+        }
+        await new condition_1.IfOnlyExistCondition(this, nqlOrRules, options, func, elseFunc).process();
     }
     /**
      * Create a {@link IfAllCondition} to check if all matching nodes match options.match,
@@ -532,13 +515,11 @@ class Instance {
      * @param {Function} func - call the function if the matching nodes match options.match.
      * @param {Function} elseFunc - call the else function if no matching node matches options.match.
      */
-    ifAllNodes(nqlOrRules, options, func, elseFunc) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (typeof options === "function") {
-                return yield new condition_1.IfAllCondition(this, nqlOrRules, {}, options, func).process();
-            }
-            yield new condition_1.IfAllCondition(this, nqlOrRules, options, func, elseFunc).process();
-        });
+    async ifAllNodes(nqlOrRules, options, func, elseFunc) {
+        if (typeof options === "function") {
+            return await new condition_1.IfAllCondition(this, nqlOrRules, {}, options, func).process();
+        }
+        await new condition_1.IfAllCondition(this, nqlOrRules, options, func, elseFunc).process();
     }
     /**
      * Append the code to the bottom of current node body.
@@ -630,7 +611,10 @@ class Instance {
                     .map((line) => (line.length === 0 ? line : `${column}${line}`))
                     .join("\n")
             : `\n${column}${code}`;
-        this.currentMutation.insert(this.currentNode, newCode, Object.assign(Object.assign({}, options), { at: "end" }));
+        this.currentMutation.insert(this.currentNode, newCode, {
+            ...options,
+            ...{ at: "end" },
+        });
     }
     /**
      * Insert the code previous to the current node.
@@ -659,7 +643,10 @@ class Instance {
                 .map((line, index) => index === 0 || line.length === 0 ? line : `${column}${line}`)
                 .join("\n") + `\n${column}`
             : `${code}\n${column}`;
-        this.currentMutation.insert(this.currentNode, newCode, Object.assign(Object.assign({}, options), { at: "beginning" }));
+        this.currentMutation.insert(this.currentNode, newCode, {
+            ...options,
+            ...{ at: "beginning" },
+        });
     }
     /**
      * Delete child nodes.
@@ -748,13 +735,11 @@ class Instance {
      * });
      * @param {Function} func
      */
-    group(func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = this.currentMutation.group(func);
-            if (result instanceof Promise) {
-                yield result;
-            }
-        });
+    async group(func) {
+        const result = this.currentMutation.group(func);
+        if (result instanceof Promise) {
+            await result;
+        }
     }
     /**
      * Sync to call a helper to run shared code.
@@ -781,19 +766,17 @@ class Instance {
      * @param {Object|Function} options - options can be anything it needs to be passed to the helper, or a function to be called
      * @param {Function} [func] - function to be called after the helper
      */
-    callHelper(helperName, options, func) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const helper = helper_1.default.fetch(helperName) || (yield (0, utils_1.evalHelper)(helperName));
-            if (!helper) {
-                return;
-            }
-            if (typeof options === "function") {
-                yield helper.func.call(this, {}, options.bind(this));
-            }
-            else {
-                yield helper.func.call(this, options, func === null || func === void 0 ? void 0 : func.bind(this));
-            }
-        });
+    async callHelper(helperName, options, func) {
+        const helper = helper_1.default.fetch(helperName) || (await (0, utils_1.evalHelper)(helperName));
+        if (!helper) {
+            return;
+        }
+        if (typeof options === "function") {
+            await helper.func.call(this, {}, options.bind(this));
+        }
+        else {
+            await helper.func.call(this, options, func === null || func === void 0 ? void 0 : func.bind(this));
+        }
     }
     /**
      * Wrap str string with single or double quotes based on Configuration.singleQuote.
@@ -931,7 +914,7 @@ exports.default = Instance;
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Mar 18 2026 08:04:33 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Mar 18 2026 12:55:30 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
