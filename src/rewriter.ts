@@ -24,7 +24,7 @@ import Configuration from "./configuration";
  * @borrows Rewriter#withinFiles as Rewriter#withinFile
  */
 class Rewriter<T> {
-  public subSnippets: Rewriter<T>[] = [];
+  public subSnippets: Rewriter<any>[] = [];
   public affectedFiles: Set<string> = new Set<string>();
   public nodeVersion?: NodeVersion;
   public npmVersion?: NpmVersion;
