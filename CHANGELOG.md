@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.6 (2026-03-19)
+
+* Update node-query to 1.19.5
+
 ## 2.24.5 (2026-03-19)
 
 * Upgrade TypeScript to 5.9.3
