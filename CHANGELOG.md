@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.24.5 (2026-03-19)
+
+* Upgrade TypeScript to 5.9.3
+* Update target to es2018 for regex s flag support
+* Fix generic type compatibility in Rewriter class
+
 ## 2.24.3 (2025-03-09)
 
 * Add type `NewLineInsertOptions`
